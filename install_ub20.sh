@@ -53,6 +53,7 @@
     apt_install apt-transport-https build-essential software-properties-common curl unzip rar htop git
     apt_install libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq3-dev libzmq5 screen cmake
     apt_install certbot python3-certbot-nginx dialog pwgen
+    echo
     echo -e "$GREEN Done...$COL_RESET"
 
     echo
@@ -61,6 +62,7 @@
     echo
     echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
     password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    echo
     echo -e "$GREEN Done...$COL_RESET"
 
     # Installing Nginx
@@ -125,6 +127,7 @@
     hide_output sudo apt -y upgrade
     apt_install dotnet-sdk-5.0
     sleep 5
+    echo
     echo -e "$GREEN Done...$COL_RESET"
 
 
@@ -196,6 +199,7 @@
     chmod -R +x $HOME/cybercore/
     cd $HOME/cybercore/src/Cybercore
     hide_output dotnet publish -c Release --framework net5.0  -o ../../build
+    echo
     echo -e "$GREEN Done...$COL_RESET"
 
 
@@ -214,6 +218,7 @@
     hide_output sudo -u postgres psql -c "alter database cybercore owner to cybercore;"
     hide_output sudo -u postgres psql -c "grant all privileges on database cybercore to cybercore;"
     hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    echo
     echo -e "$GREEN Done...$COL_RESET"
 
     echo
@@ -235,6 +240,7 @@
       }
     }
     ' | sudo -E tee /etc/psql.txt >/dev/null 2>&1
+    echo
     echo -e "$GREEN Done...$COL_RESET"
     
     
