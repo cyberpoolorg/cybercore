@@ -34,7 +34,7 @@
     echo
     echo -e "$GREEN******************************************************************************$COL_RESET"
     echo -e "$GREEN* CyberCore Install Script v0.1                                              *$COL_RESET"
-    echo -e "$GREEN* Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5.0 and Postgresql *$COL_RESET"
+    echo -e "$GREEN* Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql *$COL_RESET"
     echo -e "$GREEN******************************************************************************$COL_RESET"
     echo
     sleep 3
