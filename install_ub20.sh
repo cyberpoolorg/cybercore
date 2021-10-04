@@ -65,7 +65,7 @@
     # Installing Nginx
     echo
     echo
-    echo -e "$CYAN => Installing Nginx server : $COL_RESET"
+    echo -e "$CYAN => Installing Nginx Server $COL_RESET"
     echo
     sleep 3
     
@@ -114,7 +114,7 @@
     # Installing Dotnet 5
     echo
     echo
-    echo -e "$CYAN => Installing Microsoft Dotnet 5.0 : $COL_RESET"
+    echo -e "$CYAN => Installing Microsoft Dotnet 5.0 $COL_RESET"
     echo
     sleep 3
 
@@ -218,10 +218,10 @@
 
     echo
     echo
-    echo -e "$GREEN********************************$COL_RESET"
-    echo -e "$GREEN CyberCore Install Script v0.1 *$COL_RESET"
-    echo -e "$GREEN Finish !!!                    *$COL_RESET"
-    echo -e "$GREEN********************************$COL_RESET"
+    echo -e "$GREEN*********************************$COL_RESET"
+    echo -e "$GREEN* CyberCore Install Script v0.1 *$COL_RESET"
+    echo -e "$GREEN* Finish !!!                    *$COL_RESET"
+    echo -e "$GREEN*********************************$COL_RESET"
     echo 
     echo
     echo -e "$CYAN WoW that was fun, just some reminders. $COL_RESET"
@@ -230,16 +230,12 @@
     echo -e "$RED Your Postgresql Database is cybercore $COL_RESET"
     echo -e "$RED Your Postgresql Password is "$postgres_pass" $COL_RESET"
     echo
-    echo -e "$RED Yiimp at : http://"$server_name" (https... if SSL enabled)"
-    echo -e "$RED Yiimp Admin at : http://"$server_name"/site/AdminPanel (https... if SSL enabled)"
-    echo -e "$RED Yiimp phpMyAdmin at : http://"$server_name"/phpmyadmin (https... if SSL enabled)"
-    echo
     echo -e "$CYAN Example Config Files Are In $HOME/cybercore/examples/ $COL_RESET"
     echo -e "$CYAN To Start Cybercore run : $HOME/cybercore/build/dotnet Cybercore.dll -c config.json $COL_RESET"
     echo
     echo
-    echo -e "$RED***************************************************$COL_RESET"
-    echo -e "$RED YOU MUST REBOOT NOW TO FINALIZE INSTALLATION !!! *$COL_RESET"
-    echo -e "$RED***************************************************$COL_RESET"
+    echo -e "$RED****************************************************$COL_RESET"
+    echo -e "$RED* YOU MUST REBOOT NOW TO FINALIZE INSTALLATION !!! *$COL_RESET"
+    echo -e "$RED****************************************************$COL_RESET"
     echo
     echo
