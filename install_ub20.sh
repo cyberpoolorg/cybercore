@@ -252,6 +252,8 @@
     echo -e "$RED Your Postgresql Database is cybercore $COL_RESET"
     echo -e "$RED Your Postgresql Password is "$password" $COL_RESET"
     echo
+    echo -e "$RED YWe Saved It To $HOME/etc/psql.txt $COL_RESET"
+    echo
     echo -e "$CYAN Example Config Files Are In $HOME/cybercore/examples/ $COL_RESET"
     echo -e "$CYAN To Start Cybercore run : $HOME/cybercore/build/dotnet Cybercore.dll -c config.json $COL_RESET"
     echo
