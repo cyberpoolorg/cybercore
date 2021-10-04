@@ -60,7 +60,7 @@
     echo -e "$RED Generating Random Strong Password For Postgresql !!! $COL_RESET"
     echo
     echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
-    postgres_pass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    postgres_pass=`pwgen -c -1 20`
     echo -e "$GREEN Done...$COL_RESET"
 
     # Installing Nginx
