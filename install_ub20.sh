@@ -60,7 +60,7 @@
     echo -e "$RED Make sure you double check before hitting enter! Only one shot at these! $COL_RESET"
     echo
     echo -e "$CYAN => Please Enter PSQL Password $COL_RESET"
-    read postgres_pass
+    read -p "Your Password: " postgres_pass
 
     # Installing Nginx
     echo
