@@ -57,10 +57,11 @@
 
     echo
     echo
-    echo -e "$RED Make sure you double check before hitting enter! Only one shot at these! $COL_RESET"
+    echo -e "$RED Generating Random Strong Password For Postgresql !!! $COL_RESET"
     echo
-    echo -e "$CYAN => Please Enter PSQL Password $COL_RESET"
-    read -p "Your Password: " postgres_pass
+    echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
+    $postgres_pass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    echo -e "$GREEN Done...$COL_RESET"
 
     # Installing Nginx
     echo
@@ -208,11 +209,11 @@
     sleep 3
 
     hide_output sudo -u postgres createuser --superuser cybercore
-    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '"$postgres_pass"';"
+    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '$postgres_pass';"
     hide_output sudo -u postgres createdb cybercore
     hide_output sudo -u postgres psql -c "alter database cybercore owner to cybercore;"
     hide_output sudo -u postgres psql -c "grant all privileges on database cybercore to cybercore;"
-    hide_output PGPASSWORD="$postgres_pass" psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    hide_output PGPASSWORD=$postgres_pass psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
     echo -e "$GREEN Done...$COL_RESET"
 
 
