@@ -10,7 +10,30 @@
 #                                                                              #
 ################################################################################
 
-## Add function.sh ##
+sleep 2
+
+    output() {
+    printf "\E[0;33;40m"
+    echo $1
+    printf "\E[0m"
+    }
+
+    displayErr() {
+    echo
+    echo $1;
+    echo
+    exit 1;
+    }
+
+    #Add user group sudo and no password
+    whoami=`whoami`
+    sudo usermod -aG sudo ${whoami}
+    echo '# CyberCore
+    # It needs passwordless sudo functionality.
+    '""''"${whoami}"''""' ALL=(ALL) NOPASSWD:ALL
+    ' | sudo -E tee /etc/sudoers.d/${whoami} >/dev/null 2>&1
+    
+    ## Add function.sh ##
 
 echo '
 ESC_SEQ="\x1b["
@@ -108,31 +131,6 @@ function get_default_privateip {
 		echo $address
 }
 ' | sudo -E tee /etc/functions.sh >/dev/null 2>&1
-
-echo -e "$GREEN Done...$COL_RESET"
-
-sleep 2
-
-    output() {
-    printf "\E[0;33;40m"
-    echo $1
-    printf "\E[0m"
-    }
-
-    displayErr() {
-    echo
-    echo $1;
-    echo
-    exit 1;
-    }
-
-    #Add user group sudo and no password
-    whoami=`whoami`
-    sudo usermod -aG sudo ${whoami}
-    echo '# CyberCore
-    # It needs passwordless sudo functionality.
-    '""''"${whoami}"''""' ALL=(ALL) NOPASSWD:ALL
-    ' | sudo -E tee /etc/sudoers.d/${whoami} >/dev/null 2>&1
 
     source /etc/functions.sh
 
