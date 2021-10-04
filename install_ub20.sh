@@ -187,7 +187,7 @@
     echo
     echo -e "$CYAN => Installing CyberCore $COL_RESET"
     echo
-    echo -e "Grabbing CyberCore fron Github and Build It"
+    echo -e "Grabbing CyberCore From Github And Build It"
     echo
     sleep 3
 
