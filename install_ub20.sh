@@ -12,28 +12,18 @@
 
 sleep 2
 
-    output() {
-    printf "\E[0;33;40m"
-    echo $1
-    printf "\E[0m"
-    }
+output() {
+	printf "\E[0;33;40m"
+	echo $1
+	printf "\E[0m"
+}
 
-    displayErr() {
-    echo
-    echo $1;
-    echo
-    exit 1;
-    }
-
-    #Add user group sudo and no password
-    whoami=`whoami`
-    sudo usermod -aG sudo ${whoami}
-    echo '# CyberCore
-    # It needs passwordless sudo functionality.
-    '""''"${whoami}"''""' ALL=(ALL) NOPASSWD:ALL
-    ' | sudo -E tee /etc/sudoers.d/${whoami} >/dev/null 2>&1
-    
-    ## Add function.sh ##
+displayErr() {
+	echo
+	echo $1;
+	echo
+	exit 1;
+}
 
 echo '
 ESC_SEQ="\x1b["
