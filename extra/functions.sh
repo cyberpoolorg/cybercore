@@ -14,7 +14,6 @@ BLUE=$ESC_SEQ"34;01m"
 MAGENTA=$ESC_SEQ"35;01m"
 CYAN=$ESC_SEQ"36;01m"
 
-
 function spinner {
  		local pid=$!
  		local delay=0.75
@@ -28,7 +27,6 @@ function spinner {
  		done
  		printf "    \b\b\b\b"
  }
-
 
 function hide_output {
 		OUTPUT=$(tempfile)
