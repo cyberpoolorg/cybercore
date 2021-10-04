@@ -229,7 +229,7 @@
       "postgres":{
         "host": "127.0.0.1",
         "port": 5432,
-        "user": "cybercore",
+        "user": '"${password}"',
         "password": "$password",
         "database": "cybercore"
       }
