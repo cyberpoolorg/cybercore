@@ -1,0 +1,120 @@
+{
+    "clusterName": "cybercore",
+    "logging": {
+        "level": "info",
+        "enableConsoleLog": true,
+        "enableConsoleColors": true,
+        "logFile": "",
+        "apiLogFile": "",
+        "logBaseDirectory": "",
+        "perPoolLogFile": true
+    },
+    "banning": {
+        "manager": "integrated",
+        "banOnJunkReceive": false,
+        "banOnInvalidShares": false
+    },
+    "notifications": {
+        "enabled": false,
+        "email": {
+            "host": "smtp.example.com",
+            "port": 587,
+            "user": "user",
+            "password": "password",
+            "fromAddress": "info@yourpool.org",
+            "fromName": "pool support"
+        },
+        "admin": {
+            "enabled": false,
+            "emailAddress": "user@example.com",
+            "notifyBlockFound": true
+        }
+    },
+    "persistence": {
+        "postgres": {
+            "host": "127.0.0.1",
+            "port": 5432,
+            "user": "cybercore",
+            "password": "password",
+            "database": "cybercore"
+        }
+    },
+    "paymentProcessing": {
+        "enabled": true,
+        "interval": 600,
+        "shareRecoveryFile": "recovered-shares.txt"
+    },
+    "api": {
+        "enabled": true,
+        "listenAddress": "0.0.0.0",
+        "port": 4000,
+        "adminPort": 5000,
+        "metricsIpWhitelist": [""],
+        "adminIpWhitelist": [""],
+        "tls": {
+            "enabled": false,
+            "tlsPfxFile": "/yourpath/your.pfx",
+            "tlsPfxPassword": "pfx password"
+        },
+        "rateLimiting": {
+            "disabled": true,
+            "rules": [{
+		"Endpoint": "*",
+		"Period": "1s",
+		"Limit": 25
+            }],
+            "ipWhitelist": [""]
+        }
+    },
+    "pools": [{
+         "id": "dvt",
+         "enabled": false,
+         "coin": "devault",
+         "addressType": "CashAddr",
+         "address": "devault:qqhndk6gns00as2t759y3hqrf396uhncxyf480qn37",
+         "rewardRecipients":[
+            {
+               "address": "devault:qptdsugw4rd720kdydl45nmauu9g9yjrggye797ahs",
+               "percentage":1
+            }
+         ],
+         "blockRefreshInterval": 500,
+         "jobRebroadcastTimeout": 55,
+         "clientConnectionTimeout": 600,
+         "banning":{
+            "enabled": true,
+            "time": 600,
+            "invalidPercent": 50,
+            "checkThreshold": 50
+         },
+         "ports":{
+            "5000":{
+               "listenAddress": "0.0.0.0",
+               "difficulty": 10000,
+               "name": "ASIC Mining",
+               "varDiff": {
+                "minDiff": 1,
+                "targetTime": 5,
+                "retargetTime": 30,
+                "variancePercent": 50,
+                "maxDelta":"1"
+             }
+            }
+         },
+         "daemons":[
+            {
+               "host": "127.0.0.1",
+               "port": 8888,
+               "user": "rpcuser",
+               "password":"rpcpassword"
+            }
+         ],
+         "paymentProcessing":{
+            "enabled":true,
+            "minimumPayment": 100,
+            "payoutScheme":"PROP", // PROP , PPLNS and SOLO supported
+            "payoutSchemeConfig":{ "factor":2.0 }
+        },
+        "walletPassword":"1234"
+    }]
+}
