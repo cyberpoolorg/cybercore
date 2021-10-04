@@ -25,7 +25,7 @@
 	    exit 1;
     }
 
-    wget https://github.com/cyberpoolorg/cybercore/blob/master/extra/functions.sh
+    wget -L https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/extra/functions.sh
     sudo cp -r functions.sh /etc/
 
     source /etc/functions.sh
