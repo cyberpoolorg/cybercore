@@ -204,7 +204,7 @@
     echo
     echo -e "$CYAN => Creating DB $COL_RESET"
     echo
-    echo -e "With Given Password At Start"
+    echo -e "With Random Password Created At Start"
     echo
     sleep 3
 
@@ -229,8 +229,8 @@
       "postgres":{
         "host": "127.0.0.1",
         "port": 5432,
-        "user": '"${password}"',
-        "password": "$password",
+        "user": "cybercore",
+        "password": "'"${password}"'",
         "database": "cybercore"
       }
     }
@@ -242,7 +242,7 @@
     echo
     echo -e "$GREEN*********************************$COL_RESET"
     echo -e "$GREEN* CyberCore Install Script v0.1 *$COL_RESET"
-    echo -e "$GREEN* Finish !!!                    *$COL_RESET"
+    echo -e "$GREEN* Finished YAY !!!               *$COL_RESET"
     echo -e "$GREEN*********************************$COL_RESET"
     echo 
     echo
@@ -252,7 +252,7 @@
     echo -e "$RED Your Postgresql Database is cybercore $COL_RESET"
     echo -e "$RED Your Postgresql Password is "$password" $COL_RESET"
     echo
-    echo -e "$RED YWe Saved It To $HOME/etc/psql.txt $COL_RESET"
+    echo -e "$GREEN We Saved It To $HOME/etc/psql.txt $COL_RESET"
     echo
     echo -e "$CYAN Example Config Files Are In $HOME/cybercore/examples/ $COL_RESET"
     echo -e "$CYAN To Start Cybercore run : $HOME/cybercore/build/dotnet Cybercore.dll -c config.json $COL_RESET"
