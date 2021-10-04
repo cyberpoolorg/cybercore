@@ -1,14 +1,14 @@
 #!/bin/bash
-################################################################################
-# Author: CyberPool                                                            #
-#                                                                              #
-# Web: https://cyberpool.org                                                   #
-#                                                                              #
-# Program:                                                                     #
-#   Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5, and Postgresql  #
-#   v0.1 (update October, 2021)                                                #
-#                                                                              #
-################################################################################
+#################################################################################
+# Author: CyberPool                                                             #
+#                                                                               #
+# Web: https://cyberpool.org                                                    #
+#                                                                               #
+# Program:                                                                      #
+#   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 and Postgresql  #
+#   v0.1 (update October, 2021)                                                 #
+#                                                                               #
+#################################################################################
 
     sleep 2
 
