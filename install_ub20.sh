@@ -26,6 +26,8 @@ displayErr() {
 }
 
 echo '
+#!/bin/bash
+
 ESC_SEQ="\x1b["
 COL_RESET=$ESC_SEQ"39;49;00m"
 RED=$ESC_SEQ"31;01m"
