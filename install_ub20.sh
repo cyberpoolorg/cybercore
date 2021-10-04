@@ -32,10 +32,10 @@
 
     clear
     echo
-    echo -e "$GREEN**************************************************************************$COL_RESET"
-    echo -e "$GREEN CyberCore Install Script v0.1                                           *$COL_RESET"
-    echo -e "$GREEN Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5, and Postgres *$COL_RESET"
-    echo -e "$GREEN**************************************************************************$COL_RESET"
+    echo -e "$GREEN***************************************************************************$COL_RESET"
+    echo -e "$GREEN* CyberCore Install Script v0.1                                           *$COL_RESET"
+    echo -e "$GREEN* Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5, and Postgres *$COL_RESET"
+    echo -e "$GREEN***************************************************************************$COL_RESET"
     echo
     sleep 3
 
@@ -43,7 +43,7 @@
     # Update package and Upgrade Ubuntu
     echo
     echo
-    echo -e "$CYAN => Updating system and installing required packages :$COL_RESET"
+    echo -e "$CYAN => Updating System And Installing Required Packages $COL_RESET"
     echo 
     sleep 3
         
@@ -59,7 +59,8 @@
     echo
     echo -e "$RED Make sure you double check before hitting enter! Only one shot at these! $COL_RESET"
     echo
-    read -e -p "Enter Postgres Password Which Should Be Used : " postgres_pass
+    echo -e "$CYAN => Please Enter PSQL Password $COL_RESET"
+    read postgres_pass
 
     # Installing Nginx
     echo
