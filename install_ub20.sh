@@ -101,7 +101,7 @@
     # Installing Postgres
     echo
     echo
-    echo -e "$CYAN => Installing Postgres : $COL_RESET"
+    echo -e "$CYAN => Installing Postgresql $COL_RESET"
     echo
     sleep 3
 
