@@ -216,7 +216,28 @@
     hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
     echo -e "$GREEN Done...$COL_RESET"
 
+    echo
+    echo
+    echo -e "$CYAN => Creating File For Postgresql ! $COL_RESET"
+    echo
+    sleep 3
 
+    #Create PSQL Save
+    
+    echo '
+    "persistence":{
+      "postgres":{
+        "host": "127.0.0.1",
+        "port": 5432,
+        "user": "cybercore",
+        "password": "${password}",
+        "database": "cybercore"
+      }
+    }
+    ' | sudo -E tee /etc/psql.txt >/dev/null 2>&1
+    echo -e "$GREEN Done...$COL_RESET"
+    
+    
     echo
     echo
     echo -e "$GREEN*********************************$COL_RESET"
@@ -229,7 +250,7 @@
     echo
     echo -e "$RED Your Postgresql User is cybercore $COL_RESET"
     echo -e "$RED Your Postgresql Database is cybercore $COL_RESET"
-    echo -e "$RED Your Postgresql Password is "$postgres_pass" $COL_RESET"
+    echo -e "$RED Your Postgresql Password is "$password" $COL_RESET"
     echo
     echo -e "$CYAN Example Config Files Are In $HOME/cybercore/examples/ $COL_RESET"
     echo -e "$CYAN To Start Cybercore run : $HOME/cybercore/build/dotnet Cybercore.dll -c config.json $COL_RESET"
