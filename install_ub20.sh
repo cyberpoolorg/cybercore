@@ -52,7 +52,7 @@
     hide_output sudo apt -y autoremove
     apt_install apt-transport-https build-essential software-properties-common curl unzip rar htop git
     apt_install libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq3-dev libzmq5 screen cmake
-    apt_install certbot python3-certbot-nginx dialog
+    apt_install certbot python3-certbot-nginx dialog pwgen
     echo -e "$GREEN Done...$COL_RESET"
 
     echo
@@ -60,7 +60,7 @@
     echo -e "$RED Generating Random Strong Password For Postgresql !!! $COL_RESET"
     echo
     echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
-    $postgres_pass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    postgres_pass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     echo -e "$GREEN Done...$COL_RESET"
 
     # Installing Nginx
