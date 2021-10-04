@@ -32,10 +32,10 @@
 
     clear
     echo
-    echo -e "$GREEN***************************************************************************$COL_RESET"
-    echo -e "$GREEN* CyberCore Install Script v0.1                                           *$COL_RESET"
-    echo -e "$GREEN* Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5, and Postgres *$COL_RESET"
-    echo -e "$GREEN***************************************************************************$COL_RESET"
+    echo -e "$GREEN******************************************************************************$COL_RESET"
+    echo -e "$GREEN* CyberCore Install Script v0.1                                              *$COL_RESET"
+    echo -e "$GREEN* Install CyberCore on Ubuntu 20.04 running Nginx, Dotnet 5.0 and Postgresql *$COL_RESET"
+    echo -e "$GREEN******************************************************************************$COL_RESET"
     echo
     sleep 3
 
@@ -60,7 +60,7 @@
     echo -e "$RED Generating Random Strong Password For Postgresql !!! $COL_RESET"
     echo
     echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
-    postgres_pass=`pwgen -c -1 20`
+    password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     echo -e "$GREEN Done...$COL_RESET"
 
     # Installing Nginx
@@ -209,11 +209,11 @@
     sleep 3
 
     hide_output sudo -u postgres createuser --superuser cybercore
-    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '$postgres_pass';"
+    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '$password';"
     hide_output sudo -u postgres createdb cybercore
     hide_output sudo -u postgres psql -c "alter database cybercore owner to cybercore;"
     hide_output sudo -u postgres psql -c "grant all privileges on database cybercore to cybercore;"
-    hide_output PGPASSWORD=$postgres_pass psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
     echo -e "$GREEN Done...$COL_RESET"
 
 
