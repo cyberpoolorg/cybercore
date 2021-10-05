@@ -213,11 +213,11 @@
     sleep 3
 
     hide_output sudo -u postgres createuser --superuser cybercore
-    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '$password';"
+    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password ''"${password}"'';"
     hide_output sudo -u postgres createdb cybercore
     hide_output sudo -u postgres psql -c "alter database cybercore owner to cybercore;"
     hide_output sudo -u postgres psql -c "grant all privileges on database cybercore to cybercore;"
-    hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    hide_output PGPASSWORD='"${password}"' psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
     echo
     echo -e "$GREEN Done...$COL_RESET"
 
