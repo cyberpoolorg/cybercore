@@ -190,7 +190,7 @@
     echo
     echo -e "$CYAN=> Installing CyberCore$COL_RESET"
     echo
-    echo -e "Grabbing CyberCore From Github And Build It"
+    echo -e "$GREEN=> Grabbing CyberCore From Github And Build It$COL_RESET"
     echo
     sleep 3
 
@@ -208,7 +208,7 @@
     echo
     echo -e "$CYAN=> Creating DB$COL_RESET"
     echo
-    echo -e "With Random Password Created At Start"
+    echo -e "$GREEN=> With Random Password Created At Start$COL_RESET"
     echo
     sleep 3
 
