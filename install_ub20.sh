@@ -246,7 +246,7 @@
     echo
     echo -e "$GREEN*********************************$COL_RESET"
     echo -e "$GREEN* CyberCore Install Script v0.1 *$COL_RESET"
-    echo -e "$GREEN* Finished YAY !!!               *$COL_RESET"
+    echo -e "$GREEN* Finished YAY !!!              *$COL_RESET"
     echo -e "$GREEN*********************************$COL_RESET"
     echo 
     echo
