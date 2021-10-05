@@ -42,7 +42,7 @@
 
     echo
     echo
-    echo -e "$CYAN => Updating System And Installing Required Packages $COL_RESET"
+    echo -e "$CYAN=> Updating System And Installing Required Packages $COL_RESET"
     echo 
     sleep 3
         
@@ -54,25 +54,25 @@
     apt_install certbot python3-certbot-nginx dialog pwgen
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$RED Generating Random Strong Password For Postgresql !!! $COL_RESET"
+    echo -e "$RED=> Generating Random Strong Password For Postgresql !!!$COL_RESET"
     echo
-    echo -e "$CYAN => Password Will Be Displayed At The End Of Installtion !!! $COL_RESET"
+    echo -e "$CYAN=> Password Will Be Displayed At The End Of Installtion !!!$COL_RESET"
     sleep 3
 
     password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Installing Nginx Server $COL_RESET"
+    echo -e "$CYAN=> Installing Nginx Server$COL_RESET"
     echo
     sleep 3
 
@@ -101,12 +101,12 @@
     sudo systemctl status nginx | sed -n "1,3p"
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Installing Postgresql $COL_RESET"
+    echo -e "$CYAN=> Installing Postgresql$COL_RESET"
     echo
     sleep 3
 
@@ -114,12 +114,12 @@
     sudo systemctl status postgresql | sed -n "1,3p"
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Installing Microsoft Dotnet 5.0 $COL_RESET"
+    echo -e "$CYAN=> Installing Microsoft Dotnet 5.0$COL_RESET"
     echo
     sleep 3
 
@@ -130,13 +130,12 @@
     apt_install dotnet-sdk-5.0
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
-    # Installing Fail2Ban
     echo
     echo
-    echo -e "$CYAN => Installing Fail2Ban $COL_RESET"
+    echo -e "$CYAN=> Installing Fail2Ban$COL_RESET"
     echo
     sleep 3
     
@@ -144,13 +143,13 @@
     sudo systemctl status fail2ban | sed -n "1,3p"
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     # Installing UFW
     echo
     echo
-    echo -e "$CYAN => Installing UFW $COL_RESET"
+    echo -e "$CYAN=> Installing UFW$COL_RESET"
     echo
     sleep 3
 
@@ -184,12 +183,12 @@
     sudo systemctl status ufw | sed -n "1,3p"
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Installing CyberCore $COL_RESET"
+    echo -e "$CYAN=> Installing CyberCore$COL_RESET"
     echo
     echo -e "Grabbing CyberCore From Github And Build It"
     echo
@@ -202,12 +201,12 @@
     hide_output dotnet publish -c Release --framework net5.0  -o ../../build
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Creating DB $COL_RESET"
+    echo -e "$CYAN=> Creating DB$COL_RESET"
     echo
     echo -e "With Random Password Created At Start"
     echo
@@ -222,12 +221,12 @@
     hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
 
 
     echo
     echo
-    echo -e "$CYAN => Creating File For Postgresql !!! $COL_RESET"
+    echo -e "$CYAN=> Creating File For Postgresql !!!$COL_RESET"
     echo
     sleep 3
     
@@ -240,7 +239,7 @@
     ' | sudo -E tee /etc/psql.txt >/dev/null 2>&1
     sleep 2
     echo
-    echo -e "$GREEN Done...$COL_RESET"
+    echo -e "$GREEN=> Done...$COL_RESET"
     
     
     echo
