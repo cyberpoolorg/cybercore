@@ -241,7 +241,20 @@
     echo
     echo -e "$GREEN=> Done...$COL_RESET"
     
+    echo
+    echo
+    echo -e "$CYAN=> Deleting Temp Files !!!$COL_RESET"
+    echo
+    sleep 3
     
+    cd ~
+    hide_output rm -rf functions.sh
+    hide_output rm -rf packages-microsoft-prod.deb
+    sleep 2
+    echo
+    echo -e "$GREEN=> Done...$COL_RESET"
+
+
     echo
     echo
     echo -e "$GREEN*********************************$COL_RESET"
