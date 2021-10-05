@@ -5,7 +5,7 @@
 # Web: https://cyberpool.org                                                    #
 #                                                                               #
 # Program:                                                                      #
-#   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 and Postgresql  #
+#   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql  #
 #   v0.1 (update October, 2021)                                                 #
 #                                                                               #
 #################################################################################
