@@ -206,19 +206,20 @@
 
     echo
     echo
-    echo -e "$CYAN=> Creating DB$COL_RESET"
-    echo
-    echo -e "$GREEN=> With Random Password Created At Start$COL_RESET"
+    echo -e "$CYAN=> Creating Bash File For Postgresql !!!$COL_RESET"
     echo
     sleep 3
 
-    cd ~
+    echo '
+    #!/bin/bash
     hide_output sudo -u postgres createuser --superuser cybercore
-    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '$password';"
+    hide_output sudo -u postgres psql -c "alter user cybercore with encrypted password '"'"''"${password}"''"'"';"
     hide_output sudo -u postgres createdb cybercore
     hide_output sudo -u postgres psql -c "alter database cybercore owner to cybercore;"
     hide_output sudo -u postgres psql -c "grant all privileges on database cybercore to cybercore;"
-    hide_output PGPASSWORD=$password psql -d cybercore -U cybercore -h 127.0.0.1 -f $HOME/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    hide_output PGPASSWORD='"${password}"' psql -d cybercore -U cybercore -h 127.0.0.1 -f '"${HOME}"'/cybercore/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+    ' | sudo -E tee $HOME/psql.sh >/dev/null 2>&1
+    sudo chmod -R +x $HOME/psql.sh
     sleep 2
     echo
     echo -e "$GREEN=> Done...$COL_RESET"
@@ -226,7 +227,7 @@
 
     echo
     echo
-    echo -e "$CYAN=> Creating File For Postgresql !!!$COL_RESET"
+    echo -e "$CYAN=> Creating Credentials File For Postgresql !!!$COL_RESET"
     echo
     sleep 3
     
@@ -242,6 +243,18 @@
     echo -e "$GREEN=> Done...$COL_RESET"
 
 
+    echo
+    echo
+    echo -e "$CYAN=> Create Postgresql Database !!!$COL_RESET"
+    echo
+    sleep 3
+
+    bash $HOME/psql.sh
+    sleep 2
+    echo
+    echo -e "$GREEN=> Done...$COL_RESET"
+    
+    
     echo
     echo
     echo -e "$CYAN=> Deleting Temp Files !!!$COL_RESET"
