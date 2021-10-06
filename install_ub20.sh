@@ -59,9 +59,9 @@
 
     echo
     echo
-    echo -e "$RED=> Generating Random Strong Password For Postgresql !!!$COL_RESET"
+    echo -e "$CYAN=> Generating Random Strong Password For Postgresql !!!$COL_RESET"
     echo
-    echo -e "$CYAN=> Password Will Be Displayed At The End Of Installtion !!!$COL_RESET"
+    echo -e "$GREEN=> Password Will Be Displayed At The End Of Installtion !!!$COL_RESET"
     sleep 3
 
     password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
