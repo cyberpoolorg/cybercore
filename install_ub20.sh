@@ -198,7 +198,7 @@
     hide_output git clone https://github.com/cyberpoolorg/cybercore.git
     chmod -R +x $HOME/cybercore/
     cd $HOME/cybercore/src/Cybercore
-    hide_output dotnet publish -c Release --framework net5.0  -o ../../build
+    hide_output dotnet publish -c Release --framework net5.0  -o ../../../cyberpool
     sleep 2
     echo
     echo -e "$GREEN=> Done...$COL_RESET"
@@ -262,8 +262,9 @@
     sleep 3
     
     cd ~
-    hide_output rm -rf functions.sh
-    hide_output rm -rf packages-microsoft-prod.deb
+    hide_output sudo rm -rf psql.sh
+    hide_output sudo rm -rf functions.sh
+    hide_output sudo rm -rf packages-microsoft-prod.deb
     sleep 2
     echo
     echo -e "$GREEN=> Done...$COL_RESET"
@@ -285,8 +286,8 @@
     echo
     echo -e "$GREEN We Saved The Postgresql Credentials In /etc/psql.txt $COL_RESET"
     echo
-    echo -e "$CYAN Example Config Files Are In $HOME/cybercore/examples/ $COL_RESET"
-    echo -e "$CYAN To Start Cybercore run : $HOME/cybercore/build/dotnet Cybercore.dll -c config.json $COL_RESET"
+    echo -e "$CYAN Example Config Files Are In $HOME/cyberpool/examples/ $COL_RESET"
+    echo -e "$CYAN To Start Cybercore run : $HOME/cyberpool/dotnet Cybercore.dll -c config.json $COL_RESET"
     echo
     echo
     echo -e "$RED****************************************************$COL_RESET"
