@@ -6,7 +6,7 @@
 #                                                                               #
 # Program:                                                                      #
 #   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql  #
-#   v0.1 (update October, 2021)                                                 #
+#   v2.0 (update October, 2021)                                                 #
 #                                                                               #
 #################################################################################
 
@@ -33,7 +33,7 @@
     
     echo
     echo -e "$GREEN******************************************************************************$COL_RESET"
-    echo -e "$GREEN* CyberCore Install Script v0.1                                              *$COL_RESET"
+    echo -e "$GREEN* CyberCore Install Script v2.0                                              *$COL_RESET"
     echo -e "$GREEN* Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql *$COL_RESET"
     echo -e "$GREEN******************************************************************************$COL_RESET"
     echo
