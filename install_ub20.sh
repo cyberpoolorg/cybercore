@@ -90,7 +90,8 @@ hide_output sudo systemctl start cron.service
 hide_output sudo systemctl enable cron.service
 sleep 2
 
-echo 'map $http_user_agent $blockedagent {
+echo '
+map $http_user_agent $blockedagent {
   default         0;
   ~*malicious     1;
   ~*bot           1;
