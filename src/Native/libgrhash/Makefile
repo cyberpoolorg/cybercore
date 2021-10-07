@@ -14,8 +14,7 @@ OBJECTS = exports.o gost.o gr.o Lyra2.o Sponge.o \
           cryptonote/crypto/aesb.o cryptonote/crypto/c_blake256.o cryptonote/crypto/c_groestl.o cryptonote/crypto/c_jh.o \
 	  cryptonote/crypto/c_keccak.o cryptonote/crypto/c_skein.o cryptonote/crypto/hash.o cryptonote/crypto/oaes_lib.o \
 	  cryptonote/cryptonight.o cryptonote/cryptonight_dark.o cryptonote/cryptonight_dark_lite.o cryptonote/cryptonight_fast.o \
-	  cryptonote/cryptonight_lite.o cryptonote/cryptonight_soft_shell.o cryptonote/cryptonight_turtle.o \
-	  cryptonote/cryptonight_turtle_lite.o \
+	  cryptonote/cryptonight_lite.o cryptonote/cryptonight_soft_shell.o cryptonote/cryptonight_turtle.o cryptonote/cryptonight_turtle_lite.o
 
 all: $(TARGET)
 
