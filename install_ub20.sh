@@ -6,7 +6,7 @@
 #                                                                               #
 # Program:                                                                      #
 #   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql  #
-#   v2.0 (update October, 2021)                                                 #
+#   v2.0 (Update October, 2021)                                                 #
 #                                                                               #
 #################################################################################
 
