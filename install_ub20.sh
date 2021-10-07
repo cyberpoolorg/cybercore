@@ -37,7 +37,7 @@ echo -e "$GREEN* CyberCore Install Script v2.0                                  
 echo -e "$GREEN* Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql *$COL_RESET"
 echo -e "$GREEN******************************************************************************$COL_RESET"
 echo
-sleep 2
+sleep 3
 
 
 echo
@@ -62,6 +62,7 @@ echo
 echo -e "$CYAN=> Generating Random Strong Password For Postgresql !!!$COL_RESET"
 echo
 echo -e "$GREEN=> Password Will Be Displayed At The End Of Installtion !!!$COL_RESET"
+echo
 sleep 3
 
 password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
@@ -119,22 +120,6 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Installing Microsoft Dotnet 5.0$COL_RESET"
-echo
-sleep 3
-
-hide_output wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-hide_output sudo dpkg -i packages-microsoft-prod.deb
-hide_output sudo apt -y update 
-hide_output sudo apt -y upgrade
-apt_install dotnet-sdk-5.0
-sleep 2
-echo
-echo -e "$GREEN=> Done...$COL_RESET"
-
-
-echo
-echo
 echo -e "$CYAN=> Installing Fail2Ban$COL_RESET"
 echo
 sleep 3
@@ -180,6 +165,22 @@ hide_output sudo ufw allow 4833/tcp
 hide_output sudo ufw allow 4933/tcp
 hide_output sudo ufw --force enable
 sudo systemctl status ufw | sed -n "1,3p"
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Installing Microsoft Dotnet 5.0$COL_RESET"
+echo
+sleep 3
+
+hide_output wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+hide_output sudo dpkg -i packages-microsoft-prod.deb
+hide_output sudo apt -y update 
+hide_output sudo apt -y upgrade
+apt_install dotnet-sdk-5.0
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
