@@ -13,16 +13,16 @@
 sleep 2
 
 output() {
-printf "\E[0;33;40m"
-echo $1
-printf "\E[0m"
+  printf "\E[0;33;40m"
+  echo $1
+  printf "\E[0m"
 }
 
 displayErr() {
-echo
-echo $1;
-echo
-exit 1;
+  echo
+  echo $1;
+  echo
+  exit 1;
 }
 
 wget -L https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/extra/functions.sh
@@ -91,12 +91,12 @@ hide_output sudo systemctl enable cron.service
 sleep 2
 
 echo 'map $http_user_agent $blockedagent {
-default         0;
-~*malicious     1;
-~*bot           1;
-~*backdoor      1;
-~*crawler       1;
-~*bandit        1;
+  default         0;
+  ~*malicious     1;
+  ~*bot           1;
+  ~*backdoor      1;
+  ~*crawler       1;
+  ~*bandit        1;
 }
 ' | sudo -E tee /etc/nginx/blockuseragents.rules >/dev/null 2>&1
 sudo systemctl status nginx | sed -n "1,3p"
