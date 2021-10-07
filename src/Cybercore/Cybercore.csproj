@@ -93,6 +93,7 @@
         <Exec Command="(cd $(ProjectDir)../Native/libgrhash &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/libgrhash/libgrhash.so $(OutDir)" />
         <Exec Command="(cd $(ProjectDir)../Native/libkawpow &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/libkawpow/libkawpow.so $(OutDir)" />
         <Exec Command="(cd $(ProjectDir)../Native/liblyrahash &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/liblyrahash/liblyrahash.so $(OutDir)" />
+        <Exec Command="(cd $(ProjectDir)../Native/libminotaurx &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/libminotaurx/libminotaurx.so $(OutDir)" />
         <Exec Command="(cd $(ProjectDir)../Native/libmultihash &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/libmultihash/libmultihash.so $(OutDir)" />
         <Exec Command="(cd $(ProjectDir)../Native/librandomx &amp;&amp; make clean &amp;&amp; make) &amp;&amp; mv $(ProjectDir)../Native/librandomx/librandomx.so $(OutDir)" />
     </Target>
