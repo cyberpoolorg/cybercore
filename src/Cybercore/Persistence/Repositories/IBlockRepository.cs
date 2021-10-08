@@ -16,5 +16,8 @@ namespace Cybercore.Persistence.Repositories
         Task<Block> GetBlockBeforeAsync(IDbConnection con, string poolId, BlockStatus[] status, DateTime before);
         Task<uint> GetPoolBlockCountAsync(IDbConnection con, string poolId);
         Task<DateTime?> GetLastPoolBlockTimeAsync(IDbConnection con, string poolId);
+	Task<double?> GetAverageEffortCountAsync16(IDbConnection con, string poolId);
+	Task<double?> GetAverageEffortCountAsync64(IDbConnection con, string poolId);
+	Task<double?> GetAverageEffortCountAsync256(IDbConnection con, string poolId);
     }
 }

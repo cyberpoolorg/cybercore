@@ -131,5 +131,26 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             return con.ExecuteScalarAsync<DateTime?>(query, new { poolId });
         }
+
+        public Task<double?> GetAverageEffortCountAsync16(IDbConnection con, string poolId)
+        {
+            logger.LogInvoke(new[] { poolId });
+            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 16";
+            return con.ExecuteScalarAsync<double?>(query, new { poolId });
+        }
+
+        public Task<double?> GetAverageEffortCountAsync64(IDbConnection con, string poolId)
+        {
+            logger.LogInvoke(new[] { poolId });
+            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 64";
+            return con.ExecuteScalarAsync<double?>(query, new { poolId });
+        }
+
+        public Task<double?> GetAverageEffortCountAsync256(IDbConnection con, string poolId)
+        {
+            logger.LogInvoke(new[] { poolId });
+            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 256";
+            return con.ExecuteScalarAsync<double?>(query, new { poolId });
+        }
     }
 }

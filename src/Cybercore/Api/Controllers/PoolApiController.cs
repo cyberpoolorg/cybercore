@@ -64,6 +64,9 @@ namespace Cybercore.Api.Controllers
                     var result = config.ToPoolInfo(mapper, stats, pool);
                     result.TotalPaid = await cf.Run(con => statsRepo.GetTotalPoolPaymentsAsync(con, config.Id));
                     result.TotalBlocks = await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, config.Id));
+                    result.AverageEffort16 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync16(con, config.Id));
+                    result.AverageEffort64 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync64(con, config.Id));
+                    result.AverageEffort256 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync256(con, config.Id));
                     result.LastPoolBlockTime = await cf.Run(con => blocksRepo.GetLastPoolBlockTimeAsync(con, config.Id));
                     var from = clock.Now.AddMinutes(-30);
                     var minersByHashrate = await cf.Run(con => statsRepo.PagePoolMinersByHashrateAsync(con, config.Id, from, 0, 15));
@@ -104,6 +107,9 @@ namespace Cybercore.Api.Controllers
 
             response.Pool.TotalPaid = await cf.Run(con => statsRepo.GetTotalPoolPaymentsAsync(con, pool.Id));
             response.Pool.TotalBlocks = await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, pool.Id));
+            response.Pool.AverageEffort16 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync16(con, pool.Id));
+            response.Pool.AverageEffort64 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync64(con, pool.Id));
+            response.Pool.AverageEffort256 = await cf.Run(con => blocksRepo.GetAverageEffortCountAsync256(con, pool.Id));
             response.Pool.LastPoolBlockTime = await cf.Run(con => blocksRepo.GetLastPoolBlockTimeAsync(con, pool.Id));
             var from = clock.Now.AddMinutes(-30);
 
