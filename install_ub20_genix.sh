@@ -26,6 +26,19 @@ displayErr() {
   exit 1;
 }
 
+function EPHYMERAL_PORT() {
+	LPORT=50000;
+	UPORT=60000;
+	while true; do
+		MPORT=$[$LPORT + ($RANDOM % $UPORT)];
+		(echo "" >/dev/tcp/127.0.0.1/${MPORT}) >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo $MPORT;
+			return 0;
+        	fi
+	done
+}
+
 wget -L https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/extra/functions.sh
 sudo cp -r functions.sh /etc/
 source /etc/functions.sh
@@ -296,10 +309,11 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Generate Strong RPC User And RPC Password...$COL_RESET"
+echo -e "$CYAN=> Generate RPC Port, RPC User And RPC Password...$COL_RESET"
 echo
 sleep 3
 
+rpcport=$(EPHYMERAL_PORT)
 rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 sleep 2
@@ -319,9 +333,9 @@ listen=1
 txindex=1
 maxconnections=64
 rpcthreads=64
+rpcport='"${rpcport}"'
 rpcuser='"${rpcuser}"'
 rpcpassword='"${rpcpassword}"'
-rpcport=43648
 port=43649
 rpcallowip=127.0.0.1
 rpcbind=127.0.0.1
@@ -363,10 +377,143 @@ echo '
 Your Genix Wallet Credentials
 -----------------------------
 
-rpcuser        : '"${rpcuser}"'
-rpcpassword    : '"${rpcpassword}"'
-Wallet Address : '"${wallet}"'
+rpcport		: '"${rpcport}"'
+rpcuser		: '"${rpcuser}"'
+rpcpassword	: '"${rpcpassword}"'
+Wallet Address	: '"${wallet}"'
 ' | sudo -E tee /etc/genix.txt >/dev/null 2>&1
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Create Pool Config File For Genix...$COL_RESET"
+echo
+sleep 3
+
+echo '
+{
+	"clusterName": "cybercore",
+	"logging": {
+		"level": "info",
+		"enableConsoleLog": true,
+		"enableConsoleColors": true,
+		"logFile": "pool.log",
+		"apiLogFile": "api.log",
+		"logBaseDirectory": '"'""'"$HOME/logs/"'""'"',
+		"perPoolLogFile": true
+	,
+	"banning": {
+		"manager": "integrated",
+		"banOnJunkReceive": false,
+		"banOnInvalidShares": false
+	},
+	"notifications": {
+		"enabled": false,
+		"email": {
+			"host": "smtp.example.com",
+			"port": 587,
+			"user": "user",
+			"password": "password",
+			"fromAddress": "info@yourpool.org",
+			"fromName": "pool support"
+		},
+		"pushover": {
+			"enabled": false,
+			"user": "youruser",
+			"token": "yourtoken"
+		},
+		"admin": {
+			"enabled": false,
+			"emailAddress": "user@example.com",
+			"notifyBlockFound": true
+		}
+	},
+	"persistence": {
+		"postgres": {
+			"host": "127.0.0.1",
+			"port": 5432,
+			"user": "cybercore",
+			"password": '"'""'"${password}"'""'"',
+			"database": "cybercore"
+		}
+	},
+	"paymentProcessing": {
+		"enabled": true,
+		"interval": 600,
+		"shareRecoveryFile": "recovered-shares.txt"
+	},
+	"api": {
+		"enabled": true,
+		"listenAddress": "0.0.0.0",
+		"port": 4000,
+		"adminPort": 5000,
+		"metricsIpWhitelist": [""],
+		"adminIpWhitelist": [""],
+		"rateLimiting": {
+			"disabled": true,
+			"rules": [{
+				"Endpoint": "*",
+				"Period": "1s",
+				"Limit": 25
+			}],
+			"ipWhitelist": [""]
+		}
+	},
+	"nicehash": {
+		"enableAutoDiff": true
+	},
+	"pools": [{
+		"id": "genix",
+		"enabled": true,
+		"coin": "genix",
+		"address": '"'""'"${wallet}"'""'"',
+		"rewardRecipients": [{
+			"address": '"'""'"${wallet}"'""'"',
+			"percentage": 0.5
+		}],
+		"blockTimeInterval": 120,
+		"paymentInterval": 600,
+		"blockRefreshInterval": 333,
+		"jobRebroadcastTimeout": 10,
+		"clientConnectionTimeout": 600,
+		"banning": {
+			"enabled": true,
+			"time": 600,
+			"invalidPercent": 50,
+			"checkThreshold": 50
+		},
+		"ports": {
+			"3033": {
+				"listenAddress": "0.0.0.0",
+				"difficulty": 0.2,
+				"name": "GPU Mining",
+				"varDiff": {
+					"minDiff": 0.1,
+					"targetTime": 15,
+					"retargetTime": 90,
+					"variancePercent": 30,
+					"maxDelta": 0.1
+				}
+			}
+		},
+		"daemons": [{
+			"host": "127.0.0.1",
+			"port": '"${rpcport}"',
+			"user": '"'""'"${rpcuser}"'""'"',
+			"password": '"'""'"${rpcpassword}"'""'"'
+		}],
+		"paymentProcessing": {
+			"enabled": true,
+			"minimumPayment": 0.5,
+			"payoutScheme": "PROP",
+			"payoutSchemeConfig": { "factor": 2.0 }
+		}
+	}]
+}
+' | sudo -E tee $HOME/poolcore/config.json >/dev/null 2>&1
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
