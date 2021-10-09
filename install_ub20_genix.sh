@@ -565,8 +565,8 @@ echo -e "$CYAN Pool Sample File With Credentials In $HOME/poolcore/config.json $
 echo -e "$CYAN To Start Cybercore Run : $HOME/poolcore/dotnet Cybercore.dll -c config.json $COL_RESET"
 echo
 echo
-echo -e "$RED****************************************************$COL_RESET"
-echo -e "$RED* YOU MUST REBOOT NOW TO FINALIZE INSTALLATION !!! *$COL_RESET"
-echo -e "$RED****************************************************$COL_RESET"
+echo -e "$RED*********************************************$COL_RESET"
+echo -e "$RED* Have Fun With Your New CyberCore Pool !!! *$COL_RESET"
+echo -e "$RED*********************************************$COL_RESET"
 echo
 echo
