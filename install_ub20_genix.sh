@@ -238,6 +238,7 @@ sleep 3
 echo '
 Your Postgresql Credentials
 ---------------------------
+
 user     :  cybercore
 password : '"${password}"'
 database : cybercore
@@ -257,6 +258,10 @@ hide_output bash $HOME/psql.sh
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
+
+
+sleep 2
+clear
 
 
 echo
@@ -357,6 +362,7 @@ sleep 3
 echo '
 Your Genix Wallet Credentials
 -----------------------------
+
 rpcuser        : '"${rpcuser}"'
 rpcpassword    : '"${rpcpassword}"'
 Wallet Address : '"${wallet}"'
@@ -382,25 +388,34 @@ echo
 echo -e "$GREEN=> Done...$COL_RESET"
 
 
+sleep 2
+clear
+
+
 echo
 echo
 echo -e "$GREEN*********************************$COL_RESET"
 echo -e "$GREEN* CyberCore Install Script v2.1 *$COL_RESET"
-echo -e "$GREEN* Finished YAY !!!              *$COL_RESET"
+echo -e "$GREEN* Finished YaY !!!              *$COL_RESET"
 echo -e "$GREEN*********************************$COL_RESET"
 echo 
 echo
-echo -e "$CYAN WoW that was fun, just some reminders. $COL_RESET"
+echo -e "$CYAN WoW That Was Fun, Just Some Reminders$COL_RESET"
 echo
-echo -e "$RED Your Postgresql User is cybercore $COL_RESET"
-echo -e "$RED Your Postgresql Database is cybercore $COL_RESET"
-echo -e "$RED Your Postgresql Password is "$password" $COL_RESET"
+echo -e "$YELLOW Your Postgresql User Is $GREEN cybercore$COL_RESET"
+echo -e "$YELLOW Your Postgresql Database Is $GREEN cybercore$COL_RESET"
+echo -e "$YELLOW Your Postgresql Password Is $GREEN "$password"$COL_RESET"
+echo
+echo -e "$MAGENTA Your Genix Wallet Address Is $GREEN "$wallet"$COL_RESET"
+echo -e "$MAGENTA Your Genix Wallet RPC User Is $GREEN "$rpcuser"$COL_RESET"
+echo -e "$MAGENTA Your Genix Wallet RPC Password Is $GREEN "$rpcpassword"$COL_RESET"
 echo
 echo -e "$GREEN We Saved The Postgresql Credentials In /etc/psql.txt $COL_RESET"
+echo -e "$GREEN We Saved The Genix Wallet Credentials In /etc/genix.txt $COL_RESET"
 echo
 echo -e "$CYAN Example Config Files Are In $HOME/poolcore/examples/ $COL_RESET"
 echo -e "$CYAN Pool Sample File With Credentials In $HOME/poolcore/config.json $COL_RESET"
-echo -e "$CYAN To Start Cybercore run : $HOME/poolcore/dotnet Cybercore.dll -c config.json $COL_RESET"
+echo -e "$CYAN To Start Cybercore Run : $HOME/poolcore/dotnet Cybercore.dll -c config.json $COL_RESET"
 echo
 echo
 echo -e "$RED****************************************************$COL_RESET"
