@@ -1,6 +1,6 @@
 {
     "5gcash": {
-        "name": "5G Cash",
+	"name": "5G Cash",
         "symbol": "VGC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -25,7 +25,7 @@
     },
 
     "actinium": {
-        "name": "Actinium",
+	"name": "Actinium",
         "symbol": "ACM",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -45,7 +45,7 @@
     },
 
     "alpscoin": {
-        "name": "Alpenstars",
+	"name": "Alpenstars",
         "symbol": "ALPS",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -66,7 +66,7 @@
     },
 
     "auroracoin-sha256": {
-        "name": "Auroracoin Sha256",
+	"name": "Auroracoin Sha256",
         "canonicalName": "Auroracoin",
         "symbol": "AUR",
         "family": "bitcoin",
@@ -87,7 +87,7 @@
     },
 
     "auroracoin-scrypt": {
-        "name": "Auroracoin Scrypt",
+	"name": "Auroracoin Scrypt",
         "canonicalName": "Auroracoin",
         "symbol": "AUR",
         "family": "bitcoin",
@@ -110,7 +110,7 @@
     },
 
     "auroracoin-skein": {
-        "name": "Auroracoin Skein",
+	"name": "Auroracoin Skein",
         "canonicalName": "Auroracoin",
         "symbol": "AUR",
         "family": "bitcoin",
@@ -166,8 +166,8 @@
             "hash": "reverse",
             "args": [ { "hash": "sha256d" } ]
         },
-        "blockTemplateRpcExtraParams": [ "groestl" ],
         "shareMultiplier": 256,
+        "blockTemplateRpcExtraParams": [ "groestl" ],
         "explorerBlockLink": "http://insight.auroracoin.is/block/$hash$",
         "explorerTxLink": "http://insight.auroracoin.is/tx/{0}",
         "explorerAccountLink": "http://insight.auroracoin.is/address/{0}"
@@ -194,7 +194,7 @@
     },
 
     "axe": {
-        "name": "Axe",
+	"name": "Axe",
         "symbol": "AXE",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1774,22 +1774,22 @@
     },
 
     "titcoin": {
-       "name": "Titcoin",
-       "symbol": "TIT",
-       "family": "bitcoin",
-       "coinbaseHasher": {
-           "hash": "sha256d"
-       },
-       "headerHasher": {
-           "hash": "sha256d"
-       },
-       "blockHasher": {
-           "hash": "reverse",
-           "args": [ { "hash": "sha256d" } ]
-       },
-       "explorerBlockLink": "https://www.blockexperts.com/tit/height/$height$",
-       "explorerTxLink": "https://www.blockexperts.com/tit/tx/{0}",
-       "explorerAccountLink": "https://www.blockexperts.com/tit/address/{0}"
+	"name": "Titcoin",
+        "symbol": "TIT",
+        "family": "bitcoin",
+        "coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "sha256d"
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "sha256d" } ]
+        },
+        "explorerBlockLink": "https://www.blockexperts.com/tit/height/$height$",
+        "explorerTxLink": "https://www.blockexperts.com/tit/tx/{0}",
+        "explorerAccountLink": "https://www.blockexperts.com/tit/address/{0}"
     },
 
     "veco": {
@@ -1814,52 +1814,53 @@
     },
 
     "veles-sha256": {
-       "name": "Veles-Sha256",
-       "symbol": "VLS",
-       "family": "bitcoin",
-       "coinbaseHasher": {
-           "hash": "sha256d"
-       },
-       "headerHasher": {
-           "hash": "sha256d"
-       },
-       "blockHasher": {
-           "hash": "reverse",
-           "args": [ { "hash": "sha256d" } ]
-       },
-       "explorerBlockLink": "https://chainz.cryptoid.info/vls/block.dws?$height$.htm",
-       "explorerTxLink": "https://chainz.cryptoid.info/vls/tx.dws?{0}.htm",
-       "explorerAccountLink": "https://chainz.cryptoid.info/vls/address.dws?{0}.htm"
+        "name": "Veles Sha256",
+        "symbol": "VLS",
+        "family": "bitcoin",
+        "coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "sha256d"
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "sha256d" } ]
+        },
+        "explorerBlockLink": "https://chainz.cryptoid.info/vls/block.dws?$height$.htm",
+        "explorerTxLink": "https://chainz.cryptoid.info/vls/tx.dws?{0}.htm",
+        "explorerAccountLink": "https://chainz.cryptoid.info/vls/address.dws?{0}.htm"
     },
 
     "veles-scrypt": {
-       "name": "Veles Scrypt",
-       "symbol": "VLS",
-       "family": "bitcoin",
-       "coinbaseHasher": {
-           "hash": "sha256d"
-       },
-       "headerHasher": {
-           "hash": "scrypt",
-           "args": [ 1024, 1 ]
-       },
-       "blockHasher": {
-           "hash": "reverse",
-           "args": [ { "hash": "sha256d" } ]
-       },
-       "posBlockHasher": {
-           "hash": "reverse",
-           "args": [
-               {
-                   "hash": "scrypt",
-                   "args": [ 1024, 1 ]
-               }
-           ]
-       },
-       "shareMultiplier": 65536,       
-       "explorerBlockLink": "https://chainz.cryptoid.info/vls/block.dws?$height$.htm",
-       "explorerTxLink": "https://chainz.cryptoid.info/vls/tx.dws?{0}.htm",
-       "explorerAccountLink": "https://chainz.cryptoid.info/vls/address.dws?{0}.htm"
+	"name": "Veles Scrypt",
+      	"canonicalName": "Veles",
+       	"symbol": "VLS",
+       	"family": "bitcoin",
+       	"coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "scrypt",
+            "args": [ 1024, 1 ]
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "sha256d" } ]
+        },
+        "posBlockHasher": {
+            "hash": "reverse",
+            "args": [
+                {
+                    "hash": "scrypt",
+                    "args": [ 1024, 1 ]
+                }
+            ]
+        },
+        "shareMultiplier": 65536,       
+        "explorerBlockLink": "https://chainz.cryptoid.info/vls/block.dws?$height$.htm",
+        "explorerTxLink": "https://chainz.cryptoid.info/vls/tx.dws?{0}.htm",
+        "explorerAccountLink": "https://chainz.cryptoid.info/vls/address.dws?{0}.htm"
     },
 
     "verge-lyra": {
@@ -1883,15 +1884,15 @@
             ]
         },
         "isPseudoPoS": true,
-        "blockTemplateRpcExtraParams": [ "lyra" ],
         "shareMultiplier": 256,
+        "blockTemplateRpcExtraParams": [ "lyra" ],
         "explorerBlockLink": "https://verge-blockchain.info/block/$hash$",
         "explorerTxLink": "https://verge-blockchain.info/tx/{0}",
         "explorerAccountLink": "https://verge-blockchain.info/address/{0}"
     },
 
     "verge-scrypt": {
-        "name": "Verge-Scrypt",
+        "name": "Verge Scrypt",
         "canonicalName": "Verge",
         "symbol": "XVG",
         "family": "bitcoin",
@@ -1912,8 +1913,8 @@
             ]
         },
         "isPseudoPoS": true,
-        "blockTemplateRpcExtraParams": [ "scrypt" ],
         "shareMultiplier": 65536,
+        "blockTemplateRpcExtraParams": [ "scrypt" ],
         "explorerBlockLink": "https://verge-blockchain.info/block/$hash$",
         "explorerTxLink": "https://verge-blockchain.info/tx/{0}",
         "explorerAccountLink": "https://verge-blockchain.info/address/{0}"
@@ -1940,6 +1941,7 @@
             ]
         },
         "isPseudoPoS": true,
+        "shareMultiplier": 256,
         "blockTemplateRpcExtraParams": [ "x17" ],
         "explorerBlockLink": "https://verge-blockchain.info/block/$hash$",
         "explorerTxLink": "https://verge-blockchain.info/tx/{0}",
@@ -1967,6 +1969,7 @@
             ]
         },
         "isPseudoPoS": true,
+        "shareMultiplier": 256,
         "blockTemplateRpcExtraParams": [ "blake" ],
         "explorerBlockLink": "https://verge-blockchain.info/block/$hash$",
         "explorerTxLink": "https://verge-blockchain.info/tx/{0}",
@@ -1994,6 +1997,7 @@
             ]
         },
         "isPseudoPoS": true,
+        "shareMultiplier": 256,
         "blockTemplateRpcExtraParams": [ "groestl" ],
         "explorerBlockLink": "https://verge-blockchain.info/block/$hash$",
         "explorerTxLink": "https://verge-blockchain.info/tx/{0}",
