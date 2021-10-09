@@ -436,7 +436,7 @@ echo '
 			"host": "127.0.0.1",
 			"port": 5432,
 			"user": "cybercore",
-			"password": '"'""'"${password}"'""'"',
+			"password": "'"${password}"'",
 			"database": "cybercore"
 		}
 	},
@@ -469,9 +469,9 @@ echo '
 		"id": "genix",
 		"enabled": true,
 		"coin": "genix",
-		"address": '"'""'"${wallet}"'""'"',
+		"address": "'"${wallet}"'",
 		"rewardRecipients": [{
-			"address": '"'""'"${wallet}"'""'"',
+			"address": "'"${wallet}"'",
 			"percentage": 0.5
 		}],
 		"blockTimeInterval": 120,
@@ -502,8 +502,8 @@ echo '
 		"daemons": [{
 			"host": "127.0.0.1",
 			"port": '"${rpcport}"',
-			"user": '"'""'"${rpcuser}"'""'"',
-			"password": '"'""'"${rpcpassword}"'""'"'
+			"user": "'"${rpcuser}"'",
+			"password": "'"${rpcpassword}"'"
 		}],
 		"paymentProcessing": {
 			"enabled": true,
