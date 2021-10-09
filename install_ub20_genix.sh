@@ -402,7 +402,7 @@ echo '
 		"enableConsoleColors": true,
 		"logFile": "pool.log",
 		"apiLogFile": "api.log",
-		"logBaseDirectory": '"'""'"$HOME/logs/"'""'"',
+		"logBaseDirectory": "'"$HOME/logs/"'",
 		"perPoolLogFile": true
 	,
 	"banning": {
