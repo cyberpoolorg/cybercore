@@ -853,6 +853,26 @@
         "explorerAccountLink": "http://explorer.geekcash.org/address/{0}"
     },
 
+    "genix": {
+        "name": "Genix",
+        "symbol": "GENIX",
+        "family": "bitcoin",
+        "coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "x16r"
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "x16r" } ]
+        },
+        "hasMasterNodes": true,
+        "explorerBlockLink": "http://explorer.genix.cx/block/$height$",
+        "explorerTxLink": "http://explorer.genix.cx/tx/{0}",
+        "explorerAccountLink": "http://explorer.genix.cx/address/{0}"
+    },
+
     "goldcash": {
         "name": "Gold Cash",
         "symbol": "GOLD",
