@@ -14,9 +14,6 @@ echo
 sleep 3
 
 sudo mkdir -p /var/www/${Domain_Name}/html
-
-hide_output sudo certbot certonly --standalone -d ${Domain_Name} --staple-ocsp -m ${Letsencrypt_Email} --agree-tos --force-renewal
-
 sudo rm -rf /etc/nginx/sites-available/${Domain_Name}
 sudo rm -rf /etc/nginx/sites-enabled/${Domain_Name}
 
