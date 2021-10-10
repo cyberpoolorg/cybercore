@@ -13,6 +13,16 @@
 
 sleep 2
 
+if ! locale -a | grep en_US.utf8 > /dev/null; then
+hide_output locale-gen en_US.UTF-8
+fi
+
+export LANGUAGE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_TYPE=en_US.UTF-8
+export NCURSES_NO_UTF8_ACS=1
+
 output() {
   printf "\E[0;33;40m"
   echo $1
