@@ -45,6 +45,67 @@ source /etc/functions.sh
 
 clear
 
+message_box "Genix Coin CyberCore Installer" \
+"Thank You for Using This Installer !
+\n\nThis Will Install CyberCore with Genix Coin.
+\n\n
+\n\nAfter Answering The Following Questions, Setup Will Be Mostly automated."
+
+dialog --title "Using Domain Name" \
+--yesno "Are You Using A Domain Name? Example: example.com ?
+Make Sure The DNS Is Updated!" 7 60
+response=$?
+case $response in
+   0) Using_Domain=yes;;
+   1) Using_Domain=no;;
+   255) echo "[ESC] key pressed.";;
+esac
+
+if [[ ("$Using_Domain" == "yes") ]]; then
+
+dialog --title "Using Sub-Domain" \
+--yesno "Are You Using A Sub-Domain For The Main Website Domain? Example pool.example.com ?
+Make Sure The DNS Is Updated!" 7 60
+response=$?
+case $response in
+   0) Using_Sub_Domain=yes;;
+   1) Using_Sub_Domain=no;;
+   255) echo "[ESC] key pressed.";;
+esac
+
+if [ -z "${Domain_Name:-}" ]; then
+DEFAULT_Domain_Name=example.com
+input_box "Domain Name" \
+"Enter Your Domain Name. If Using A Subdomain Enter The Full Domain As In pool.example.com
+\n\nDo Not Add www. To The Domain Name.
+\n\nMake Sure The Domain Is Pointed To This Server Before Continuing !
+\n\nDomain Name:" \
+${DEFAULT_Domain_Name} \
+Domain_Name
+
+if [ -z "${Domain_Name}" ]; then
+# user hit ESC/cancel
+exit
+fi
+fi
+
+dialog --title "Install SSL" \
+--yesno "Would You Like The System To Install SSL Automatically?" 7 60
+response=$?
+case $response in
+   0) Install_SSL=yes;;
+   1) Install_SSL=no;;
+   255) echo "[ESC] key pressed.";;
+esac
+else
+
+Domain_Name=$(get_publicip_from_web_service 4 || get_default_privateip 4)
+Using_Sub_Domain=no
+Install_SSL=no
+fi
+
+clear
+
 echo
 echo -e "$GREEN******************************************************************************$COL_RESET"
 echo -e "$GREEN* CyberCore Install Script v2.1                                              *$COL_RESET"
@@ -223,7 +284,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Create Bash File For Postgresql...$COL_RESET"
+echo -e "$CYAN=> Creating Bash File For Postgresql...$COL_RESET"
 echo
 sleep 3
 
@@ -244,7 +305,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Create Credentials File For Postgresql...$COL_RESET"
+echo -e "$CYAN=> Creating Credentials File For Postgresql...$COL_RESET"
 echo
 sleep 3
 
@@ -263,7 +324,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Create Postgresql Database...$COL_RESET"
+echo -e "$CYAN=> Creating Postgresql Database...$COL_RESET"
 echo
 sleep 3
 
@@ -288,7 +349,7 @@ sleep 3
 
 echo
 echo
-echo -e "$CYAN=> Install Genix Wallet...$COL_RESET"
+echo -e "$CYAN=> Installing Genix Wallet...$COL_RESET"
 echo
 sleep 3
 
@@ -309,7 +370,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Generate RPC Port, RPC User And RPC Password...$COL_RESET"
+echo -e "$CYAN=> Generating RPC Port, RPC User And RPC Password...$COL_RESET"
 echo
 sleep 3
 
@@ -322,7 +383,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Generate Genix Wallet Config File...$COL_RESET"
+echo -e "$CYAN=> Generating Genix Wallet Config File...$COL_RESET"
 echo
 sleep 3
 
@@ -346,7 +407,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Start Wallet And Open Port...$COL_RESET"
+echo -e "$CYAN=> Starting Wallet And Open Port...$COL_RESET"
 echo
 sleep 3
 
@@ -358,7 +419,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Generate New Wallet Address...$COL_RESET"
+echo -e "$CYAN=> Generating New Wallet Address...$COL_RESET"
 echo
 sleep 3
 
@@ -369,7 +430,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Create Credentials File For Genix...$COL_RESET"
+echo -e "$CYAN=> Creating Credentials File For Genix...$COL_RESET"
 echo
 sleep 3
 
@@ -389,7 +450,7 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Create Pool Config File For Genix...$COL_RESET"
+echo -e "$CYAN=> Creating Pool Config File For Genix...$COL_RESET"
 echo
 sleep 3
 
@@ -515,6 +576,36 @@ echo '
 }
 ' | sudo -E tee $HOME/poolcore/config.json >/dev/null 2>&1
 sudo chmod -R +x $HOME/poolcore/
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Building Web File Structure And Copying Files...$COL_RESET"
+echo
+sleep 3
+
+cd $HOME/cybercore/
+hide_output mv extra $HOME/
+sudo chmod -R +x $HOME/extra/
+echo -e "GREEN=> Generating Nginx Configs...$COL_RESET"
+if [[ ("$Using_Sub_Domain" == "y" || "$Using_Sub_Domain" == "Y" || "$Using_Sub_Domain" == "yes" || "$Using_Sub_Domain" == "Yes" || "$Using_Sub_Domain" == "YES") ]]; then
+  cd $HOME/extra
+  source web_with_sub.sh
+    if [[ ("$Install_SSL" == "y" || "$Install_SSL" == "Y" || "$Install_SSL" == "yes" || "$Install_SSL" == "Yes" || "$Install_SSL" == "YES") ]]; then
+      cd $HOME/extra
+      source web_with_sub_ssl.sh
+    fi
+      else
+        $HOME/extra
+        source web_without_sub.sh
+    if [[ ("$Install_SSL" == "y" || "$Install_SSL" == "Y" || "$Install_SSL" == "yes" || "$Install_SSL" == "Yes" || "$Install_SSL" == "YES") ]]; then
+      cd $HOME/extra
+      source web_without_sub_ssl.sh
+    fi
+fi
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
