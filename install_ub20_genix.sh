@@ -133,11 +133,26 @@ Using_Sub_Domain=no
 Install_SSL=no
 fi
 
+if [ -z "${Letsencrypt_Email:-}" ]; then
+DEFAULT_Letsencrypt_Email=ssl@gmail.com
+input_box "Letsencrypt Email" \
+"Enter An Email Address For Letsencrypt (Only When Choosed SSL before).
+\n\nLetsencrypt Email:" \
+$DEFAULT_Letsencrypt_Email \
+Letsencrypt_Email
+
+if [ -z "$Letsencrypt_Email" ]; then
+# user hit ESC/cancel
+exit
+fi
+fi
+
 echo 'PRIMARY_HOSTNAME='"${Domain_Name}"'
 Using_Domain='"${Using_Domain}"'
 Using_Sub_Domain='"${Using_Sub_Domain}"'
 Domain_Name='"${Domain_Name}"'
 Install_SSL='"${Install_SSL}"'
+Letsencrypt_Email='"${Letsencrypt_Email}"'
 ' | sudo -E tee /etc/web.conf >/dev/null 2>&1
 
 
