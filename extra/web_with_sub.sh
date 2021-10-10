@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #############################################
 # Created By CyperPool for CyberCore use... #
