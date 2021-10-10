@@ -133,8 +133,7 @@ Using_Sub_Domain=no
 Install_SSL=no
 fi
 
-echo '
-PRIMARY_HOSTNAME='"${Domain_Name}"'
+echo 'PRIMARY_HOSTNAME='"${Domain_Name}"'
 Using_Domain='"${Using_Domain}"'
 Using_Sub_Domain='"${Using_Sub_Domain}"'
 Domain_Name='"${Domain_Name}"'
@@ -202,18 +201,6 @@ hide_output sudo systemctl start nginx.service
 hide_output sudo systemctl enable nginx.service
 hide_output sudo systemctl start cron.service
 hide_output sudo systemctl enable cron.service
-sleep 2
-
-echo '
-map $http_user_agent $blockedagent {
-  default         0;
-  ~*malicious     1;
-  ~*bot           1;
-  ~*backdoor      1;
-  ~*crawler       1;
-  ~*bandit        1;
-}
-' | sudo -E tee /etc/nginx/blockuseragents.rules >/dev/null 2>&1
 sudo systemctl status nginx | sed -n "1,3p"
 sleep 2
 echo
@@ -327,8 +314,7 @@ echo -e "$CYAN=> Creating Bash File For Postgresql...$COL_RESET"
 echo
 sleep 3
 
-echo '
-#!/bin/bash
+echo '#!/bin/bash
 sudo -u postgres createuser --superuser cybercore
 sudo -u postgres psql -c "alter user cybercore with encrypted password '"'"''"${password}"''"'"';"
 sudo -u postgres createdb cybercore
@@ -426,19 +412,18 @@ echo -e "$CYAN=> Generating Genix Wallet Config File...$COL_RESET"
 echo
 sleep 3
 
-echo '
-server=1
+echo 'server=1
 daemon=1
 listen=1
 txindex=1
 maxconnections=64
 rpcthreads=64
-rpcport='"${rpcport}"'
 rpcuser='"${rpcuser}"'
 rpcpassword='"${rpcpassword}"'
+rpcport='"${rpcport}"'
 port=43649
 rpcallowip=127.0.0.1
-rpcbind=127.0.0.1
+rpcbind=0.0.0.0
 ' | sudo -E tee $HOME/.genixcore/genix.conf >/dev/null 2>&1
 sleep 2
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -473,8 +458,7 @@ echo -e "$CYAN=> Creating Credentials File For Genix...$COL_RESET"
 echo
 sleep 3
 
-echo '
-Your Genix Wallet Credentials
+echo 'Your Genix Wallet Credentials
 -----------------------------
 
 rpcport		: '"${rpcport}"'
@@ -493,8 +477,7 @@ echo -e "$CYAN=> Creating Pool Config File For Genix...$COL_RESET"
 echo
 sleep 3
 
-echo '
-{
+echo '{
 	"clusterName": "cybercore",
 	"logging": {
 		"level": "info",
@@ -674,8 +657,8 @@ echo -e "$MAGENTA Your Genix Wallet Address Is $GREEN "$wallet"$COL_RESET"
 echo -e "$MAGENTA Your Genix Wallet RPC User Is $GREEN "$rpcuser"$COL_RESET"
 echo -e "$MAGENTA Your Genix Wallet RPC Password Is $GREEN "$rpcpassword"$COL_RESET"
 echo
-echo -e "$GREEN We Saved The Postgresql Credentials In /etc/psql.txt $COL_RESET"
-echo -e "$GREEN We Saved The Genix Wallet Credentials In /etc/genix.txt $COL_RESET"
+echo -e "$GREEN We Saved The Postgresql Credentials In /etc/psql.conf $COL_RESET"
+echo -e "$GREEN We Saved The Genix Wallet Credentials In /etc/genix.conf $COL_RESET"
 echo
 echo -e "$CYAN Example Config Files Are In $HOME/poolcore/examples/ $COL_RESET"
 echo -e "$CYAN Pool Sample File With Credentials In $HOME/poolcore/config.json $COL_RESET"
