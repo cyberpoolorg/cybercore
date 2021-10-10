@@ -39,4 +39,4 @@ server {
 sudo ln -s /etc/nginx/sites-available/${Domain_Name} /etc/nginx/sites-enabled/${Domain_Name}
 
 sudo systemctl restart nginx
-cd ~
+cd $HOME/
