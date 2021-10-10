@@ -27,8 +27,8 @@ displayErr() {
 }
 
 function EPHYMERAL_PORT() {
-	LPORT=50000;
-	UPORT=60000;
+	LPORT=32768;
+	UPORT=60999;
 	while true; do
 		MPORT=$[$LPORT + ($RANDOM % $UPORT)];
 		(echo "" >/dev/tcp/127.0.0.1/${MPORT}) >/dev/null 2>&1
