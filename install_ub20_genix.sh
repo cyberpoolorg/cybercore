@@ -514,6 +514,7 @@ echo '
 	}]
 }
 ' | sudo -E tee $HOME/poolcore/config.json >/dev/null 2>&1
+sudo chmod -R +x $HOME/poolcore/
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
