@@ -43,7 +43,23 @@ wget -L https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/extra/fu
 sudo cp -r functions.sh /etc/
 source /etc/functions.sh
 
+
+echo
+echo
+echo -e "$CYAN=> Installing Needed Packages For Setup To Continue...$COL_RESET"
+echo 
+sleep 3
+
+hide_output sudo apt -y update 
+hide_output sudo apt -y upgrade
+apt_install dialog python3 python3-pip acl nano git apt-transport-https
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
 clear
+
 
 message_box "Genix Coin CyberCore Installer" \
 "Thank You for Using This Installer !
@@ -104,7 +120,17 @@ Using_Sub_Domain=no
 Install_SSL=no
 fi
 
+echo '
+PRIMARY_HOSTNAME='"${Domain_Name}"'
+Using_Domain='"${Using_Domain}"'
+Using_Sub_Domain='"${Using_Sub_Domain}"'
+Domain_Name='"${Domain_Name}"'
+Install_SSL='"${Install_SSL}"'
+' | sudo -E tee /etc/web.conf >/dev/null 2>&1
+
+
 clear
+
 
 echo
 echo -e "$GREEN******************************************************************************$COL_RESET"
@@ -117,16 +143,16 @@ sleep 3
 
 echo
 echo
-echo -e "$CYAN=> Updating System And Installing Required Packages $COL_RESET"
+echo -e "$CYAN=> Updating System And Installing Required Packages For CyberCore...$COL_RESET"
 echo 
 sleep 3
 
 hide_output sudo apt -y update 
 hide_output sudo apt -y upgrade
 hide_output sudo apt -y autoremove
-apt_install apt-transport-https build-essential software-properties-common curl unzip rar htop git
+apt_install build-essential software-properties-common curl unzip rar htop
 apt_install libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq3-dev libzmq5 screen cmake
-apt_install certbot python3-certbot-nginx dialog pwgen
+apt_install certbot python3-certbot-nginx
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -316,7 +342,7 @@ Your Postgresql Credentials
 user     :  cybercore
 password : '"${password}"'
 database : cybercore
-' | sudo -E tee /etc/psql.txt >/dev/null 2>&1
+' | sudo -E tee /etc/psql.conf >/dev/null 2>&1
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -442,7 +468,7 @@ rpcport		: '"${rpcport}"'
 rpcuser		: '"${rpcuser}"'
 rpcpassword	: '"${rpcpassword}"'
 Wallet Address	: '"${wallet}"'
-' | sudo -E tee /etc/genix.txt >/dev/null 2>&1
+' | sudo -E tee /etc/genix.conf >/dev/null 2>&1
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"

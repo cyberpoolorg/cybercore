@@ -5,6 +5,7 @@
 #############################################
 
 source /etc/functions.sh
+source /etc/web.conf
 
 sudo mkdir -p /var/www/${Domain_Name}/html
 
@@ -39,4 +40,4 @@ server {
 sudo ln -s /etc/nginx/sites-available/${Domain_Name} /etc/nginx/sites-enabled/${Domain_Name}
 
 sudo systemctl restart nginx
-cd~
+cd ~
