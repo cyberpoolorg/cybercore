@@ -617,6 +617,19 @@ sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
 
+echo
+echo
+echo -e "$CYAN=> Creating Bash File For Letsencrypt...$COL_RESET"
+echo
+sleep 3
+
+echo '#!/bin/bash
+sudo certbot certonly --standalone -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
+' | sudo -E tee $HOME/ssl.sh >/dev/null 2>&1
+sudo chmod -R +x $HOME/ssl.sh
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
