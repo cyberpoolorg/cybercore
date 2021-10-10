@@ -54,6 +54,9 @@ sudo cp -r functions.sh /etc/
 source /etc/functions.sh
 
 
+clear
+
+
 echo
 echo
 echo -e "$CYAN=> Installing Needed Packages For Setup To Continue...$COL_RESET"
@@ -626,22 +629,8 @@ sleep 3
 cd $HOME/cybercore/
 hide_output mv extra $HOME/
 sudo chmod -R +x $HOME/extra/
-echo -e "GREEN=> Generating Nginx Configs...$COL_RESET"
-if [[ ("$Using_Sub_Domain" == "y" || "$Using_Sub_Domain" == "Y" || "$Using_Sub_Domain" == "yes" || "$Using_Sub_Domain" == "Yes" || "$Using_Sub_Domain" == "YES") ]]; then
-  cd $HOME/extra
-  source web_with_sub.sh
-    if [[ ("$Install_SSL" == "y" || "$Install_SSL" == "Y" || "$Install_SSL" == "yes" || "$Install_SSL" == "Yes" || "$Install_SSL" == "YES") ]]; then
-      cd $HOME/extra
-      source web_with_sub_ssl.sh
-    fi
-      else
-        $HOME/extra
-        source web_without_sub.sh
-    if [[ ("$Install_SSL" == "y" || "$Install_SSL" == "Y" || "$Install_SSL" == "yes" || "$Install_SSL" == "Yes" || "$Install_SSL" == "YES") ]]; then
-      cd $HOME/extra
-      source web_without_sub_ssl.sh
-    fi
-fi
+cd $HOME/extra
+source nginxcreate.sh
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
