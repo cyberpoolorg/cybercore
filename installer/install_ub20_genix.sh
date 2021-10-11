@@ -95,7 +95,7 @@ message_box "Genix Coin CyberCore Installer" \
 
 dialog --title "Using Domain Name" \
 --yesno "\n\nAre You Using A Domain Name? Example: example.com ?
-Make Sure The DNS Is Updated!\n\n" 7 60
+\n\nMake Sure The DNS Is Updated!\n\n" 7 60
 response=$?
 case $response in
    0) Using_Domain=yes;;
@@ -107,7 +107,7 @@ if [[ ("$Using_Domain" == "yes") ]]; then
 
 dialog --title "Using Sub-Domain" \
 --yesno "\n\nAre You Using A Sub-Domain For The Main Website Domain? Example: pool.cyberpool.org ?
-Make Sure The DNS Is Updated!\n\n" 7 60
+\n\nMake Sure The DNS Is Updated!\n\n" 7 60
 response=$?
 case $response in
    0) Using_Sub_Domain=yes;;
