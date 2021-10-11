@@ -7,12 +7,6 @@
 source /etc/functions.sh
 source /etc/web.conf
 
-echo
-echo
-echo -e "GREEN=> Generating Nginx Configs...$COL_RESET"
-echo 
-sleep 3
-
 if [[ ("$Using_Sub_Domain" == "y" || "$Using_Sub_Domain" == "Y" || "$Using_Sub_Domain" == "yes" || "$Using_Sub_Domain" == "Yes" || "$Using_Sub_Domain" == "YES") ]]; then
   cd $HOME/extra
   source subdomain.sh
@@ -28,6 +22,5 @@ if [[ ("$Using_Sub_Domain" == "y" || "$Using_Sub_Domain" == "Y" || "$Using_Sub_D
       source domain_ssl.sh
     fi
 fi
-echo -e "$GREEN=> Done...$COL_RESET"
 
 cd $HOME/

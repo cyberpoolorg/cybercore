@@ -7,12 +7,6 @@
 source /etc/functions.sh
 source /etc/web.conf
 
-echo
-echo
-echo -e "$CYAN=> Generating Certbot Request For ${Domain_Name}...$COL_RESET"
-echo
-sleep 3
-
 sudo mkdir -p /var/www/${Domain_Name}/html
 sudo rm -rf /etc/nginx/sites-available/${Domain_Name}
 sudo rm -rf /etc/nginx/sites-enabled/${Domain_Name}
@@ -29,14 +23,14 @@ limit_req zone=req_limit_per_ip burst=80 nodelay;
 limit_req_zone $binary_remote_addr zone=req_limit_per_ip:40m rate=5r/s;
 
 server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+
+	server_name '"${Domain_Name}"';
 
 	root "/var/www/'"${Domain_Name}"'/html";
 
 	index index.html index.htm index.php;
-
-	server_name '"${Domain_Name}"';
 
 	location / {
 		try_files $uri $uri/ =404;
@@ -64,4 +58,5 @@ server {
 sudo ln -s /etc/nginx/sites-available/${Domain_Name} /etc/nginx/sites-enabled/${Domain_Name}
 
 sudo systemctl restart nginx
+
 cd $HOME/extra
