@@ -516,7 +516,7 @@ echo '{
 		"apiLogFile": "api.log",
 		"logBaseDirectory": "'"$HOME/logs/"'",
 		"perPoolLogFile": true
-	,
+	},
 	"banning": {
 		"manager": "integrated",
 		"banOnJunkReceive": false,
@@ -561,9 +561,6 @@ echo '{
 		"enabled": true,
 		"listenAddress": "0.0.0.0",
 		"port": 4000,
-		"adminPort": 5000,
-		"metricsIpWhitelist": [""],
-		"adminIpWhitelist": [""],
 		"rateLimiting": {
 			"disabled": true,
 			"rules": [{
@@ -571,7 +568,6 @@ echo '{
 				"Period": "1s",
 				"Limit": 25
 			}],
-			"ipWhitelist": [""]
 		}
 	},
 	"nicehash": {
