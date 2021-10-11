@@ -212,8 +212,6 @@ fi
 apt_install nginx
 hide_output sudo systemctl start nginx.service
 hide_output sudo systemctl enable nginx.service
-hide_output sudo systemctl start cron.service
-hide_output sudo systemctl enable cron.service
 sudo systemctl status nginx | sed -n "1,3p"
 sleep 2
 echo
@@ -636,7 +634,11 @@ echo
 sleep 3
 
 echo '#!/bin/bash
-sudo certbot certonly --standalone --non-interactive -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
+hide_output sudo systemctl stop nginx.service
+sleep 2
+sudo certbot certonly --standalone --non-interactive --webroot -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
+sleep 2
+hide_output sudo systemctl start nginx.service
 ' | sudo -E tee $HOME/ssl.sh >/dev/null 2>&1
 sudo chmod -R +x $HOME/ssl.sh
 sleep 2
