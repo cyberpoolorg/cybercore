@@ -329,6 +329,8 @@ cd $HOME/cybercore/src/Cybercore
 hide_output dotnet publish -c Release --framework net5.0  -o ../../../poolcore
 cd $HOME/cybercore
 hide_output mv examples $HOME/poolcore/
+cd ~
+mkdir -p $HOME/poolcore/start
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
