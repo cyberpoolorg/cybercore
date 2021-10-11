@@ -636,11 +636,10 @@ echo -e "$CYAN=> Creating SSL Certificate If Needed...$COL_RESET"
 echo
 sleep 3
 
-cd $HOME/cybercore/
-hide_output mv extra $HOME/
-sudo chmod -R +x $HOME/extra/
-cd $HOME/
-hide_output bash $HOME/extra/sslcreate.sh
+if [[ ("$Install_SSL" == "yes") ]];
+	then bash $HOME/ssl.sh
+fi
+else
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -652,6 +651,9 @@ echo -e "$CYAN=> Building Web File Structure And Copying Files...$COL_RESET"
 echo
 sleep 3
 
+cd $HOME/cybercore/
+hide_output mv extra $HOME/
+sudo chmod -R +x $HOME/extra/
 cd $HOME/extra
 source nginxcreate.sh
 sleep 2
