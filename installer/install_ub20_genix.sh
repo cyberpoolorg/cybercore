@@ -132,15 +132,15 @@ Using_Sub_Domain=no
 Install_SSL=no
 fi
 
-if [ -z "${Letsencrypt_Email:-}" ]; then
-DEFAULT_Letsencrypt_Email=ssl@gmail.com
-input_box "Letsencrypt Email" \
-"Enter An Email Address For Letsencrypt (Only When Choosed SSL before).
-\n\nLetsencrypt Email:" \
-$DEFAULT_Letsencrypt_Email \
-Letsencrypt_Email
+if [ -z "${Support_Email:-}" ]; then
+DEFAULT_Support_Email=support@gmail.com
+input_box "Support Email" \
+"Enter An Email Address For Support and Letsencrypt.
+\n\nSupport Email:" \
+${DEFAULT_Support_Email} \
+Support_Email
 
-if [ -z "$Letsencrypt_Email" ]; then
+if [ -z "${Support_Email}" ]; then
 # user hit ESC/cancel
 exit
 fi
@@ -150,7 +150,7 @@ echo 'Using_Domain='"${Using_Domain}"'
 Using_Sub_Domain='"${Using_Sub_Domain}"'
 Domain_Name='"${Domain_Name}"'
 Install_SSL='"${Install_SSL}"'
-Letsencrypt_Email='"${Letsencrypt_Email}"'
+Support_Email='"${Support_Email}"'
 ' | sudo -E tee /etc/web.conf >/dev/null 2>&1
 
 
@@ -511,7 +511,7 @@ echo '{
 			"port": 587,
 			"user": "user",
 			"password": "password",
-			"fromAddress": "info@yourpool.org",
+			"fromAddress": "'"${Supprt_Email}"'",
 			"fromName": "pool support"
 		},
 		"pushover": {
@@ -521,7 +521,7 @@ echo '{
 		},
 		"admin": {
 			"enabled": false,
-			"emailAddress": "user@example.com",
+			"emailAddress": "'"${Supprt_Email}"'",
 			"notifyBlockFound": true
 		}
 	},
@@ -629,18 +629,22 @@ sleep 3
 
 echo
 echo
-echo -e "$CYAN=> Creating Bash File For Letsencrypt...$COL_RESET"
+echo -e "$CYAN=> Creating Bash File For Letsencrypt If Needed...$COL_RESET"
 echo
 sleep 3
 
+if [[ ("$Install_SSL" == "yes") ]]; then
 echo '#!/bin/bash
-hide_output sudo systemctl stop nginx.service
+sudo systemctl stop nginx.service
 sleep 2
-sudo certbot certonly --standalone --non-interactive --webroot -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
+sudo certbot certonly --standalone --non-interactive -d '"${Domain_Name}"' --staple-ocsp -m '"${Support_Email}"' --agree-tos --force-renewal
 sleep 2
-hide_output sudo systemctl start nginx.service
+sudo systemctl start nginx.service
 ' | sudo -E tee $HOME/ssl.sh >/dev/null 2>&1
 sudo chmod -R +x $HOME/ssl.sh
+else
+echo -e "$GREEN=> SSL Not Choosed...$COL_RESET"
+fi
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -652,11 +656,10 @@ echo -e "$CYAN=> Creating SSL Certificate If Needed...$COL_RESET"
 echo
 sleep 3
 
-if [[ ("$Install_SSL" == "yes") ]];
-	then
-	bash $HOME/ssl.sh
-	else
-	echo -e "$GREEN=> SSL Not Needed...$COL_RESET"
+if [[ ("$Install_SSL" == "yes") ]]; then
+bash $HOME/ssl.sh
+else
+echo -e "$GREEN=> SSL Not Choosed...$COL_RESET"
 fi
 sleep 2
 echo
