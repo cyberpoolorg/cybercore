@@ -28,7 +28,7 @@ server {
 
 	server_name '"${Domain_Name}"';
 
-	root "/var/www/'"${Domain_Name}"'/html";
+	root /var/www/'"${Domain_Name}"'/html;
 
 	index index.html index.htm index.php;
 
