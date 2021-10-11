@@ -75,9 +75,8 @@ clear
 
 
 message_box "Genix Coin CyberCore Installer" \
-"Thank You for Using This Installer !
-\n\nThis Will Install CyberCore with Genix Coin.
-\n\n
+"\n\nThank You for Using This Installer !
+\n\nThis Will Install CyberCore with Genix Coin and Web Frontend.
 \n\nAfter Answering The Following Questions, Setup Will Be Mostly automated."
 
 dialog --title "Using Domain Name" \
@@ -93,7 +92,7 @@ esac
 if [[ ("$Using_Domain" == "yes") ]]; then
 
 dialog --title "Using Sub-Domain" \
---yesno "Are You Using A Sub-Domain For The Main Website Domain? Example pool.example.com ?
+--yesno "Are You Using A Sub-Domain For The Main Website Domain? Example: pool.cyberpool.org ?
 Make Sure The DNS Is Updated!" 7 60
 response=$?
 case $response in
@@ -103,9 +102,9 @@ case $response in
 esac
 
 if [ -z "${Domain_Name:-}" ]; then
-DEFAULT_Domain_Name=example.com
+DEFAULT_Domain_Name=cyberpool.org
 input_box "Domain Name" \
-"Enter Your Domain Name. If Using A Subdomain Enter The Full Domain As In pool.example.com
+"Enter Your Domain Name. If Using A Subdomain Enter The Full Domain As In pool.cyberpool.org
 \n\nDo Not Add www. To The Domain Name.
 \n\nMake Sure The Domain Is Pointed To This Server Before Continuing !
 \n\nDomain Name:" \
