@@ -6,7 +6,7 @@
 #                                                                               #
 # Program:                                                                      #
 #   Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql  #
-#   Setup Genix Wallet With Config Files                                        #
+#   Setup Genix Wallet With Config Files and Web Frontend With Letsencrypt      #
 #   v2.1 (Update October, 2021)                                                 #
 #                                                                               #
 #################################################################################
@@ -36,7 +36,20 @@ displayErr() {
   exit 1;
 }
 
-function EPHYMERAL_PORT() {
+function DAEMON_PORT() {
+	LPORT=32768;
+	UPORT=60999;
+	while true; do
+		MPORT=$[$LPORT + ($RANDOM % $UPORT)];
+		(echo "" >/dev/tcp/127.0.0.1/${MPORT}) >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo $MPORT;
+			return 0;
+        	fi
+	done
+}
+
+function DAEMONRPC_PORT() {
 	LPORT=32768;
 	UPORT=60999;
 	while true; do
@@ -158,10 +171,10 @@ clear
 
 
 echo
-echo -e "$GREEN******************************************************************************$COL_RESET"
-echo -e "$GREEN* CyberCore Install Script v2.1                                              *$COL_RESET"
-echo -e "$GREEN* Install CyberCore On Ubuntu 20.04 Running Nginx, Dotnet 5.0 And Postgresql *$COL_RESET"
-echo -e "$GREEN******************************************************************************$COL_RESET"
+echo -e "$GREEN********************************************************************$COL_RESET"
+echo -e "$GREEN* CyberCore Install Script v2.1 For Ubuntu 20.04                   *$COL_RESET"
+echo -e "$GREEN* Installing Firewall, Nginx, Postgresql, Dotnet 5.0 and CyberCore *$COL_RESET"
+echo -e "$GREEN********************************************************************$COL_RESET"
 echo
 sleep 3
 
@@ -187,7 +200,6 @@ echo
 echo
 echo -e "$CYAN=> Generate Random Strong Password For Postgresql...$COL_RESET"
 echo
-echo -e "$GREEN=> Password Will Be Displayed At The End Of Installtion...$COL_RESET"
 echo
 sleep 3
 
@@ -375,10 +387,10 @@ clear
 
 
 echo
-echo -e "$GREEN**********************************$COL_RESET"
-echo -e "$GREEN* CyberCore Install Script v2.1  *$COL_RESET"
-echo -e "$GREEN* Install And Setup Genix Wallet *$COL_RESET"
-echo -e "$GREEN**********************************$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
+echo -e "$GREEN* CyberCore Install Script v2.1 For Ubuntu 20.04 *$COL_RESET"
+echo -e "$GREEN* Installing And Setup Genix Wallet              *$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
 echo
 sleep 3
 
@@ -410,7 +422,8 @@ echo -e "$CYAN=> Generating RPC Port, RPC User And RPC Password...$COL_RESET"
 echo
 sleep 3
 
-rpcport=$(EPHYMERAL_PORT)
+port=$(DAEMON_PORT)
+rpcport=$(DAEMONRPC_PORT)
 rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 sleep 2
@@ -432,7 +445,7 @@ rpcthreads=64
 rpcuser='"${rpcuser}"'
 rpcpassword='"${rpcpassword}"'
 rpcport='"${rpcport}"'
-port=43649
+port='"${port}"'
 rpcallowip=127.0.0.1
 rpcbind=0.0.0.0
 ' | sudo -E tee $HOME/.genixcore/genix.conf >/dev/null 2>&1
@@ -446,7 +459,7 @@ echo -e "$CYAN=> Starting Wallet And Open Port...$COL_RESET"
 echo
 sleep 3
 
-hide_output sudo ufw allow 43649
+hide_output sudo ufw allow ${port}
 hide_output genixd -shrinkdebugfile
 sleep 5
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -566,7 +579,7 @@ echo '{
 		"address": "'"${wallet}"'",
 		"rewardRecipients": [{
 			"address": "'"${wallet}"'",
-			"percentage": 0.5
+			"percentage": 1
 		}],
 		"blockTimeInterval": 120,
 		"paymentInterval": 600,
@@ -619,10 +632,10 @@ clear
 
 
 echo
-echo -e "$GREEN**********************************$COL_RESET"
-echo -e "$GREEN* CyberCore Install Script v2.1  *$COL_RESET"
-echo -e "$GREEN* Install And Setup Web And SSL! *$COL_RESET"
-echo -e "$GREEN**********************************$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
+echo -e "$GREEN* CyberCore Install Script v2.1 For Ubuntu 20.04 *$COL_RESET"
+echo -e "$GREEN* Installing And Setup WEB And SSL If Choosed    *$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
 echo
 sleep 3
 
@@ -643,7 +656,7 @@ sudo systemctl start nginx.service
 ' | sudo -E tee $HOME/ssl.sh >/dev/null 2>&1
 sudo chmod -R +x $HOME/ssl.sh
 else
-echo -e "$GREEN=> SSL Not Choosed...$COL_RESET"
+echo -e "$GREEN=> Letsencrypt SSL Not Choosed...$COL_RESET"
 fi
 sleep 2
 echo
@@ -652,14 +665,14 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
-echo -e "$CYAN=> Creating SSL Certificate If Needed...$COL_RESET"
+echo -e "$CYAN=> Creating Letsencrypt SSL Certificate If Choosed...$COL_RESET"
 echo
 sleep 3
 
 if [[ ("$Install_SSL" == "yes") ]]; then
-bash $HOME/ssl.sh
+hide_output bash $HOME/ssl.sh
 else
-echo -e "$GREEN=> SSL Not Choosed...$COL_RESET"
+echo -e "$GREEN=> Letsencrypt SSL Not Choosed...$COL_RESET"
 fi
 sleep 2
 echo
@@ -689,6 +702,7 @@ echo
 sleep 3
 
 cd ~
+hide_output sudo rm -rf ssl.sh
 hide_output sudo rm -rf psql.sh
 hide_output sudo rm -rf cybercore
 hide_output sudo rm -rf functions.sh
@@ -704,10 +718,10 @@ clear
 
 echo
 echo
-echo -e "$GREEN*********************************$COL_RESET"
-echo -e "$GREEN* CyberCore Install Script v2.1 *$COL_RESET"
-echo -e "$GREEN* Finished YaY !!!              *$COL_RESET"
-echo -e "$GREEN*********************************$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
+echo -e "$GREEN* CyberCore Install Script v2.1 For Ubuntu 20.04 *$COL_RESET"
+echo -e "$GREEN*                Finished YaY !!!                *$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
 echo 
 echo
 echo -e "$CYAN WoW That Was Fun, Just Some Reminders$COL_RESET"
@@ -728,8 +742,8 @@ echo -e "$CYAN Pool Sample File With Credentials In $HOME/poolcore/config.json $
 echo -e "$CYAN To Start Cybercore Run : $HOME/poolcore/dotnet Cybercore.dll -c config.json $COL_RESET"
 echo
 echo
-echo -e "$GREEN****************************************************$COL_RESET"
-echo -e "$GREEN* YOU MUST REBOOT NOW TO FINALIZE INSTALLATION !!! *$COL_RESET"
-echo -e "$GREEN****************************************************$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
+echo -e "$GREEN*        YOUR INSTALLATION IS FINISHED !!        *$COL_RESET"
+echo -e "$GREEN**************************************************$COL_RESET"
 echo
 echo
