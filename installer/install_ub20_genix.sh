@@ -65,7 +65,7 @@ sleep 3
 
 hide_output sudo apt -y update 
 hide_output sudo apt -y upgrade
-apt_install dialog python3 python3-pip acl nano git apt-transport-https
+apt_install dialog acl nano git apt-transport-https
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -147,8 +147,7 @@ exit
 fi
 fi
 
-echo 'PRIMARY_HOSTNAME='"${Domain_Name}"'
-Using_Domain='"${Using_Domain}"'
+echo 'Using_Domain='"${Using_Domain}"'
 Using_Sub_Domain='"${Using_Sub_Domain}"'
 Domain_Name='"${Domain_Name}"'
 Install_SSL='"${Install_SSL}"'
@@ -452,7 +451,7 @@ sleep 3
 
 hide_output sudo ufw allow 43649
 hide_output genixd -shrinkdebugfile
-sleep 2
+sleep 5
 echo -e "$GREEN=> Done...$COL_RESET"
 
 
@@ -631,15 +630,29 @@ sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
 
+
 echo
 echo
-echo -e "$CYAN=> Building Web File Structure And Copying Files...$COL_RESET"
+echo -e "$CYAN=> Creating SSL Certificate If Needed...$COL_RESET"
 echo
 sleep 3
 
 cd $HOME/cybercore/
 hide_output mv extra $HOME/
 sudo chmod -R +x $HOME/extra/
+cd $HOME/
+hide_output bash $HOME/extra/sslcreate.sh
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Building Web File Structure And Copying Files...$COL_RESET"
+echo
+sleep 3
+
 cd $HOME/extra
 source nginxcreate.sh
 sleep 2
