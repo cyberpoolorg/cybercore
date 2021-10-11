@@ -61,7 +61,6 @@ function restart_service {
 		hide_output sudo service $1 restart
 }
 
-## Dialog Functions ##
 function message_box {
 		dialog --title "$1" --msgbox "$2" 0 0
 }

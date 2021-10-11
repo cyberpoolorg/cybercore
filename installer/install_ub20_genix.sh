@@ -95,7 +95,7 @@ message_box "Genix Coin CyberCore Installer" \
 
 dialog --title "Using Domain Name" \
 --yesno "\n\nAre You Using A Domain Name? Example: example.com ?
-\n\nMake Sure The DNS Is Updated!\n\n" 7 60
+\n\nMake Sure The DNS Is Updated!\n\n" 0 0
 response=$?
 case $response in
    0) Using_Domain=yes;;
@@ -107,7 +107,7 @@ if [[ ("$Using_Domain" == "yes") ]]; then
 
 dialog --title "Using Sub-Domain" \
 --yesno "\n\nAre You Using A Sub-Domain For The Main Website Domain? Example: pool.cyberpool.org ?
-\n\nMake Sure The DNS Is Updated!\n\n" 7 60
+\n\nMake Sure The DNS Is Updated!\n\n" 0 0
 response=$?
 case $response in
    0) Using_Sub_Domain=yes;;
@@ -131,17 +131,33 @@ exit
 fi
 fi
 
+
 dialog --title "Install SSL" \
---yesno "\n\nWould You Like The System To Install SSL Automatically?\n\n" 7 60
+--yesno "\n\nWould You Like The System To Install SSL Automatically?\n\n" 0 0
 response=$?
 case $response in
    0) Install_SSL=yes;;
    1) Install_SSL=no;;
    255) echo "[ESC] key pressed.";;
 esac
+
 else
 
-Domain_Name=$(get_publicip_from_web_service 4 || get_default_privateip 4)
+if [ -z "${VPS_IP:-}" ]; then
+DEFAULT_VPS_IP=0.0.0.0
+input_box "VPS IP Address" \
+"Enter The Public IP Address Of This VPS, As Given To You By Your VPS Provider.
+\n\nVPS IP Address:" \
+${DEFAULT_VPS_IP:-} \
+VPS_IP
+
+if [ -z "$VPS_IP" ]; then
+# user hit ESC/cancel
+exit
+fi
+fi
+
+Domain_Name=${VPS_IP}
 Using_Sub_Domain=no
 Install_SSL=no
 fi
