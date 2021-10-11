@@ -90,11 +90,12 @@ clear
 message_box "Genix Coin CyberCore Installer" \
 "\n\nThank You for Using This Installer !
 \n\nThis Will Install CyberCore with Genix Coin and Web Frontend.
-\n\nAfter Answering The Following Questions, Setup Will Be Mostly automated."
+\n\nAfter Answering The Following Questions, Setup Will Be Mostly automated.
+\n\n"
 
 dialog --title "Using Domain Name" \
---yesno "Are You Using A Domain Name? Example: example.com ?
-Make Sure The DNS Is Updated!" 7 60
+--yesno "\n\nAre You Using A Domain Name? Example: example.com ?
+Make Sure The DNS Is Updated!\n\n" 7 60
 response=$?
 case $response in
    0) Using_Domain=yes;;
@@ -105,8 +106,8 @@ esac
 if [[ ("$Using_Domain" == "yes") ]]; then
 
 dialog --title "Using Sub-Domain" \
---yesno "Are You Using A Sub-Domain For The Main Website Domain? Example: pool.cyberpool.org ?
-Make Sure The DNS Is Updated!" 7 60
+--yesno "\n\nAre You Using A Sub-Domain For The Main Website Domain? Example: pool.cyberpool.org ?
+Make Sure The DNS Is Updated!\n\n" 7 60
 response=$?
 case $response in
    0) Using_Sub_Domain=yes;;
@@ -117,7 +118,7 @@ esac
 if [ -z "${Domain_Name:-}" ]; then
 DEFAULT_Domain_Name=cyberpool.org
 input_box "Domain Name" \
-"Enter Your Domain Name. If Using A Subdomain Enter The Full Domain As In pool.cyberpool.org
+"\n\nEnter Your Domain Name. If Using A Subdomain Enter The Full Domain As In pool.cyberpool.org
 \n\nDo Not Add www. To The Domain Name.
 \n\nMake Sure The Domain Is Pointed To This Server Before Continuing !
 \n\nDomain Name:" \
@@ -131,7 +132,7 @@ fi
 fi
 
 dialog --title "Install SSL" \
---yesno "Would You Like The System To Install SSL Automatically?" 7 60
+--yesno "\n\nWould You Like The System To Install SSL Automatically?\n\n" 7 60
 response=$?
 case $response in
    0) Install_SSL=yes;;
@@ -148,7 +149,7 @@ fi
 if [ -z "${Support_Email:-}" ]; then
 DEFAULT_Support_Email=support@gmail.com
 input_box "Support Email" \
-"Enter An Email Address For Support and Letsencrypt.
+"\n\nEnter An Email Address For Support and Letsencrypt.
 \n\nSupport Email:" \
 ${DEFAULT_Support_Email} \
 Support_Email
