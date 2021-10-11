@@ -615,6 +615,20 @@ sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
 
+
+sleep 2
+clear
+
+
+echo
+echo -e "$GREEN**********************************$COL_RESET"
+echo -e "$GREEN* CyberCore Install Script v2.1  *$COL_RESET"
+echo -e "$GREEN* Install And Setup Web And SSL! *$COL_RESET"
+echo -e "$GREEN**********************************$COL_RESET"
+echo
+sleep 3
+
+
 echo
 echo
 echo -e "$CYAN=> Creating Bash File For Letsencrypt...$COL_RESET"
@@ -622,7 +636,7 @@ echo
 sleep 3
 
 echo '#!/bin/bash
-sudo certbot certonly --standalone -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
+sudo certbot certonly --standalone --non-interactive -d '"${Domain_Name}"' --staple-ocsp -m '"${Letsencrypt_Email}"' --agree-tos --force-renewal
 ' | sudo -E tee $HOME/ssl.sh >/dev/null 2>&1
 sudo chmod -R +x $HOME/ssl.sh
 sleep 2
@@ -637,9 +651,11 @@ echo
 sleep 3
 
 if [[ ("$Install_SSL" == "yes") ]];
-	then bash $HOME/ssl.sh
+	then
+	bash $HOME/ssl.sh
+	else
+	echo -e "$GREEN=> SSL Not Needed...$COL_RESET"
 fi
-else
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
