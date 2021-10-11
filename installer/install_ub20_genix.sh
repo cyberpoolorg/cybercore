@@ -225,6 +225,8 @@ fi
 apt_install nginx
 hide_output sudo systemctl start nginx.service
 hide_output sudo systemctl enable nginx.service
+hide_output sudo systemctl start cron.service
+hide_output sudo systemctl enable cron.service
 sudo systemctl status nginx | sed -n "1,3p"
 sleep 2
 echo
@@ -698,16 +700,99 @@ echo -e "$GREEN=> Done...$COL_RESET"
 
 echo
 echo
+echo -e "$CYAN=> Creating CyberCore Startup Script...$COL_RESET"
+echo
+sleep 3
+
+echo '#!/bin/bash
+
+#############################################################
+#  Author: CyberPool                                        #
+#                                                           #
+#                                                           #
+#  Program: CyberCore Screen Startup Script                 #
+#                                                           #
+#  BTC Donation: 1H8Ze41raYGXYAiLAEiN12vmGH34A7cuua         #
+#  LTC Donation: LSE19SHK3DMxFVyk35rhTFaw7vr1f8zLkT         #
+#  ETH Donation: 0x52FdE416C1D51525aEA390E39CfD5016dAFC01F7 #
+#                                                           #
+#############################################################
+
+cd $HOME/poolcore
+screen -dmS cybercore dotnet Cybercore.dll -c config.json
+' | sudo -E tee $HOME/poolcore/start/cybercore_start.sh >/dev/null 2>&1
+sudo chmod -R +x $HOME/poolcore/start/cybercore_start.sh
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Creating Wallets Startup Script...$COL_RESET"
+echo
+sleep 3
+
+echo '#!/bin/bash
+
+#############################################################
+#  Author: CyberPool                                        #
+#                                                           #
+#                                                           #
+#  Program: Wallets Startup Script                          #
+#                                                           #
+#  BTC Donation: 1H8Ze41raYGXYAiLAEiN12vmGH34A7cuua         #
+#  LTC Donation: LSE19SHK3DMxFVyk35rhTFaw7vr1f8zLkT         #
+#  ETH Donation: 0x52FdE416C1D51525aEA390E39CfD5016dAFC01F7 #
+#                                                           #
+#############################################################
+
+genixd -shrinkdebugfile
+' | sudo -E tee $HOME/poolcore/start/wallets_start.sh >/dev/null 2>&1
+sudo chmod -R +x $HOME/poolcore/start/wallets_start.sh
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
+echo -e "$CYAN=> Installing CyberCore And Wallets to Crontab...$COL_RESET"
+echo
+sleep 3
+
+(crontab -l 2>/dev/null; echo "@reboot source /etc/functions.sh") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot sleep 10 && $HOME/poolcore/start/wallets_start.sh") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot sleep 20 && $HOME/poolcore/start/cybercore_start.sh") | crontab -
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+
+echo
+echo
 echo -e "$CYAN=> Deleting Temp Files...$COL_RESET"
 echo
 sleep 3
 
 cd ~
+hide_output sudo rm -rf extra
 hide_output sudo rm -rf ssl.sh
 hide_output sudo rm -rf psql.sh
 hide_output sudo rm -rf cybercore
 hide_output sudo rm -rf functions.sh
 hide_output sudo rm -rf packages-microsoft-prod.deb
+sleep 2
+echo
+echo -e "$GREEN=> Done...$COL_RESET"
+
+echo
+echo
+echo -e "$CYAN=> Starting CyberCore Server...$COL_RESET"
+echo
+sleep 3
+
+bash $HOME/poolcore/start/cybercore_start.sh
 sleep 2
 echo
 echo -e "$GREEN=> Done...$COL_RESET"
@@ -732,6 +817,7 @@ echo -e "$YELLOW Your Postgresql Database Is $GREEN cybercore$COL_RESET"
 echo -e "$YELLOW Your Postgresql Password Is $GREEN "$password"$COL_RESET"
 echo
 echo -e "$MAGENTA Your Genix Wallet Address Is $GREEN "$wallet"$COL_RESET"
+echo -e "$MAGENTA Your Genix Wallet RPC Port Is $GREEN "$rpcport"$COL_RESET"
 echo -e "$MAGENTA Your Genix Wallet RPC User Is $GREEN "$rpcuser"$COL_RESET"
 echo -e "$MAGENTA Your Genix Wallet RPC Password Is $GREEN "$rpcpassword"$COL_RESET"
 echo
@@ -740,11 +826,25 @@ echo -e "$GREEN We Saved The Genix Wallet Credentials In /etc/genix.conf $COL_RE
 echo
 echo -e "$CYAN Example Config Files Are In $HOME/poolcore/examples/ $COL_RESET"
 echo -e "$CYAN Pool Sample File With Credentials In $HOME/poolcore/config.json $COL_RESET"
-echo -e "$CYAN To Start Cybercore Run : $HOME/poolcore/dotnet Cybercore.dll -c config.json $COL_RESET"
+echo -e "$CYAN To Start Wallets After Reboot Run : bash $HOME/poolcore/start/wallets_start.sh $COL_RESET"
+echo -e "$CYAN To Start Cybercore After Reboot Run : bash $HOME/poolcore/start/cybercore_start.sh $COL_RESET"
+echo
+echo -e "$BLUE POOL WITH SSL https://"$Domain_Name"$COL_RESET"
+echo -e "$BLUE POOL WITHOUT SSL http://"$Domain_Name"$COL_RESET"
 echo
 echo
 echo -e "$GREEN**************************************************$COL_RESET"
 echo -e "$GREEN*        YOUR INSTALLATION IS FINISHED !!        *$COL_RESET"
+echo -e "$GREEN*             CYBERCORE IS RUNNING !             *$COL_RESET"
 echo -e "$GREEN**************************************************$COL_RESET"
+echo
+echo
+echo -e "$GREEN############################################################$COL_RESET"
+echo -e "$GREEN#                                                          #$COL_RESET"
+echo -e "$GREEN# BTC Donation: 1H8Ze41raYGXYAiLAEiN12vmGH34A7cuua         #$COL_RESET"
+echo -e "$GREEN# LTC Donation: LSE19SHK3DMxFVyk35rhTFaw7vr1f8zLkT         #$COL_RESET"
+echo -e "$GREEN# ETH Donation: 0x52FdE416C1D51525aEA390E39CfD5016dAFC01F7 #$COL_RESET"
+echo -e "$GREEN#                                                          #$COL_RESET"
+echo -e "$GREEN############################################################$COL_RESET"
 echo
 echo
