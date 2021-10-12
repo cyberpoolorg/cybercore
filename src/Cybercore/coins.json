@@ -1077,8 +1077,9 @@
         "explorerAccountLink": "https://chainz.cryptoid.info/ltc/address.dws?{0}.htm"
     },
 
-    "litecoin-cash": {
-        "name": "Litecoin Cash",
+    "lcc-sha256": {
+        "name": "LTC Cash Sha256",
+        "canonicalName": "Litecoin Cash",
         "symbol": "LCC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1091,6 +1092,29 @@
             "hash": "reverse",
             "args": [ { "hash": "sha256d" } ]
         },
+        "blockTemplateRpcExtraParams": [ "sha256" ],
+        "explorerBlockLink": "https://chainz.cryptoid.info/lcc/block.dws?$height$.htm",
+        "explorerTxLink": "https://chainz.cryptoid.info/lcc/tx.dws?{0}.htm",
+        "explorerAccountLink": "https://chainz.cryptoid.info/lcc/address.dws?{0}.htm"
+    },
+
+    "lcc-minotaurx": {
+        "name": "LTC Cash MinotaurX",
+        "canonicalName": "Litecoin Cash",
+        "symbol": "LCC",
+        "family": "bitcoin",
+        "coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "minotaurx"
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "sha256d" } ]
+        },
+        "shareMultiplier": 4096,
+        "blockTemplateRpcExtraParams": [ "minotaurx" ],
         "explorerBlockLink": "https://chainz.cryptoid.info/lcc/block.dws?$height$.htm",
         "explorerTxLink": "https://chainz.cryptoid.info/lcc/tx.dws?{0}.htm",
         "explorerAccountLink": "https://chainz.cryptoid.info/lcc/address.dws?{0}.htm"
