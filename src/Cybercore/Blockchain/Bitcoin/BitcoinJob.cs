@@ -451,7 +451,7 @@ namespace Cybercore.Blockchain.Bitcoin
                         var payeeDestination = BitcoinUtils.AddressToDestination(masterNode.Payee, network);
                         var payeeReward = masterNode.Amount;
 
-			if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC"))
+			if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
 			{
 				reward -= payeeReward;
 				rewardToPool -= payeeReward;
@@ -481,7 +481,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 var payeeAddress = BitcoinUtils.AddressToDestination(masterNodeParameters.Payee, network);
                 var payeeReward = masterNodeParameters.PayeeAmount;
 
-                if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC"))
+                if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
 		{
 			reward -= payeeReward;
                         rewardToPool -= payeeReward;
