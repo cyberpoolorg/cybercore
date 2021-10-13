@@ -60,7 +60,7 @@ namespace Cybercore.Mining
             this.clusterConfig = clusterConfig;
 
             updateInterval = TimeSpan.FromSeconds(clusterConfig.Statistics?.UpdateInterval ?? 60);
-            gcInterval = TimeSpan.FromMinutes(clusterConfig.Statistics?.GcInterval ?? 15);
+            gcInterval = TimeSpan.FromMinutes(clusterConfig.Statistics?.GcInterval ?? 1);
             hashrateCalculationWindow = TimeSpan.FromMinutes(clusterConfig.Statistics?.HashrateCalculationWindow ?? 5);
             cleanupDays = TimeSpan.FromDays(clusterConfig.Statistics?.CleanupDays ?? 180);
 
@@ -157,19 +157,26 @@ namespace Cybercore.Mining
                     var poolHashesAccumulated = result.Sum(x => x.Sum);
                     var poolHashesCountAccumulated = result.Sum(x => x.Count);
                     var poolHashrate = pool.HashrateFromShares(poolHashesAccumulated, poolHashTimeFrame) * HashrateBoostFactor;
+		    logger.Info(() => $"[{poolId}] Pool Hashrate Normal {poolHashrate}");
 
-                    poolHashrate = Math.Floor(poolHashrate);
+                    poolHashrate = Math.Round(poolHashrate, 8);
 
 		    if(poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
 		    {
 			poolHashrate *= 11.2;
 		    }
                         
-		    if(poolId == "rng" || poolId == "lccm" || poolId == "lccms")
+		    if(poolId == "rng")
 		    {
 			poolHashrate *= 2850;
 		    }
-                        
+
+		    if(poolId == "lccm" || poolId == "lccms")
+		    {
+			poolHashrate *= 1100000;
+		        logger.Info(() => $"[{poolId}] Pool Hashrate Adjusted {poolHashrate}");
+		    }
+
 		    if(poolId == "sugar")
 		    {
 			poolHashrate *= 58.5;
@@ -262,7 +269,8 @@ namespace Cybercore.Mining
 
                             var minerHashrate = pool.HashrateFromShares(item.Sum, minerHashTimeFrame) * HashrateBoostFactor;
 
-                            minerHashrate = Math.Floor(minerHashrate);
+                            minerHashrate = Math.Round(minerHashrate, 8);
+			    logger.Info(() => $"[{poolId}] Miner Hashrate Normal {minerHashrate}");
 
 			    if(poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
 			    {
@@ -273,7 +281,13 @@ namespace Cybercore.Mining
 			    {
 				minerHashrate *= 2850;
 			    }
-                                
+
+			    if(poolId == "lccm" || poolId == "lccms")
+			    {
+				minerHashrate *= 400;
+				logger.Info(() => $"[{poolId}] Miner Hashrate Adjusted {minerHashrate}");
+			    }
+
 			    if(poolId == "sugar")
 			    {
 				minerHashrate *= 58.5;
