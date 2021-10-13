@@ -184,7 +184,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 submitcount+=1;
 
-		logger.Info(() => $"[{connection.ConnectionId}] Total Shares:{submitcount} Share accepted: D={Math.Round(share.Difficulty * coin.ShareMultiplier, 3)}");
+		logger.Info(() => $"[{connection.ConnectionId}] Total Shares:{submitcount} Share accepted: D={Math.Round(share.Difficulty * coin.ShareMultiplier, 8)}");
 
                 if(share.IsBlockCandidate)
                     poolStats.LastPoolBlockTime = clock.Now;

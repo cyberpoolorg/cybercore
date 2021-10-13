@@ -165,7 +165,7 @@ namespace Cybercore.Mining
 			poolHashrate *= 11.2;
 		    }
                         
-		    if(poolId == "rng")
+		    if(poolId == "rng" || poolId == "lccm" || poolId == "lccms")
 		    {
 			poolHashrate *= 2850;
 		    }
@@ -269,7 +269,7 @@ namespace Cybercore.Mining
 				minerHashrate *= 11.2;
 			    }
                                 
-			    if(poolId == "rng")
+			    if(poolId == "rng" || poolId == "lccm" || poolId == "lccms")
 			    {
 				minerHashrate *= 2850;
 			    }

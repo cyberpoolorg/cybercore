@@ -178,7 +178,7 @@ namespace Cybercore.Mining
 
                 if(newDiff != null)
                 {
-                    logger.Info(() => $"[{connection.ConnectionId}] VarDiff update to {Math.Round(newDiff.Value, 3)}");
+                    logger.Info(() => $"[{connection.ConnectionId}] VarDiff update to {Math.Round(newDiff.Value, 8)}");
 
                     await OnVarDiffUpdateAsync(connection, newDiff.Value);
                 }
