@@ -726,6 +726,37 @@
         "explorerAccountLink": "https://chainz.cryptoid.info/ftc/address.dws?{0}.htm"
     },
 
+    "fireants": {
+        "name": "Fireants",
+        "symbol": "ANTS",
+        "family": "bitcoin",
+        "coinbaseHasher": {
+            "hash": "sha256d"
+        },
+        "headerHasher": {
+            "hash": "scrypt",
+            "args": [ 1024, 1 ]
+        },
+        "blockHasher": {
+            "hash": "reverse",
+            "args": [ { "hash": "sha256d" } ]
+        },
+        "posBlockHasher": {
+            "hash": "reverse",
+            "args": [
+                {
+                    "hash": "scrypt",
+                    "args": [ 1024, 1 ]
+                }
+            ]
+        },
+        "shareMultiplier": 65536,
+        "coinbaseMinConfimations": 21,
+        "explorerBlockLink": "https://explorer.fireants.online/block/$height$",
+        "explorerTxLink": "https://explorer.fireants.online/tx/{0}",
+        "explorerAccountLink": "https://explorer.fireants.online/address/{0}"
+    },
+
     "flapx": {
         "name": "Flapx Coin",
         "symbol": "FLAPX",
