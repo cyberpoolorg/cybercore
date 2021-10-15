@@ -80,7 +80,7 @@
             "hash": "reverse",
             "args": [ { "hash": "sha256d" } ]
         },
-        "blockTemplateRpcExtraParams": [ "sha256" ],
+        "blockTemplateRpcExtraParams": [ "sha256d" ],
         "explorerBlockLink": "http://insight.auroracoin.is/block/$hash$",
         "explorerTxLink": "http://insight.auroracoin.is/tx/{0}",
         "explorerAccountLink": "http://insight.auroracoin.is/address/{0}"
@@ -485,7 +485,7 @@
             "hash": "reverse",
             "args": [ { "hash": "sha256d" } ]
         },
-        "blockTemplateRpcExtraParams": [ "sha256" ],
+        "blockTemplateRpcExtraParams": [ "sha256d" ],
         "explorerBlockLink": "https://digiexplorer.info/block/$height$",
         "explorerTxLink": "https://digiexplorer.info/tx/{0}",
         "explorerAccountLink": "https://digiexplorer.info/address/{0}"
