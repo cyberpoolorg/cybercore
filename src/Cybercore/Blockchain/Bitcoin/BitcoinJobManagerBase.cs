@@ -56,6 +56,7 @@ namespace Cybercore.Blockchain.Bitcoin
         protected DateTime? lastJobRebroadcast;
         protected bool hasSubmitBlockMethod;
         protected bool isPoS;
+        protected bool newDifficulty;
         protected TimeSpan jobRebroadcastTimeout;
         protected Network network;
         protected IDestination poolAddressDestination;
@@ -461,7 +462,7 @@ namespace Cybercore.Blockchain.Bitcoin
             var validateAddressResponse = results[0].Error == null ? results[0].Response.ToObject<ValidateAddressResponse>() : null;
             var submitBlockResponse = results[1];
             var blockchainInfoResponse = !hasLegacyDaemon ? results[2].Response.ToObject<BlockchainInfo>() : null;
-            var daemonInfoResponse = hasLegacyDaemon ? results[2].Response.ToObject<DaemonInfo>() : null;
+            var daemonInfoResponse = !hasLegacyDaemon ? results[2].Response.ToObject<DaemonInfo>() : null;
             var difficultyResponse = results[3].Response.ToObject<JToken>();
             var addressInfoResponse = results[4].Error == null ? results[4].Response.ToObject<AddressInfo>() : null;
 
@@ -475,7 +476,9 @@ namespace Cybercore.Blockchain.Bitcoin
             if(validateAddressResponse is not {IsValid: true})
                 logger.ThrowLogPoolStartupException($"Daemon reports pool-address '{poolConfig.Address}' as invalid");
 
-            isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true} || difficultyResponse.Values().Any(x => x.Path == "proof-of-stake");
+            newDifficulty = difficultyResponse.Values().Any(x => x.Path == "proof-of-work");
+
+            isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true};
 
             if(!isPoS || !poolConfig.UseP2PK)
             {
