@@ -478,7 +478,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             newDifficulty = difficultyResponse.Values().Any(x => x.Path == "proof-of-work");
 
-            isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true};
+            isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true} || difficultyResponse.Values().Any(x => x.Path == "proof-of-stake");
 
             if(!isPoS || !poolConfig.UseP2PK)
             {
@@ -496,7 +496,7 @@ namespace Cybercore.Blockchain.Bitcoin
             }
 
             BlockchainStats.NetworkType = network.Name;
-            BlockchainStats.RewardType = isPoS ? "POS" : "POW";
+            BlockchainStats.RewardType = isPoS ? "POW/POS" : "POW";
 
             if(submitBlockResponse.Error?.Message?.ToLower() == "method not found")
                 hasSubmitBlockMethod = false;
