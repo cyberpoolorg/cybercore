@@ -496,7 +496,7 @@ namespace Cybercore.Blockchain.Bitcoin
             }
 
             BlockchainStats.NetworkType = network.Name;
-            BlockchainStats.RewardType = isPoS ? "POW/POS" : "POW";
+            BlockchainStats.RewardType = isPoS ? "POW / POS" : "POW";
 
             if(submitBlockResponse.Error?.Message?.ToLower() == "method not found")
                 hasSubmitBlockMethod = false;
