@@ -94,6 +94,7 @@ namespace Cybercore.Blockchain.Bitcoin
         public const string SubmitBlock = "submitblock";
         public const string GetBlockchainInfo = "getblockchaininfo";
         public const string GetBlock = "getblock";
+        public const string GetBlockHash = "getblockhash";
         public const string GetTransaction = "gettransaction";
         public const string SendMany = "sendmany";
         public const string WalletPassphrase = "walletpassphrase";
