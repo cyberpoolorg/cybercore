@@ -39,7 +39,7 @@
 
     <ItemGroup>
         <PackageReference Include="AspNetCoreRateLimit" Version="4.0.1" />
-        <PackageReference Include="Autofac" Version="6.2.0" />
+        <PackageReference Include="Autofac" Version="6.3.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="Dapper" Version="2.0.90" />
@@ -60,7 +60,7 @@
         <PackageReference Include="NLog" Version="4.7.11" />
         <PackageReference Include="NLog.Extensions.Hosting" Version="1.7.4" />
         <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
-        <PackageReference Include="Npgsql" Version="5.0.7" />
+        <PackageReference Include="Npgsql" Version="5.0.10" />
         <PackageReference Include="Polly" Version="7.2.2" />
         <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.1" />
         <PackageReference Include="prometheus-net" Version="5.0.1" />
