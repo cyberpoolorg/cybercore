@@ -325,11 +325,11 @@ namespace Cybercore.Blockchain.Ethereum
                         break;
 
                     case EthereumStratumMethods.ExtraNonceSubscribe:
-                        await client.RespondErrorAsync(StratumError.Other, "not supported", request.Id, false);
+                        await client.RespondAsync(true, request.Id);
                         break;
 
                     default:
-                        logger.Debug(() => $"[{client.ConnectionId}] Unsupported RPC request: {JsonConvert.SerializeObject(request, serializerSettings)}");
+                        logger.Info(() => $"[{client.ConnectionId}] Unsupported RPC request: {JsonConvert.SerializeObject(request, serializerSettings)}");
 
                         await client.RespondErrorAsync(StratumError.Other, $"Unsupported request {request.Method}", request.Id);
                         break;
