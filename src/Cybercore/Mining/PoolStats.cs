@@ -9,6 +9,6 @@ namespace Cybercore.Mining
         public int ConnectedWorkers { get; set; }
         public ulong PoolHashrate { get; set; }
         public double SharesPerSecond { get; set; }
-        public double RoundShares { get; set; }
+        public double SharesDiff { get; set; }
     }
 }
