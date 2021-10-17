@@ -186,7 +186,7 @@ namespace Cybercore.Mining
                     pool.PoolStats.ConnectedWorkers = workerCount;
                     pool.PoolStats.PoolHashrate = (ulong) poolHashrate;
                     pool.PoolStats.SharesPerSecond = (double) (poolHashesCountAccumulated / poolHashTimeFrame);
-                    pool.PoolStats.SharesDiff = (double) poolShares;
+                    pool.PoolStats.RoundShares = (double) poolShares;
 
 		    messageBus.NotifyHashrateUpdated(pool.Config.Id, poolHashrate);
 
@@ -196,7 +196,7 @@ namespace Cybercore.Mining
                     pool.PoolStats.ConnectedWorkers = 0;
                     pool.PoolStats.PoolHashrate = 0;
                     pool.PoolStats.SharesPerSecond = 0;
-                    pool.PoolStats.SharesDiff = 0;
+                    pool.PoolStats.RoundShares = 0;
 
                     messageBus.NotifyHashrateUpdated(pool.Config.Id, 0);
 
