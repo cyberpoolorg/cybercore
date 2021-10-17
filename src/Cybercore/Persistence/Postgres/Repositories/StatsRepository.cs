@@ -35,9 +35,9 @@ namespace Cybercore.Persistence.Postgres.Repositories
             var mapped = mapper.Map<Entities.PoolStats>(stats);
 
             const string query = "INSERT INTO poolstats(poolid, connectedminers, connectedworkers, poolhashrate, networkhashrate, " +
-                "networkdifficulty, lastnetworkblocktime, lastpoolblocktime, blockheight, connectedpeers, sharespersecond, roundshares, created) " +
+                "networkdifficulty, lastnetworkblocktime, lastpoolblocktime, blockheight, connectedpeers, sharespersecond, sharesdiff, created) " +
                 "VALUES(@poolid, @connectedminers, @connectedworkers, @poolhashrate, @networkhashrate, @networkdifficulty, " +
-                "@lastnetworkblocktime, @lastpoolblocktime, @blockheight, @connectedpeers, @sharespersecond, @roundshares, @created)";
+                "@lastnetworkblocktime, @lastpoolblocktime, @blockheight, @connectedpeers, @sharespersecond, @sharesdiff, @created)";
 
             await con.ExecuteAsync(query, mapped, tx);
         }
