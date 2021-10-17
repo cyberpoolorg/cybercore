@@ -16,7 +16,7 @@ namespace Cybercore.Persistence.Model
         public long BlockReward { get; set; }
         public int ConnectedPeers { get; set; }
         public double SharesPerSecond { get; set; }
-        public double SharesDiff { get; set; }
+        public double RoundShares { get; set; }
         public DateTime? LastPoolBlockTime { get; set; }
         public DateTime Created { get; set; }
     }
