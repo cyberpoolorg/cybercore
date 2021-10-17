@@ -248,6 +248,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetworkHashps;
                 BlockchainStats.ConnectedPeers = networkInfoResponse.Connections;
+		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
 
                 if(BlockchainStats.NetworkHashrate == 0 && results[2].Error == null)
                     BlockchainStats.NetworkHashrate = results[2].Response.Value<double>();
@@ -359,6 +360,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 BlockchainStats.ConnectedPeers = (int) (long) connectionCountResponse;
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetmHashps *= 1000000;
+		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
             }
 
             catch(Exception e)
