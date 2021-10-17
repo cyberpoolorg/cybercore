@@ -1015,9 +1015,9 @@
         },
         "shareMultiplier": 4096,
         "hasMasterNodes": true,
-        "explorerBlockLink": "http://157.245.248.32:3000/#/block/$hash$",
-        "explorerTxLink": "http://157.245.248.32:3000/#/tx/{0}",
-        "explorerAccountLink": "http://157.245.248.32:3000/#/address/{0}"
+        "explorerBlockLink": "http://167.179.94.237:3001/block/$hash$",
+        "explorerTxLink": "http://167.179.94.237:3001/tx/{0}",
+        "explorerAccountLink": "http://167.179.94.237:3001/address/{0}"
     },
 
     "kryptofranc": {
