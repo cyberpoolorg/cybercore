@@ -1480,7 +1480,6 @@
     "picacoin": {
         "name": "Picacoin",
         "canonicalName": "PicaCoin",
-        "canonicalName": "",
         "symbol": "PIC",
         "family": "bitcoin",
         "coinbaseHasher": {
