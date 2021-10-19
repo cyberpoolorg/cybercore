@@ -1,6 +1,7 @@
 {
     "5gcash": {
 	"name": "5G Cash",
+        "canonicalName": "5G Cash",
         "symbol": "VGC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -26,6 +27,7 @@
 
     "actinium": {
 	"name": "Actinium",
+        "canonicalName": "Actinium",
         "symbol": "ACM",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -46,6 +48,7 @@
 
     "alpscoin": {
 	"name": "Alpenstars",
+        "canonicalName": "Alpenstars",
         "symbol": "ALPS",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -67,7 +70,7 @@
 
     "auroracoin-sha256": {
 	"name": "Auroracoin Sha256",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "AuroraCoin",
         "symbol": "AUR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -88,7 +91,7 @@
 
     "auroracoin-scrypt": {
 	"name": "Auroracoin Scrypt",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "AuroraCoin",
         "symbol": "AUR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -111,7 +114,7 @@
 
     "auroracoin-skein": {
 	"name": "Auroracoin Skein",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "AuroraCoin",
         "symbol": "AUR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -132,7 +135,7 @@
 
     "auroracoin-qubit": {
         "name": "Auroracoin Qubit",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "AuroraCoin",
         "symbol": "AUR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -153,7 +156,7 @@
 
     "auroracoin-groestl": {
         "name": "Auroracoin Groestl",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "AuroraCoin",
         "symbol": "AUR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -175,6 +178,7 @@
 
     "arowanacoin": {
         "name": "Arowanacoin",
+        "canonicalName": "ArowanaCoin",
         "symbol": "ARWN",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -195,6 +199,7 @@
 
     "axe": {
 	"name": "Axe",
+        "canonicalName": "Axe Runner",
         "symbol": "AXE",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -237,6 +242,7 @@
 
     "bitcoin": {
         "name": "Bitcoin",
+        "canonicalName": "Bitcoin",
         "symbol": "BTC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -257,6 +263,7 @@
 
     "bitcoin-atom": {
         "name": "Bitcoin Atom",
+        "canonicalName": "Bitcoin Atom",
         "symbol": "BCA",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -276,6 +283,7 @@
 
     "bitcoin-cash": {
         "name": "Bitcoin Cash",
+        "canonicalName": "Bitcoin Cash",
         "symbol": "BCH",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -295,6 +303,7 @@
 
     "bitcoin-diamond": {
         "name": "Bitcoin Diamond",
+        "canonicalName": "Bitcoin Diamond",
         "symbol": "BCD",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -314,6 +323,7 @@
 
     "bitcoin-sv": {
         "name": "BitcoinSV",
+        "canonicalName": "Bitcoin Satoshi Vision",
         "symbol": "BSV",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -333,6 +343,7 @@
 
     "bitflate": {
         "name": "Bitflate",
+        "canonicalName": "Bitflate",
         "symbol": "BFL",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -352,6 +363,7 @@
 
     "browncoin": {
         "name": "Browncoin",
+        "canonicalName": "BrownCoin",
         "symbol": "BRWN",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -373,6 +385,7 @@
 
     "cannabiscoin": {
         "name": "Cannabiscoin",
+        "canonicalName": "CannabisCoin",
         "symbol": "CANN",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -392,6 +405,7 @@
 
     "combode": {
         "name": "Combode",
+        "canonicalName": "Combode",
         "symbol": "CBE",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -412,6 +426,7 @@
 
     "cpuchain": {
         "name": "CPUchain",
+        "canonicalName": "CPU Chain",
         "symbol": "CPU",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -432,6 +447,7 @@
 
     "dash": {
         "name": "Dash",
+        "canonicalName": "Dash",
         "symbol": "DASH",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -452,6 +468,7 @@
 
     "devault": {
         "name": "DeVault",
+        "canonicalName": "DeVault",
         "symbol": "DVT",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -580,6 +597,7 @@
 
     "dogecoin": {
         "name": "Dogecoin",
+        "canonicalName": "DogeCoin",
         "symbol": "DOGE",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -602,6 +620,7 @@
 
     "ecash": {
         "name": "eCash",
+        "canonicalName": "eCash",
         "symbol": "XEC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -621,6 +640,7 @@
 
     "elicoin": {
         "name": "Elicoin",
+        "canonicalName": "EliCoin",
         "symbol": "ELI",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -641,6 +661,7 @@
 
     "emark": {
         "name": "Deutsche eMark",
+        "canonicalName": "Deutsche eMark",
         "symbol": "DEM",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -662,6 +683,7 @@
 
     "exosis": {
         "name": "Exosis",
+        "canonicalName": "Exosis",
         "symbol": "EXO",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -683,6 +705,7 @@
 
     "fanaticos-cash": {
         "name": "Fanaticos Cash",
+        "canonicalName": "Fanaticos Cash",
         "symbol": "FCH",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -702,6 +725,7 @@
 
     "feathercoin": {
         "name": "Feathercoin",
+        "canonicalName": "FeatherCoin",
         "symbol": "FTC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -727,7 +751,8 @@
     },
 
     "fireants": {
-        "name": "Fireants",
+        "name": "FireAnts",
+        "canonicalName": "FireAnts",
         "symbol": "ANTS",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -759,6 +784,7 @@
 
     "flapx": {
         "name": "Flapx Coin",
+        "canonicalName": "Flapx Coin",
         "symbol": "FLAPX",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -789,6 +815,7 @@
 
     "flo": {
         "name": "Florin",
+        "canonicalName": "Florin",
         "symbol": "FLO",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -846,6 +873,7 @@
 
     "freecash": {
         "name": "Free Cash",
+        "canonicalName": "Free Cash",
         "symbol": "FCH",
          "family": "bitcoin",
          "coinbaseHasher": {
@@ -866,6 +894,7 @@
 
     "geekcash": {
         "name": "Geek Cash",
+        "canonicalName": "Geek Cash",
         "symbol": "GEEK",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -886,6 +915,7 @@
 
     "genix": {
         "name": "Genix",
+        "canonicalName": "Genix",
         "symbol": "GENIX",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -906,6 +936,7 @@
 
     "goldcash": {
         "name": "Gold Cash",
+        "canonicalName": "Gold Cash",
         "symbol": "GOLD",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -926,6 +957,7 @@
 
     "groestlcoin": {
         "name": "Groestlcoin",
+        "canonicalName": "GroestlCoin",
         "symbol": "GRS",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -946,6 +978,7 @@
 
     "help-the-homeless": {
         "name": "Help The Homeless",
+        "canonicalName": "",
         "symbol": "HTH",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -967,6 +1000,7 @@
 
     "hfrcoin": {
         "name": "HFRcoin",
+        "canonicalName": "HFR Coin",
         "symbol": "HFR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -997,6 +1031,7 @@
 
     "indexchain": {
         "name": "IndexChain",
+        "canonicalName": "Index Chain",
         "symbol": "IDX",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1022,6 +1057,7 @@
 
     "kryptofranc": {
         "name": "Kryptofranc",
+        "canonicalName": "Kryptofranc",
         "symbol": "KYF",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1041,6 +1077,7 @@
 
     "lanacoin": {
         "name": "Lanacoin",
+        "canonicalName": "LanaCoin",
         "symbol": "LANA",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1060,6 +1097,7 @@
 
     "levocoin": {
         "name": "Levocoin",
+        "canonicalName": "LevoCoin",
         "symbol": "LEVO",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1080,6 +1118,7 @@
 
     "litecoin": {
         "name": "Litecoin",
+        "canonicalName": "Litecoin",
         "symbol": "LTC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1172,6 +1211,7 @@
 
     "luckybit": {
         "name": "Lucky Bit",
+        "canonicalName": "Lucky Bit",
         "symbol": "LUCKY",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1199,6 +1239,7 @@
 
     "magpiecoin": {
         "name": "MagPie Coin",
+        "canonicalName": "MagPie Coin",
         "symbol": "MGPC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1220,7 +1261,7 @@
 
     "mincoin": {
         "name": "Mincoin",
-        "canonicalName": "Mincoin",
+        "canonicalName": "MinCoin",
         "symbol": "MNC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1242,6 +1283,7 @@
 
     "monacoin": {
         "name": "Monacoin",
+        "canonicalName": "MonaCoin",
         "symbol": "MONA",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1262,6 +1304,7 @@
 
     "mooncoin": {
         "name": "Mooncoin",
+        "canonicalName": "MoonCoin",
         "symbol": "MOON",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1292,6 +1335,7 @@
 
     "namecoin": {
         "name": "Namecoin",
+        "canonicalName": "NameCoin",
         "symbol": "NMC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1311,6 +1355,7 @@
 
     "note-blockchain": {
         "name": "Notecoin",
+        "canonicalName": "Notecoin Blockchain",
         "symbol": "NTBC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1341,6 +1386,7 @@
 
     "opticalbitcoin": {
         "name": "Optical BTC",
+        "canonicalName": "Optical Bitcoin",
         "symbol": "OBTC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1360,6 +1406,7 @@
 
     "paccoin": {
         "name": "Paccoin",
+        "canonicalName": "PacCoin",
         "symbol": "PAC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1380,6 +1427,7 @@
 
     "pakcoin": {
         "name": "Pakcoin",
+        "canonicalName": "PakCoin",
         "symbol": "PAK",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1410,6 +1458,7 @@
 
     "peercoin": {
         "name": "Peercoin",
+        "canonicalName": "PeerCoin",
         "symbol": "PPC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1430,7 +1479,8 @@
 
     "picacoin": {
         "name": "Picacoin",
-        "canonicalName": "Picacoin",
+        "canonicalName": "PicaCoin",
+        "canonicalName": "",
         "symbol": "PIC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1450,6 +1500,7 @@
 
     "profithunters": {
         "name": "Profit Hunters",
+        "canonicalName": "Profit Hunters",
         "symbol": "PHC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1555,6 +1606,7 @@
 
     "raptoreum": {
         "name": "Raptoreum",
+        "canonicalName": "Raptoreum",
         "symbol": "RTM",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1577,6 +1629,7 @@
 
     "ravencoinlite": {
         "name": "Ravencoin Lite",
+        "canonicalName": "Ravencoin Lite",
         "symbol": "RVL",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1597,6 +1650,7 @@
 
     "ring": {
         "name": "Ring",
+        "canonicalName": "RingCoin",
         "symbol": "RNG",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1617,6 +1671,7 @@
 
     "rosecoin": {
         "name": "Rosecoin",
+        "canonicalName": "RoseCoin",
         "symbol": "ROC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1647,6 +1702,7 @@
 
     "shroud": {
         "name": "ShroudX",
+        "canonicalName": "ShroudX",
         "symbol": "SHRX",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1672,6 +1728,7 @@
 
     "sparkspay": {
         "name": "SparksPay",
+        "canonicalName": "SparksPay",
         "symbol": "SPK",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1699,6 +1756,7 @@
 
     "stakecube": {
         "name": "StakeCube",
+        "canonicalName": "StakeCube",
         "symbol": "SCC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1719,6 +1777,7 @@
 
     "sugarchain": {
         "name": "SugarChain",
+        "canonicalName": "SugarChain",
         "symbol": "SUGAR",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1739,6 +1798,7 @@
 
     "swippcoin": {
         "name": "Swipp",
+        "canonicalName": "SwippCoin",
         "symbol": "SWP",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1759,7 +1819,7 @@
 
     "terracoin": {
         "name": "Terracoin",
-        "canonicalName": "Auroracoin",
+        "canonicalName": "TerraCoin",
         "symbol": "TRC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1779,6 +1839,7 @@
 
     "tdcoin": {
         "name": "TDCOIN",
+        "canonicalName": "TD Coin",
         "symbol": "TDC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1798,6 +1859,7 @@
 
     "theholyroger": {
         "name": "The Holy Roger",
+        "canonicalName": "The Holy Roger",
         "symbol": "ROGER",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1828,6 +1890,7 @@
 
     "tidecoin": {
         "name": "Tidecoin",
+        "canonicalName": "TideCoin",
         "symbol": "TDC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1848,6 +1911,7 @@
 
     "titcoin": {
 	"name": "Titcoin",
+        "canonicalName": "TitCoin",
         "symbol": "TIT",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1867,6 +1931,7 @@
 
     "veco": {
         "name": "Veco",
+        "canonicalName": "Veco",
         "symbol": "VECO",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -1888,6 +1953,7 @@
 
     "veles-sha256": {
         "name": "Veles Sha256",
+        "canonicalName": "Veles",
         "symbol": "VLS",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2079,6 +2145,7 @@
 
     "vertcoin": {
         "name": "Vertcoin",
+        "canonicalName": "VertCoin",
         "symbol": "VTC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2099,6 +2166,7 @@
 
     "viacoin": {
         "name": "Viacoin",
+        "canonicalName": "ViaCoin",
         "symbol": "VIA",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2129,6 +2197,7 @@
 
     "voltpotcoin": {
         "name": "Volt Pot Coin",
+        "canonicalName": "Volt Pot Coin",
         "symbol": "VPC",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2159,6 +2228,7 @@
 
     "widecoin": {
         "name": "Widecoin",
+        "canonicalName": "WideCoin",
         "symbol": "WCN",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2178,6 +2248,7 @@
 
     "xazab": {
         "name": "Xazab",
+        "canonicalName": "Xazab",
         "symbol": "XAZAB",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2198,6 +2269,7 @@
 
     "yenten": {
         "name": "Yenten",
+        "canonicalName": "Yenten",
         "symbol": "YTN",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2218,7 +2290,7 @@
 
     "zetacoin": {
         "name": "Zetacoin",
-        "canonicalName": "Zetacoin",
+        "canonicalName": "ZetaCoin",
         "symbol": "ZET",
         "family": "bitcoin",
         "coinbaseHasher": {
@@ -2238,6 +2310,7 @@
 
     "bitcoin-gold": {
         "name": "Bitcoin Gold",
+        "canonicalName": "Bitcoin Gold",
         "symbol": "BTG",
         "family": "equihash",
         "networks": {
@@ -2284,6 +2357,7 @@
 
     "bitcoin-private": {
         "name": "Bitcoin Private",
+        "canonicalName": "Bitcoin Private",
         "symbol": "BTCP",
         "family": "equihash",
         "networks": {
@@ -2330,6 +2404,7 @@
 
     "bithereum": {
         "name": "Bithereum",
+        "canonicalName": "Bithereum",
         "symbol": "BTH",
         "family": "equihash",
         "networks": {
@@ -2376,6 +2451,7 @@
 
     "minexcoin": {
         "name": "Minexcoin",
+        "canonicalName": "MinexCoin",
         "symbol": "MNX",
         "family": "equihash",
         "networks": {
@@ -2422,6 +2498,7 @@
 
     "veruscoin": {
         "name": "Veruscoin",
+        "canonicalName": "VerusCoin",
         "symbol": "VRSC",
         "family": "equihash",
         "networks": {
@@ -2474,6 +2551,7 @@
 
     "zcash": {
         "name": "ZCash",
+        "canonicalName": "ZCash",
         "symbol": "ZEC",
         "family": "equihash",
         "networks": {
@@ -2643,6 +2721,7 @@
 
     "zclassic": {
         "name": "ZClassic",
+        "canonicalName": "ZClassic",
         "symbol": "ZCL",
         "family": "equihash",
         "networks": {
@@ -2689,6 +2768,7 @@
 
     "zencash": {
         "name": "Zencash",
+        "canonicalName": "ZenCash",
         "symbol": "ZEN",
         "family": "equihash",
         "networks": {
@@ -2866,6 +2946,7 @@
 
     "monero": {
         "name": "Monero",
+        "canonicalName": "Monero",
         "symbol": "XMR",
         "family": "cryptonote",
         "hash": "randomx",
@@ -2883,6 +2964,7 @@
 
     "callisto": {
         "name": "Callisto Network",
+        "canonicalName": "Callisto Network",
         "symbol": "CLO",
         "family": "ethereum",
         "explorerBlockLinks": {
@@ -2895,6 +2977,7 @@
 
     "ethereum": {
         "name": "Ethereum",
+        "canonicalName": "Ethereum",
         "symbol": "ETH",
         "family": "ethereum",
         "explorerBlockLinks": {
@@ -2907,6 +2990,7 @@
 
     "ergo": {
         "name": "Ergo",
+        "canonicalName": "Ergo Platform",
         "symbol": "ERG",
         "family": "ergo",
         "explorerBlockLink": "https://explorer.ergoplatform.com/en/blocks/$hash$",
