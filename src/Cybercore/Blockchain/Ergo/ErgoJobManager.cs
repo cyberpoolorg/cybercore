@@ -349,6 +349,27 @@ namespace Cybercore.Blockchain.Ergo
             return validity?.IsValid == true;
         }
 
+        private async Task UpdateNetworkStatsAsync(CancellationToken ct)
+        {
+            logger.LogInvoke();
+
+            try
+            {
+		var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
+		    ex=> logger.Debug(ex));
+
+		var chainPeers = info.PeersCount;
+
+                BlockchainStats.ConnectedPeers = chainPeers;
+		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
+            }
+
+            catch(Exception e)
+            {
+                logger.Error(e);
+            }
+        }
+
         #endregion // API-Surface
 
         #region Overrides
@@ -387,6 +408,15 @@ namespace Cybercore.Blockchain.Ergo
 
             BlockchainStats.NetworkType = network;
             BlockchainStats.RewardType = "POW";
+
+            await UpdateNetworkStatsAsync(ct);
+
+            Observable.Interval(TimeSpan.FromMinutes(5))
+                .Select(via => Observable.FromAsync(() =>
+                    Guard(()=> (UpdateNetworkStatsAsync(ct)),
+                        ex => logger.Error(ex))))
+                .Concat()
+                .Subscribe();
 
             SetupJobUpdates();
         }
