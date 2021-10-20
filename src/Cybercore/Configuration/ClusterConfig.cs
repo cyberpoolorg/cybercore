@@ -486,6 +486,7 @@ namespace Cybercore.Configuration
         public Dictionary<int, PoolEndpoint> Ports { get; set; }
         public DaemonEndpointConfig[] Daemons { get; set; }
         public PoolPaymentProcessingConfig PaymentProcessing { get; set; }
+        public int PaymentInterval { get; set; }
         public PoolShareBasedBanningConfig Banning { get; set; }
         public RewardRecipient[] RewardRecipients { get; set; }
         public string Address { get; set; }
@@ -494,7 +495,6 @@ namespace Cybercore.Configuration
         public int BlockRefreshInterval { get; set; }
         public int JobRebroadcastTimeout { get; set; }
         public int BlockTimeInterval { get; set; }
-        public int PaymentInterval { get; set; }
         public bool? EnableInternalStratum { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]

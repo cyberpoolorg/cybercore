@@ -246,9 +246,50 @@ namespace Cybercore.Blockchain.Bitcoin
                 var miningInfoResponse = results[0].Response.ToObject<MiningInfo>();
                 var networkInfoResponse = results[1].Response.ToObject<NetworkInfo>();
 
+                var latestBlockHeight = miningInfoResponse.Blocks;
+		var sampleSize = 300;
+                var sampleBlockNumber = (latestBlockHeight - sampleSize);
+
+                var blocksHash = await daemon.ExecuteBatchAnyAsync(logger, ct,
+                    new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { latestBlockHeight }),
+                    new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { sampleBlockNumber })
+                );
+
+                if(blocksHash.Any(x => x.Error != null))
+                {
+                    var errors = blocksHash.Where(x => x.Error != null).ToArray();
+
+                    if(errors.Any())
+                        logger.Warn(() => $"Error(s) get blockhash: {string.Join(", ", errors.Select(y => y.Error.Message))}");
+                }
+
+                var blockHash1 = blocksHash[0].Response;
+                var blockHash2 = blocksHash[1].Response;
+
+                var blocksInfo = await daemon.ExecuteBatchAnyAsync(logger, ct,
+                    new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash1 }),
+                    new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash2 })
+                );
+
+                if(blocksInfo.Any(x => x.Error != null))
+                {
+                    var errors = blocksInfo.Where(x => x.Error != null).ToArray();
+
+                    if(errors.Any())
+                        logger.Warn(() => $"Error(s) get blockinfo: {string.Join(", ", errors.Select(y => y.Error.Message))}");
+                }
+
+                var blockInfo1 = blocksInfo[0].Response.ToObject<BlockInfo1>();
+                var blockInfo2 = blocksInfo[1].Response.ToObject<BlockInfo2>();
+
+		var latestBlockTime = blockInfo1.Time;
+		var sampleBlockTime = blockInfo2.Time;
+
+		var blockTime = (double) (latestBlockTime - sampleBlockTime) / sampleSize;
+
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetworkHashps;
                 BlockchainStats.ConnectedPeers = networkInfoResponse.Connections;
-		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
+		BlockchainStats.BlockTime = blockTime;
 
                 if(BlockchainStats.NetworkHashrate == 0 && results[2].Error == null)
                     BlockchainStats.NetworkHashrate = results[2].Response.Value<double>();
@@ -358,9 +399,50 @@ namespace Cybercore.Blockchain.Bitcoin
                 var connectionCountResponse = results[0].Response.ToObject<object>();
                 var miningInfoResponse = results[1].Response.ToObject<MiningInfo>();
 
+                var latestBlockHeight = miningInfoResponse.Blocks;
+		var sampleSize = 300;
+                var sampleBlockNumber = (latestBlockHeight - sampleSize);
+
+                var blocksHash = await daemon.ExecuteBatchAnyAsync(logger, ct,
+                    new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { latestBlockHeight }),
+                    new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { sampleBlockNumber })
+                );
+
+                if(blocksHash.Any(x => x.Error != null))
+                {
+                    var errors = blocksHash.Where(x => x.Error != null).ToArray();
+
+                    if(errors.Any())
+                        logger.Warn(() => $"Error(s) get blockhash: {string.Join(", ", errors.Select(y => y.Error.Message))}");
+                }
+
+                var blockHash1 = blocksHash[0].Response;
+                var blockHash2 = blocksHash[1].Response;
+
+                var blocksInfo = await daemon.ExecuteBatchAnyAsync(logger, ct,
+                    new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash1 }),
+                    new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash2 })
+                );
+
+                if(blocksInfo.Any(x => x.Error != null))
+                {
+                    var errors = blocksInfo.Where(x => x.Error != null).ToArray();
+
+                    if(errors.Any())
+                        logger.Warn(() => $"Error(s) get blockinfo: {string.Join(", ", errors.Select(y => y.Error.Message))}");
+                }
+
+                var blockInfo1 = blocksInfo[0].Response.ToObject<BlockInfo1>();
+                var blockInfo2 = blocksInfo[1].Response.ToObject<BlockInfo2>();
+
+		var latestBlockTime = blockInfo1.Time;
+		var sampleBlockTime = blockInfo2.Time;
+
+		var blockTime = (double) (latestBlockTime - sampleBlockTime) / sampleSize;
+
                 BlockchainStats.ConnectedPeers = (int) (long) connectionCountResponse;
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetmHashps *= 1000000;
-		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
+		BlockchainStats.BlockTime = blockTime;
             }
 
             catch(Exception e)

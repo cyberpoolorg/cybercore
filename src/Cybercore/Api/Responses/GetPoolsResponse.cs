@@ -33,8 +33,6 @@ namespace Cybercore.Api.Responses
         public ApiCoinConfig Coin { get; set; }
         public Dictionary<int, PoolEndpoint> Ports { get; set; }
         public ApiPoolPaymentProcessingConfig PaymentProcessing { get; set; }
-        public PoolShareBasedBanningConfig ShareBasedBanning { get; set; }
-        public int BlockTimeInterval { get; set; }
         public int PaymentInterval { get; set; }
         public int ClientConnectionTimeout { get; set; }
         public int JobRebroadcastTimeout { get; set; }
