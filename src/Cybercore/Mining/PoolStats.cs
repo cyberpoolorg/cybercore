@@ -10,5 +10,6 @@ namespace Cybercore.Mining
         public ulong PoolHashrate { get; set; }
         public double SharesPerSecond { get; set; }
         public double RoundShares { get; set; }
+        public double RoundEffort { get; set; }
     }
 }

@@ -3,15 +3,18 @@ using AutoMapper;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cybercore.Blockchain;
 using Cybercore.Configuration;
 using Cybercore.Contracts;
 using Cybercore.Extensions;
@@ -23,6 +26,7 @@ using Cybercore.Persistence.Repositories;
 using Cybercore.Time;
 using Cybercore.Util;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using NLog;
 using Polly;
 
@@ -84,8 +88,9 @@ namespace Cybercore.Mining
 	private const double HashrateBoostFactor = 1.1d;
         private const int RetryCount = 4;
         private IAsyncPolicy readFaultPolicy;
-
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+
+        protected BlockchainStats blockchainStats;
 
         private void AttachPool(IMiningPool pool)
         {
@@ -105,6 +110,7 @@ namespace Cybercore.Mining
             var from = DateTime.MinValue;
             var to = clock.Now;
             var poolShares = (double) 0;
+            var netDiff = (double) 0;
 
             var stats = new MinerWorkerPerformanceStats
             {
@@ -142,6 +148,11 @@ namespace Cybercore.Mining
 		if(accumulatedShareDiffForBlock.HasValue)
 			poolShares = accumulatedShareDiffForBlock.Value;
 
+		var diff = await cf.Run(con => statsRepo.GetLastPoolStatsAsync(con, poolId));
+
+                if(diff != null)
+                    netDiff = diff.NetworkDifficulty;
+
                 if (result.Length > 0)
                 {
                     var workerCount = 0;
@@ -157,7 +168,6 @@ namespace Cybercore.Mining
                     var poolHashesAccumulated = result.Sum(x => x.Sum);
                     var poolHashesCountAccumulated = result.Sum(x => x.Count);
                     var poolHashrate = pool.HashrateFromShares(poolHashesAccumulated, poolHashTimeFrame) * HashrateBoostFactor;
-		    logger.Info(() => $"[{poolId}] Pool Hashrate Normal {poolHashrate}");
 
                     poolHashrate = Math.Round(poolHashrate, 8);
 
@@ -187,6 +197,7 @@ namespace Cybercore.Mining
                     pool.PoolStats.PoolHashrate = (ulong) poolHashrate;
                     pool.PoolStats.SharesPerSecond = (double) (poolHashesCountAccumulated / poolHashTimeFrame);
                     pool.PoolStats.RoundShares = (double) poolShares;
+                    pool.PoolStats.RoundEffort = (poolShares / netDiff) * 100;
 
 		    messageBus.NotifyHashrateUpdated(pool.Config.Id, poolHashrate);
 
@@ -197,6 +208,7 @@ namespace Cybercore.Mining
                     pool.PoolStats.PoolHashrate = 0;
                     pool.PoolStats.SharesPerSecond = 0;
                     pool.PoolStats.RoundShares = 0;
+                    pool.PoolStats.RoundEffort = 0;
 
                     messageBus.NotifyHashrateUpdated(pool.Config.Id, 0);
 
@@ -270,7 +282,6 @@ namespace Cybercore.Mining
                             var minerHashrate = pool.HashrateFromShares(item.Sum, minerHashTimeFrame) * HashrateBoostFactor;
 
                             minerHashrate = Math.Round(minerHashrate, 8);
-			    logger.Info(() => $"[{poolId}] Miner Hashrate Normal {minerHashrate}");
 
 			    if(poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
 			    {

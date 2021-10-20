@@ -17,6 +17,7 @@ namespace Cybercore.Persistence.Model
         public int ConnectedPeers { get; set; }
         public double SharesPerSecond { get; set; }
         public double RoundShares { get; set; }
+        public double RoundEffort { get; set; }
         public DateTime? LastPoolBlockTime { get; set; }
         public DateTime Created { get; set; }
     }
