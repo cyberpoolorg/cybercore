@@ -202,6 +202,7 @@ namespace Cybercore.Blockchain.Cryptonote
 
                     BlockchainStats.NetworkHashrate = info.Target > 0 ? (double) info.Difficulty / info.Target : 0;
                     BlockchainStats.ConnectedPeers = info.OutgoingConnectionsCount + info.IncomingConnectionsCount;
+		    BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
                 }
             }
 
