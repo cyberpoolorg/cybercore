@@ -160,7 +160,7 @@ namespace Cybercore.Blockchain.Equihash
                         BlockchainStats.NetworkDifficulty = job.Difficulty;
                         BlockchainStats.NextNetworkTarget = blockTemplate.Target;
                         BlockchainStats.NextNetworkBits = blockTemplate.Bits;
-                        BlockchainStats.BlockReward = blockTemplate.CoinbaseValue;
+                        BlockchainStats.BlockReward = (double) blockTemplate.CoinbaseValue / 100000000;
                     }
 
                     else

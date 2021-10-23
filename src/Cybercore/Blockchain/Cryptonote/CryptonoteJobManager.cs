@@ -121,7 +121,7 @@ namespace Cybercore.Blockchain.Cryptonote
                     BlockchainStats.NetworkDifficulty = job.BlockTemplate.Difficulty;
                     BlockchainStats.NextNetworkTarget = "";
                     BlockchainStats.NextNetworkBits = "";
-                    BlockchainStats.BlockReward = blockTemplate.ExpectedReward;
+                    BlockchainStats.BlockReward = (double) blockTemplate.ExpectedReward / 1000000000000;
                 }
 
                 else
