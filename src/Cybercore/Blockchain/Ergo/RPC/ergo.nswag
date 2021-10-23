@@ -55,7 +55,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "Miningcore.Blockchain.Ergo",
+      "namespace": "Cybercore.Blockchain.Ergo",
       "requiredPropertiesMustBeDefined": false,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
