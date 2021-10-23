@@ -359,8 +359,10 @@ namespace Cybercore.Blockchain.Ergo
 		    ex=> logger.Debug(ex));
 
 		var chainPeers = info.PeersCount;
+		var blockReward = info.MinerReward;
 
                 BlockchainStats.ConnectedPeers = chainPeers;
+                BlockchainStats.BlockReward = (double) blockReward;
 		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
             }
 

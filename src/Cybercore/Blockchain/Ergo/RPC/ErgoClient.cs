@@ -9422,6 +9422,10 @@ namespace Cybercore.Blockchain.Ergo
         /// <summary>Can be 'null' if genesis blocks is not produced yet</summary>
         [Newtonsoft.Json.JsonProperty("genesisBlockId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? GenesisBlockId { get; set; }= default!;
+
+        /// <summary>Number of current blockreward</summary>
+        [Newtonsoft.Json.JsonProperty("minerReward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long MinerReward { get; set; }= default!;
     
         /// <summary>current parameters</summary>
         [Newtonsoft.Json.JsonProperty("parameters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
