@@ -78,7 +78,7 @@ namespace Cybercore.Api
                 await SendMessageToAllAsync(msg);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex);
             }

@@ -30,7 +30,7 @@ namespace Cybercore.Api.Controllers
         private readonly IMinerRepository minerRepo;
         private readonly ConcurrentDictionary<string, IMiningPool> pools;
         private readonly Responses.AdminGcStats gcStats;
-	private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         #region Actions
 
@@ -63,12 +63,12 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            var result = await cf.Run(con=> minerRepo.GetSettings(con, null, pool.Id, address));
+            var result = await cf.Run(con => minerRepo.GetSettings(con, null, pool.Id, address));
 
-            if(result == null)
+            if (result == null)
                 throw new ApiException("No settings found", HttpStatusCode.NotFound);
 
             return mapper.Map<Responses.MinerSettings>(result);
@@ -80,15 +80,15 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(settings == null)
+            if (settings == null)
                 throw new ApiException("Invalid or missing settings", HttpStatusCode.BadRequest);
 
             var mapped = mapper.Map<Persistence.Model.MinerSettings>(settings);
 
-            if(pool.PaymentProcessing != null)
+            if (pool.PaymentProcessing != null)
                 mapped.PaymentThreshold = Math.Max(mapped.PaymentThreshold, pool.PaymentProcessing.MinimumPayment);
 
             mapped.PoolId = pool.Id;
@@ -101,7 +101,7 @@ namespace Cybercore.Api.Controllers
                 return await minerRepo.GetSettings(con, tx, mapped.PoolId, mapped.Address);
             });
 
-            logger.Info(()=> $"Updated settings for pool {pool.Id}, miner {address}");
+            logger.Info(() => $"Updated settings for pool {pool.Id}, miner {address}");
             return mapper.Map<Responses.MinerSettings>(result);
         }
 

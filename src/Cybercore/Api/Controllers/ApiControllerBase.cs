@@ -23,7 +23,7 @@ namespace Cybercore.Api.Controllers
 
         protected PoolConfig GetPoolNoThrow(string poolId)
         {
-            if(string.IsNullOrEmpty(poolId))
+            if (string.IsNullOrEmpty(poolId))
                 return null;
 
             var pool = clusterConfig.Pools.FirstOrDefault(x => x.Id == poolId && x.Enabled);
@@ -32,12 +32,12 @@ namespace Cybercore.Api.Controllers
 
         protected PoolConfig GetPool(string poolId)
         {
-            if(string.IsNullOrEmpty(poolId))
+            if (string.IsNullOrEmpty(poolId))
                 throw new ApiException("Invalid pool id", HttpStatusCode.NotFound);
 
             var pool = clusterConfig.Pools.FirstOrDefault(x => x.Id == poolId && x.Enabled);
 
-            if(pool == null)
+            if (pool == null)
                 throw new ApiException($"Unknown pool {poolId}", HttpStatusCode.NotFound);
 
             return pool;

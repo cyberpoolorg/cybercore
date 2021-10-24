@@ -7,13 +7,13 @@ namespace Cybercore.Api
     {
         public ApiException(string message, HttpStatusCode? responseStatusCode = null) : base(message)
         {
-            if(responseStatusCode.HasValue)
-                ResponseStatusCode = (int) responseStatusCode.Value;
+            if (responseStatusCode.HasValue)
+                ResponseStatusCode = (int)responseStatusCode.Value;
         }
 
         public ApiException(HttpStatusCode responseStatusCode) : base(string.Empty)
         {
-            ResponseStatusCode = (int) responseStatusCode;
+            ResponseStatusCode = (int)responseStatusCode;
         }
 
         public ApiException()

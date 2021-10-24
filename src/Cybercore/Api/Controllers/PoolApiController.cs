@@ -129,7 +129,7 @@ namespace Cybercore.Api.Controllers
             var end = clock.Now;
             DateTime start;
 
-            switch(range)
+            switch (range)
             {
                 case SampleRange.Day:
                     start = end.AddDays(-1);
@@ -184,17 +184,17 @@ namespace Cybercore.Api.Controllers
 
             var blockInfobaseDict = pool.Template.ExplorerBlockLinks;
 
-            foreach(var block in blocks)
+            foreach (var block in blocks)
             {
-                if(blockInfobaseDict != null)
+                if (blockInfobaseDict != null)
                 {
                     blockInfobaseDict.TryGetValue(!string.IsNullOrEmpty(block.Type) ? block.Type : "block", out var blockInfobaseUrl);
 
-                    if(!string.IsNullOrEmpty(blockInfobaseUrl))
+                    if (!string.IsNullOrEmpty(blockInfobaseUrl))
                     {
-                        if(blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
+                        if (blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
                             block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHeightPH, block.BlockHeight.ToString(CultureInfo.InvariantCulture));
-                        else if(blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
+                        else if (blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
                             block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHashPH, block.Hash);
                     }
                 }
@@ -213,7 +213,7 @@ namespace Cybercore.Api.Controllers
                 state :
                 new[] { BlockStatus.Confirmed, BlockStatus.Pending, BlockStatus.Orphaned };
 
-            uint pageCount = (uint) Math.Floor((await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, poolId))) / (double) pageSize);
+            uint pageCount = (uint)Math.Floor((await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, poolId))) / (double)pageSize);
 
             var blocks = (await cf.Run(con => blocksRepo.PageBlocksAsync(con, pool.Id, blockStates, page, pageSize)))
                 .Select(mapper.Map<Responses.Block>)
@@ -221,17 +221,17 @@ namespace Cybercore.Api.Controllers
 
             var blockInfobaseDict = pool.Template.ExplorerBlockLinks;
 
-            foreach(var block in blocks)
+            foreach (var block in blocks)
             {
-                if(blockInfobaseDict != null)
+                if (blockInfobaseDict != null)
                 {
                     blockInfobaseDict.TryGetValue(!string.IsNullOrEmpty(block.Type) ? block.Type : "block", out var blockInfobaseUrl);
 
-                    if(!string.IsNullOrEmpty(blockInfobaseUrl))
+                    if (!string.IsNullOrEmpty(blockInfobaseUrl))
                     {
-                        if(blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
+                        if (blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
                             block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHeightPH, block.BlockHeight.ToString(CultureInfo.InvariantCulture));
-                        else if(blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
+                        else if (blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
                             block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHashPH, block.Hash);
                     }
                 }
@@ -255,12 +255,12 @@ namespace Cybercore.Api.Controllers
             var txInfobaseUrl = pool.Template.ExplorerTxLink;
             var addressInfobaseUrl = pool.Template.ExplorerAccountLink;
 
-            foreach(var payment in payments)
+            foreach (var payment in payments)
             {
-                if(!string.IsNullOrEmpty(txInfobaseUrl))
+                if (!string.IsNullOrEmpty(txInfobaseUrl))
                     payment.TransactionInfoLink = string.Format(txInfobaseUrl, payment.TransactionConfirmationData);
 
-                if(!string.IsNullOrEmpty(addressInfobaseUrl))
+                if (!string.IsNullOrEmpty(addressInfobaseUrl))
                     payment.AddressInfoLink = string.Format(addressInfobaseUrl, payment.Address);
             }
 
@@ -273,7 +273,7 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            uint pageCount = (uint) Math.Floor((await cf.Run(con => paymentsRepo.GetPaymentsCountAsync(con, poolId))) / (double) pageSize);
+            uint pageCount = (uint)Math.Floor((await cf.Run(con => paymentsRepo.GetPaymentsCountAsync(con, poolId))) / (double)pageSize);
 
             var payments = (await cf.Run(con => paymentsRepo.PagePaymentsAsync(
                     con, pool.Id, null, page, pageSize)))
@@ -283,12 +283,12 @@ namespace Cybercore.Api.Controllers
             var txInfobaseUrl = pool.Template.ExplorerTxLink;
             var addressInfobaseUrl = pool.Template.ExplorerAccountLink;
 
-            foreach(var payment in payments)
+            foreach (var payment in payments)
             {
-                if(!string.IsNullOrEmpty(txInfobaseUrl))
+                if (!string.IsNullOrEmpty(txInfobaseUrl))
                     payment.TransactionInfoLink = string.Format(txInfobaseUrl, payment.TransactionConfirmationData);
 
-                if(!string.IsNullOrEmpty(addressInfobaseUrl))
+                if (!string.IsNullOrEmpty(addressInfobaseUrl))
                     payment.AddressInfoLink = string.Format(addressInfobaseUrl, payment.Address);
             }
 
@@ -302,10 +302,10 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
             var statsResult = await cf.RunTx((con, tx) =>
@@ -313,16 +313,16 @@ namespace Cybercore.Api.Controllers
 
             Responses.MinerStats stats = null;
 
-            if(statsResult != null)
+            if (statsResult != null)
             {
                 stats = mapper.Map<Responses.MinerStats>(statsResult);
 
-                if(statsResult.LastPayment != null)
+                if (statsResult.LastPayment != null)
                 {
                     stats.LastPayment = statsResult.LastPayment.Created;
 
                     var baseUrl = pool.Template.ExplorerTxLink;
-                    if(!string.IsNullOrEmpty(baseUrl))
+                    if (!string.IsNullOrEmpty(baseUrl))
                         stats.LastPaymentLink = string.Format(baseUrl, statsResult.LastPayment.TransactionConfirmationData);
                 }
 
@@ -338,10 +338,10 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
             var payments = (await cf.Run(con => paymentsRepo.PagePaymentsAsync(
@@ -352,12 +352,12 @@ namespace Cybercore.Api.Controllers
             var txInfobaseUrl = pool.Template.ExplorerTxLink;
             var addressInfobaseUrl = pool.Template.ExplorerAccountLink;
 
-            foreach(var payment in payments)
+            foreach (var payment in payments)
             {
-                if(!string.IsNullOrEmpty(txInfobaseUrl))
+                if (!string.IsNullOrEmpty(txInfobaseUrl))
                     payment.TransactionInfoLink = string.Format(txInfobaseUrl, payment.TransactionConfirmationData);
 
-                if(!string.IsNullOrEmpty(addressInfobaseUrl))
+                if (!string.IsNullOrEmpty(addressInfobaseUrl))
                     payment.AddressInfoLink = string.Format(addressInfobaseUrl, payment.Address);
             }
 
@@ -370,13 +370,13 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
-            uint pageCount = (uint) Math.Floor((await cf.Run(con => paymentsRepo.GetPaymentsCountAsync(con, poolId, address))) / (double) pageSize);
+            uint pageCount = (uint)Math.Floor((await cf.Run(con => paymentsRepo.GetPaymentsCountAsync(con, poolId, address))) / (double)pageSize);
 
             var payments = (await cf.Run(con => paymentsRepo.PagePaymentsAsync(
                     con, pool.Id, address, page, pageSize)))
@@ -386,12 +386,12 @@ namespace Cybercore.Api.Controllers
             var txInfobaseUrl = pool.Template.ExplorerTxLink;
             var addressInfobaseUrl = pool.Template.ExplorerAccountLink;
 
-            foreach(var payment in payments)
+            foreach (var payment in payments)
             {
-                if(!string.IsNullOrEmpty(txInfobaseUrl))
+                if (!string.IsNullOrEmpty(txInfobaseUrl))
                     payment.TransactionInfoLink = string.Format(txInfobaseUrl, payment.TransactionConfirmationData);
 
-                if(!string.IsNullOrEmpty(addressInfobaseUrl))
+                if (!string.IsNullOrEmpty(addressInfobaseUrl))
                     payment.AddressInfoLink = string.Format(addressInfobaseUrl, payment.Address);
             }
 
@@ -405,10 +405,10 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
             var balanceChanges = (await cf.Run(con => paymentsRepo.PageBalanceChangesAsync(
@@ -425,13 +425,13 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
-            uint pageCount = (uint) Math.Floor((await cf.Run(con => paymentsRepo.GetBalanceChangesCountAsync(con, poolId, address))) / (double) pageSize);
+            uint pageCount = (uint)Math.Floor((await cf.Run(con => paymentsRepo.GetBalanceChangesCountAsync(con, poolId, address))) / (double)pageSize);
 
             var balanceChanges = (await cf.Run(con => paymentsRepo.PageBalanceChangesAsync(
                     con, pool.Id, address, page, pageSize)))
@@ -448,10 +448,10 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
             var earnings = (await cf.Run(con => paymentsRepo.PageMinerPaymentsByDayAsync(
@@ -467,13 +467,13 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
-            uint pageCount = (uint) Math.Floor((await cf.Run(con => paymentsRepo.GetMinerPaymentsByDayCountAsync(con, poolId, address))) / (double) pageSize);
+            uint pageCount = (uint)Math.Floor((await cf.Run(con => paymentsRepo.GetMinerPaymentsByDayCountAsync(con, poolId, address))) / (double)pageSize);
 
             var earnings = (await cf.Run(con => paymentsRepo.PageMinerPaymentsByDayAsync(
                     con, pool.Id, address, page, pageSize)))
@@ -489,10 +489,10 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(pool.Template.Family == CoinFamily.Ethereum)
+            if (pool.Template.Family == CoinFamily.Ethereum)
                 address = address.ToLower();
 
             var result = await GetMinerPerformanceInternal(mode, pool, address);
@@ -505,12 +505,12 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            var result = await cf.Run(con=> minerRepo.GetSettings(con, null, pool.Id, address));
+            var result = await cf.Run(con => minerRepo.GetSettings(con, null, pool.Id, address));
 
-            if(result == null)
+            if (result == null)
                 throw new ApiException("No settings found", HttpStatusCode.NotFound);
 
             return mapper.Map<Responses.MinerSettings>(result);
@@ -522,26 +522,26 @@ namespace Cybercore.Api.Controllers
         {
             var pool = GetPool(poolId);
 
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            if(request?.Settings == null)
+            if (request?.Settings == null)
                 throw new ApiException("Invalid or missing settings", HttpStatusCode.BadRequest);
 
-            if(!IPAddress.TryParse(request.IpAddress, out var requestIp))
+            if (!IPAddress.TryParse(request.IpAddress, out var requestIp))
                 throw new ApiException("Invalid IP address", HttpStatusCode.BadRequest);
 
-            var ips = await cf.Run(con=> shareRepo.GetRecentyUsedIpAddresses(con, null, poolId, address));
+            var ips = await cf.Run(con => shareRepo.GetRecentyUsedIpAddresses(con, null, poolId, address));
 
-            if(ips == null || ips.Length == 0)
+            if (ips == null || ips.Length == 0)
                 throw new ApiException("Address not recently used for mining", HttpStatusCode.NotFound);
 
-            if(!ips.Any(x=> IPAddress.TryParse(x, out var ipAddress) && ipAddress.IsEqual(requestIp)))
+            if (!ips.Any(x => IPAddress.TryParse(x, out var ipAddress) && ipAddress.IsEqual(requestIp)))
                 throw new ApiException("None of the recently used IP addresses matches the request", HttpStatusCode.Forbidden);
 
             var mapped = mapper.Map<Persistence.Model.MinerSettings>(request.Settings);
 
-            if(pool.PaymentProcessing != null)
+            if (pool.PaymentProcessing != null)
                 mapped.PaymentThreshold = Math.Max(mapped.PaymentThreshold, pool.PaymentProcessing.MinimumPayment);
 
             mapped.PoolId = pool.Id;
@@ -551,7 +551,7 @@ namespace Cybercore.Api.Controllers
             {
                 await minerRepo.UpdateSettings(con, tx, mapped);
 
-                logger.Info(()=> $"Updated settings for pool {pool.Id}, miner {address}");
+                logger.Info(() => $"Updated settings for pool {pool.Id}, miner {address}");
 
                 var result = await minerRepo.GetSettings(con, tx, mapped.PoolId, mapped.Address);
                 return mapper.Map<Responses.MinerSettings>(result);
@@ -567,7 +567,7 @@ namespace Cybercore.Api.Controllers
             var end = clock.Now;
             DateTime start;
 
-            switch(mode)
+            switch (mode)
             {
                 case SampleRange.Hour:
                     end = end.AddSeconds(-end.Second);
@@ -578,7 +578,7 @@ namespace Cybercore.Api.Controllers
                     break;
 
                 case SampleRange.Day:
-                    if(end.Minute < 30)
+                    if (end.Minute < 30)
                         end = end.AddHours(-1);
 
                     end = end.AddMinutes(-end.Minute);
@@ -590,7 +590,7 @@ namespace Cybercore.Api.Controllers
                     break;
 
                 case SampleRange.Month:
-                    if(end.Hour < 12)
+                    if (end.Hour < 12)
                         end = end.AddDays(-1);
 
                     end = end.Date;

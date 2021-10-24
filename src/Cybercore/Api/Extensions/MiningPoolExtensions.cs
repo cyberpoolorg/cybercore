@@ -18,10 +18,10 @@ namespace Cybercore.Api.Extensions
             poolInfo.NetworkStats = pool?.NetworkStats ?? mapper.Map<BlockchainStats>(stats);
 
             var addressInfobaseUrl = poolConfig.Template.ExplorerAccountLink;
-            if(!string.IsNullOrEmpty(addressInfobaseUrl))
+            if (!string.IsNullOrEmpty(addressInfobaseUrl))
                 poolInfo.AddressInfoLink = string.Format(addressInfobaseUrl, poolInfo.Address);
 
-            poolInfo.PoolFeePercent = poolConfig.RewardRecipients != null ? (float) poolConfig.RewardRecipients.Sum(x => x.Percentage) : 0;
+            poolInfo.PoolFeePercent = poolConfig.RewardRecipients != null ? (float)poolConfig.RewardRecipients.Sum(x => x.Percentage) : 0;
 
             return poolInfo;
         }

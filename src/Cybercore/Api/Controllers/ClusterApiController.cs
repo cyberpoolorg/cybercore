@@ -55,26 +55,26 @@ namespace Cybercore.Api.Controllers
 
             var blocksByPool = blocks.GroupBy(x => x.PoolId);
 
-            foreach(var poolBlocks in blocksByPool)
+            foreach (var poolBlocks in blocksByPool)
             {
                 var pool = GetPoolNoThrow(poolBlocks.Key);
 
-                if(pool == null)
+                if (pool == null)
                     continue;
 
                 var blockInfobaseDict = pool.Template.ExplorerBlockLinks;
 
-                if(blockInfobaseDict != null)
+                if (blockInfobaseDict != null)
                 {
-                    foreach(var block in poolBlocks)
+                    foreach (var block in poolBlocks)
                     {
                         blockInfobaseDict.TryGetValue(!string.IsNullOrEmpty(block.Type) ? block.Type : "block", out var blockInfobaseUrl);
 
-                        if(!string.IsNullOrEmpty(blockInfobaseUrl))
+                        if (!string.IsNullOrEmpty(blockInfobaseUrl))
                         {
-                            if(blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
+                            if (blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
                                 block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHeightPH, block.BlockHeight.ToString(CultureInfo.InvariantCulture));
-                            else if(blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
+                            else if (blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
                                 block.InfoLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHashPH, block.Hash);
                         }
                     }
