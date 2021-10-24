@@ -403,6 +403,27 @@
     "explorerAccountLink": "https://chainz.cryptoid.info/cann/address.dws?{0}.htm"
   },
 
+  "chipmonk": {
+    "name": "ChipMonk",
+    "canonicalName": "ChipMonk",
+    "symbol": "CPMK",
+    "family": "bitcoin",
+    "coinbaseHasher": {
+      "hash": "sha256d"
+    },
+    "headerHasher": {
+      "hash": "yespower"
+    },
+    "blockHasher": {
+      "hash": "reverse",
+      "args": [ { "hash": "yespower" } ]
+    },
+    "shareMultiplier": 65536,
+    "explorerBlockLink": "https://explorer.chipmonk.world/block/$height$",
+    "explorerTxLink": "https://explorer.chipmonk.world/transaction/{0}",
+    "explorerAccountLink": "https://explorer.chipmonk.world/address/{0}"
+  },
+
   "combode": {
     "name": "Combode",
     "canonicalName": "Combode",
