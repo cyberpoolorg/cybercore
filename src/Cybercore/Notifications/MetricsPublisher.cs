@@ -69,14 +69,14 @@ namespace Cybercore.Notifications
 
         private void OnTelemetryEvent(TelemetryEvent msg)
         {
-            switch(msg.Category)
+            switch (msg.Category)
             {
                 case TelemetryCategory.Share:
                     shareCounter.WithLabels(msg.GroupId).Inc();
 
-                    if(msg.Success.HasValue)
+                    if (msg.Success.HasValue)
                     {
-                        if(msg.Success.Value)
+                        if (msg.Success.Value)
                             validShareCounter.WithLabels(msg.GroupId).Inc();
                         else
                             invalidShareCounter.WithLabels(msg.GroupId).Inc();

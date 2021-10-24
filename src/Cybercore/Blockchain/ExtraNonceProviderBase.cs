@@ -16,25 +16,25 @@ namespace Cybercore.Blockchain
             idMax = (1U << IdBits) - 1;
             stringFormat = "x" + extranonceBytes * 2;
             var mask = (1L << IdBits) - 1;
-            if(instanceId.HasValue)
+            if (instanceId.HasValue)
             {
                 id = instanceId.Value;
 
-                if(id > idMax)
+                if (id > idMax)
                     logger.ThrowLogPoolStartupException($"Provided instance id to large to fit into {IdBits} bits (limit {idMax})");
             }
             else
             {
-                using(var rng = RandomNumberGenerator.Create())
+                using (var rng = RandomNumberGenerator.Create())
                 {
                     var bytes = new byte[1];
                     rng.GetNonZeroBytes(bytes);
                     id = bytes[0];
                 }
             }
-            id = (byte) (id & mask);
+            id = (byte)(id & mask);
             counter = 0;
-            logger.Info(()=> $"ExtraNonceProvider using {IdBits} bits for instance id, {extranonceBytes * 8 - IdBits} bits for {nonceMax} values, instance id = 0x{id:X}");
+            logger.Info(() => $"ExtraNonceProvider using {IdBits} bits for instance id, {extranonceBytes * 8 - IdBits} bits for {nonceMax} values, instance id = 0x{id:X}");
         }
 
         private readonly ILogger logger;
@@ -54,17 +54,17 @@ namespace Cybercore.Blockchain
         public string Next()
         {
             ulong value;
-            lock(counterLock)
+            lock (counterLock)
             {
                 counter++;
 
-                if(counter > nonceMax)
+                if (counter > nonceMax)
                 {
-                    logger.Warn(()=> $"ExtraNonceProvider range exhausted! Rolling over to 0.");
+                    logger.Warn(() => $"ExtraNonceProvider range exhausted! Rolling over to 0.");
 
                     counter = 0;
                 }
-                value = ((ulong) id << idShift) | counter;
+                value = ((ulong)id << idShift) | counter;
             }
             return value.ToString(stringFormat);
         }

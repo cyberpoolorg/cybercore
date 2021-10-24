@@ -79,7 +79,7 @@ namespace Cybercore.Blockchain.Ethereum
                 return UpdateJob(await GetBlockTemplateAsync(ct));
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Error during {nameof(UpdateJobAsync)}");
             }
@@ -93,7 +93,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             try
             {
-                if(blockTemplate == null || blockTemplate.Header?.Length == 0)
+                if (blockTemplate == null || blockTemplate.Header?.Length == 0)
                     return false;
 
                 var job = currentJob;
@@ -101,7 +101,7 @@ namespace Cybercore.Blockchain.Ethereum
                     job.BlockTemplate.Height < blockTemplate.Height ||
                     job.BlockTemplate.Header != blockTemplate.Header;
 
-                if(isNew)
+                if (isNew)
                 {
                     messageBus.NotifyChainHeight(poolConfig.Id, blockTemplate.Height, poolConfig.Template);
 
@@ -109,14 +109,14 @@ namespace Cybercore.Blockchain.Ethereum
 
                     job = new EthereumJob(jobId, blockTemplate, logger);
 
-                    lock(jobLock)
+                    lock (jobLock)
                     {
                         validJobs[jobId] = job;
 
                         var obsoleteKeys = validJobs.Keys
                             .Where(key => validJobs[key].BlockTemplate.Height < job.BlockTemplate.Height - MaxBlockBacklog).ToArray();
 
-                        foreach(var key in obsoleteKeys)
+                        foreach (var key in obsoleteKeys)
                             validJobs.Remove(key);
                     }
 
@@ -132,7 +132,7 @@ namespace Cybercore.Blockchain.Ethereum
                 return isNew;
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Error during {nameof(UpdateJob)}");
             }
@@ -152,7 +152,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             var results = await daemon.ExecuteBatchAnyAsync(logger, ct, commands);
 
-            if(results.Any(x => x.Error != null))
+            if (results.Any(x => x.Error != null))
             {
                 logger.Warn(() => $"Error(s) refreshing blocktemplate: {results.First(x => x.Error != null).Error.Message}");
                 return null;
@@ -161,7 +161,7 @@ namespace Cybercore.Blockchain.Ethereum
             var work = results[0].Response.ToObject<string[]>();
             var block = results[1].Response.ToObject<Block>();
 
-            if(work.Length < 4)
+            if (work.Length < 4)
             {
                 var currentHeight = block.Height.Value;
                 work = work.Concat(new[] { (currentHeight + 1).ToStringHexWithPrefix() }).ToArray();
@@ -176,7 +176,7 @@ namespace Cybercore.Blockchain.Ethereum
                 Header = work[0],
                 Seed = work[1],
                 Target = targetString,
-                Difficulty = (ulong) BigInteger.Divide(EthereumConstants.BigMaxValue, target),
+                Difficulty = (ulong)BigInteger.Divide(EthereumConstants.BigMaxValue, target),
                 Height = height
             };
 
@@ -188,35 +188,35 @@ namespace Cybercore.Blockchain.Ethereum
             var responses = await daemon.ExecuteCmdAllAsync<object>(logger, EC.GetSyncState, ct);
             var firstValidResponse = responses.FirstOrDefault(x => x.Error == null && x.Response != null)?.Response;
 
-            if(firstValidResponse != null)
+            if (firstValidResponse != null)
             {
-                if(firstValidResponse is bool)
+                if (firstValidResponse is bool)
                     return;
 
                 var syncStates = responses.Where(x => x.Error == null && x.Response != null && firstValidResponse is JObject)
-                    .Select(x => ((JObject) x.Response).ToObject<SyncState>())
+                    .Select(x => ((JObject)x.Response).ToObject<SyncState>())
                     .ToArray();
 
-                if(syncStates.Any())
+                if (syncStates.Any())
                 {
                     var response = await daemon.ExecuteCmdAllAsync<string>(logger, EC.GetPeerCount, ct);
                     var validResponses = response.Where(x => x.Error == null && x.Response != null).ToArray();
                     var peerCount = validResponses.Any() ? validResponses.Max(x => x.Response.IntegralFromHex<uint>()) : 0;
 
-                    if(syncStates.Any(x => x.WarpChunksAmount != 0))
+                    if (syncStates.Any(x => x.WarpChunksAmount != 0))
                     {
                         var warpChunkAmount = syncStates.Min(x => x.WarpChunksAmount);
                         var warpChunkProcessed = syncStates.Max(x => x.WarpChunksProcessed);
-                        var percent = (double) warpChunkProcessed / warpChunkAmount * 100;
+                        var percent = (double)warpChunkProcessed / warpChunkAmount * 100;
 
                         logger.Info(() => $"Daemons have downloaded {percent:0.00}% of warp-chunks from {peerCount} peers");
                     }
 
-                    else if(syncStates.Any(x => x.HighestBlock != 0))
+                    else if (syncStates.Any(x => x.HighestBlock != 0))
                     {
                         var lowestHeight = syncStates.Min(x => x.CurrentBlock);
                         var totalBlocks = syncStates.Max(x => x.HighestBlock);
-                        var percent = (double) lowestHeight / totalBlocks * 100;
+                        var percent = (double)lowestHeight / totalBlocks * 100;
 
                         logger.Info(() => $"Daemons have downloaded {percent:0.00}% of blockchain from {peerCount} peers");
                     }
@@ -238,12 +238,12 @@ namespace Cybercore.Blockchain.Ethereum
 
                 var results = await daemon.ExecuteBatchAnyAsync(logger, ct, commands);
 
-                if(results.Any(x => x.Error != null))
+                if (results.Any(x => x.Error != null))
                 {
                     var errors = results.Where(x => x.Error != null)
                         .ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) refreshing network stats: {string.Join(", ", errors.Select(y => y.Error.Message))})");
                 }
 
@@ -254,20 +254,20 @@ namespace Cybercore.Blockchain.Ethereum
                 var latestBlockTimestamp = latestBlockInfo.Timestamp;
                 var latestBlockDifficulty = latestBlockInfo.Difficulty.IntegralFromHex<ulong>();
 
-                var sampleSize = (ulong) 300;
+                var sampleSize = (ulong)300;
                 var sampleBlockNumber = latestBlockHeight - sampleSize;
-                var sampleBlockResults = await daemon.ExecuteCmdAllAsync<Block>(logger, EC.GetBlockByNumber, ct, new[] { (object) sampleBlockNumber.ToStringHexWithPrefix(), true });
+                var sampleBlockResults = await daemon.ExecuteCmdAllAsync<Block>(logger, EC.GetBlockByNumber, ct, new[] { (object)sampleBlockNumber.ToStringHexWithPrefix(), true });
                 var sampleBlockTimestamp = sampleBlockResults.First(x => x.Error == null && x.Response?.Height != null).Response.Timestamp;
 
-                var blockTime = (double) (latestBlockTimestamp - sampleBlockTimestamp) / sampleSize;
-                var networkHashrate = (double) (latestBlockDifficulty / blockTime);
+                var blockTime = (double)(latestBlockTimestamp - sampleBlockTimestamp) / sampleSize;
+                var networkHashrate = (double)(latestBlockDifficulty / blockTime);
 
                 BlockchainStats.NetworkHashrate = blockTime > 0 ? networkHashrate : 0;
                 BlockchainStats.ConnectedPeers = peerCount;
-		BlockchainStats.BlockTime = blockTime;
+                BlockchainStats.BlockTime = blockTime;
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
             }
@@ -282,7 +282,7 @@ namespace Cybercore.Blockchain.Ethereum
                 mixHash
             });
 
-            if(response.Error != null || (bool?) response.Response == false)
+            if (response.Error != null || (bool?)response.Response == false)
             {
                 var error = response.Error?.Message ?? response?.Response?.ToString();
 
@@ -299,7 +299,7 @@ namespace Cybercore.Blockchain.Ethereum
         {
             var job = currentJob;
 
-            if(job != null)
+            if (job != null)
             {
                 return new object[]
                 {
@@ -315,11 +315,11 @@ namespace Cybercore.Blockchain.Ethereum
 
         private JsonRpcRequest DeserializeRequest(byte[] data)
         {
-            using(var stream = new MemoryStream(data))
+            using (var stream = new MemoryStream(data))
             {
-                using(var reader = new StreamReader(stream, Encoding.UTF8))
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
                 {
-                    using(var jreader = new JsonTextReader(reader))
+                    using (var jreader = new JsonTextReader(reader))
                     {
                         return serializer.Deserialize<JsonRpcRequest>(jreader);
                     }
@@ -341,7 +341,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             base.Configure(poolConfig, clusterConfig);
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 var dagDir = !string.IsNullOrEmpty(extraPoolConfig?.DagDir) ?
                     Environment.ExpandEnvironmentVariables(extraPoolConfig.DagDir) :
@@ -355,10 +355,10 @@ namespace Cybercore.Blockchain.Ethereum
 
         public bool ValidateAddress(string address)
         {
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 return false;
 
-            if(EthereumConstants.ZeroHashPattern.IsMatch(address) ||
+            if (EthereumConstants.ZeroHashPattern.IsMatch(address) ||
                 !EthereumConstants.ValidAddressPattern.IsMatch(address))
                 return false;
 
@@ -383,9 +383,9 @@ namespace Cybercore.Blockchain.Ethereum
             var nonce = request[2];
             EthereumJob job;
 
-            lock(jobLock)
+            lock (jobLock)
             {
-                if(!validJobs.TryGetValue(jobId, out job))
+                if (!validJobs.TryGetValue(jobId, out job))
                     throw new StratumException(StratumError.MinusOne, "stale share");
             }
 
@@ -396,13 +396,13 @@ namespace Cybercore.Blockchain.Ethereum
             share.Source = clusterConfig.ClusterName;
             share.Created = clock.Now;
 
-            if(share.IsBlockCandidate)
+            if (share.IsBlockCandidate)
             {
                 logger.Info(() => $"Submitting block {share.BlockHeight}");
 
                 share.IsBlockCandidate = await SubmitBlockAsync(share, fullNonceHex, headerHash, mixHash);
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                 {
                     logger.Info(() => $"Daemon accepted block {share.BlockHeight} submitted by {context.Miner}");
                 }
@@ -427,10 +427,10 @@ namespace Cybercore.Blockchain.Ethereum
 
         protected override async Task<bool> AreDaemonsHealthyAsync(CancellationToken ct)
         {
-            var responses = await daemon.ExecuteCmdAllAsync<Block>(logger, EC.GetBlockByNumber, ct, new[] { (object) "latest", true });
+            var responses = await daemon.ExecuteCmdAllAsync<Block>(logger, EC.GetBlockByNumber, ct, new[] { (object)"latest", true });
 
-            if(responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
-                .Select(x => (DaemonClientException) x.Error.InnerException)
+            if (responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
+                .Select(x => (DaemonClientException)x.Error.InnerException)
                 .Any(x => x.Code == HttpStatusCode.Unauthorized))
                 logger.ThrowLogPoolStartupException("Daemon reports invalid credentials");
 
@@ -448,20 +448,20 @@ namespace Cybercore.Blockchain.Ethereum
         {
             var syncPendingNotificationShown = false;
 
-            while(true)
+            while (true)
             {
                 var responses = await daemon.ExecuteCmdAllAsync<object>(logger, EC.GetSyncState, ct);
 
                 var isSynched = responses.All(x => x.Error == null &&
                                                    x.Response is false);
 
-                if(isSynched)
+                if (isSynched)
                 {
                     logger.Info(() => "All daemons synched with blockchain");
                     break;
                 }
 
-                if(!syncPendingNotificationShown)
+                if (!syncPendingNotificationShown)
                 {
                     logger.Info(() => "Daemons still syncing with network. Manager will be started once synced");
                     syncPendingNotificationShown = true;
@@ -484,12 +484,12 @@ namespace Cybercore.Blockchain.Ethereum
 
             var results = await daemon.ExecuteBatchAnyAsync(logger, ct, commands);
 
-            if(results.Any(x => x.Error != null))
+            if (results.Any(x => x.Error != null))
             {
                 var errors = results.Take(3).Where(x => x.Error != null)
                     .ToArray();
 
-                if(errors.Any())
+                if (errors.Any())
                     logger.ThrowLogPoolStartupException($"Init RPC failed: {string.Join(", ", errors.Select(y => y.Error.Message))}");
             }
 
@@ -507,18 +507,18 @@ namespace Cybercore.Blockchain.Ethereum
 
             Observable.Interval(TimeSpan.FromMinutes(10))
                 .Select(via => Observable.FromAsync(() =>
-                    Guard(()=> UpdateNetworkStatsAsync(ct),
-                        ex=> logger.Error(ex))))
+                    Guard(() => UpdateNetworkStatsAsync(ct),
+                        ex => logger.Error(ex))))
                 .Concat()
                 .Subscribe();
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
-                while(true)
+                while (true)
                 {
                     var blockTemplate = await GetBlockTemplateAsync(ct);
 
-                    if(blockTemplate != null)
+                    if (blockTemplate != null)
                     {
                         logger.Info(() => "Loading current DAG ...");
 
@@ -540,7 +540,7 @@ namespace Cybercore.Blockchain.Ethereum
 
         private void ConfigureRewards()
         {
-            if(networkType == EthereumNetworkType.Mainnet &&
+            if (networkType == EthereumNetworkType.Mainnet &&
                 chainType == GethChainType.Ethereum &&
                 DevDonation.Addresses.TryGetValue(poolConfig.Template.As<CoinTemplate>().Symbol, out var address))
             {
@@ -565,7 +565,7 @@ namespace Cybercore.Blockchain.Ethereum
                 .Concat()
                 .Do(isNew =>
                 {
-                    if(isNew)
+                    if (isNew)
                         logger.Info(() => $"New work at height {currentJob.BlockTemplate.Height} and header {currentJob.BlockTemplate.Header} detected [{JobRefreshBy.Poll}]");
                 })
                 .Where(isNew => isNew)

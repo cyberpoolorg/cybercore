@@ -38,9 +38,9 @@ namespace Cybercore.Native
                         success = convert_blob(input, size, output, ref outputBufferLength);
                     }
 
-                    if(!success)
+                    if (!success)
                     {
-                        if(outputBufferLength == 0)
+                        if (outputBufferLength == 0)
                             return null;
 
                         ArrayPool<byte>.Shared.Return(outputBuffer);
@@ -51,7 +51,7 @@ namespace Cybercore.Native
                             success = convert_blob(input, size, output, ref outputBufferLength);
                         }
 
-                        if(!success)
+                        if (!success)
                             return null;
                     }
 
@@ -100,7 +100,7 @@ namespace Cybercore.Native
             {
                 fixed (byte* output = result)
                 {
-                    cn_fast_hash(input, output, (uint) data.Length);
+                    cn_fast_hash(input, output, (uint)data.Length);
                 }
             }
         }

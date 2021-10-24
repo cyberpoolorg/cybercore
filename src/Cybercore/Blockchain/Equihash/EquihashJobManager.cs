@@ -54,11 +54,11 @@ namespace Cybercore.Blockchain.Equihash
             var subsidyResponse = await daemon.ExecuteCmdAnyAsync<ZCashBlockSubsidy>(logger, BitcoinCommands.GetBlockSubsidy, ct);
 
             var result = await daemon.ExecuteCmdAnyAsync<EquihashBlockTemplate>(logger,
-                BitcoinCommands.GetBlockTemplate, ct, extraPoolConfig?.GBTArgs ?? (object) GetBlockTemplateParams());
+                BitcoinCommands.GetBlockTemplate, ct, extraPoolConfig?.GBTArgs ?? (object)GetBlockTemplateParams());
 
-            if(subsidyResponse.Error == null && result.Error == null && result.Response != null)
+            if (subsidyResponse.Error == null && result.Error == null && result.Response != null)
                 result.Response.Subsidy = subsidyResponse.Response;
-            else if(subsidyResponse.Error?.Code != (int) BitcoinRPCErrorCode.RPC_METHOD_NOT_FOUND)
+            else if (subsidyResponse.Error?.Code != (int)BitcoinRPCErrorCode.RPC_METHOD_NOT_FOUND)
                 result.Error = new JsonRpcException(-1, $"{BitcoinCommands.GetBlockSubsidy} failed", null);
 
             return result;
@@ -78,7 +78,7 @@ namespace Cybercore.Blockchain.Equihash
 
         protected override IDestination AddressToDestination(string address, BitcoinAddressType? addressType)
         {
-            if(!coin.UsesZCashAddressFormat)
+            if (!coin.UsesZCashAddressFormat)
                 return base.AddressToDestination(address, addressType);
 
             var decoded = Encoders.Base58.DecodeData(address);
@@ -89,7 +89,7 @@ namespace Cybercore.Blockchain.Equihash
 
         private EquihashJob CreateJob()
         {
-            switch(coin.Symbol)
+            switch (coin.Symbol)
             {
                 case "BTG":
                     return new BitcoinGoldJob();
@@ -109,14 +109,14 @@ namespace Cybercore.Blockchain.Equihash
 
             try
             {
-                if(forceUpdate)
+                if (forceUpdate)
                     lastJobRebroadcast = clock.Now;
 
                 var response = string.IsNullOrEmpty(json) ?
                     await GetBlockTemplateAsync(ct) :
                     GetBlockTemplateFromJson(json);
 
-                if(response.Error != null)
+                if (response.Error != null)
                 {
                     logger.Warn(() => $"Unable to update job. Daemon responded with: {response.Error.Message} Code {response.Error.Code}");
                     return (false, forceUpdate);
@@ -130,27 +130,27 @@ namespace Cybercore.Blockchain.Equihash
                         (job.BlockTemplate?.PreviousBlockhash != blockTemplate.PreviousBlockhash ||
                         blockTemplate.Height > job.BlockTemplate?.Height));
 
-                if(isNew)
+                if (isNew)
                     messageBus.NotifyChainHeight(poolConfig.Id, blockTemplate.Height, poolConfig.Template);
 
-                if(isNew || forceUpdate)
+                if (isNew || forceUpdate)
                 {
                     job = CreateJob();
 
                     job.Init(blockTemplate, NextJobId(),
                         poolConfig, clusterConfig, clock, poolAddressDestination, network, solver);
 
-                    lock(jobLock)
+                    lock (jobLock)
                     {
                         validJobs.Insert(0, job);
 
-                        while(validJobs.Count > maxActiveJobs)
+                        while (validJobs.Count > maxActiveJobs)
                             validJobs.RemoveAt(validJobs.Count - 1);
                     }
 
-                    if(isNew)
+                    if (isNew)
                     {
-                        if(via != null)
+                        if (via != null)
                             logger.Info(() => $"Detected new block {blockTemplate.Height} [{via}]");
                         else
                             logger.Info(() => $"Detected new block {blockTemplate.Height}");
@@ -160,12 +160,12 @@ namespace Cybercore.Blockchain.Equihash
                         BlockchainStats.NetworkDifficulty = job.Difficulty;
                         BlockchainStats.NextNetworkTarget = blockTemplate.Target;
                         BlockchainStats.NextNetworkBits = blockTemplate.Bits;
-                        BlockchainStats.BlockReward = (double) blockTemplate.CoinbaseValue / 100000000;
+                        BlockchainStats.BlockReward = (double)blockTemplate.CoinbaseValue / 100000000;
                     }
 
                     else
                     {
-                        if(via != null)
+                        if (via != null)
                             logger.Debug(() => $"Template update {blockTemplate.Height} [{via}]");
                         else
                             logger.Debug(() => $"Template update {blockTemplate.Height}");
@@ -177,7 +177,7 @@ namespace Cybercore.Blockchain.Equihash
                 return (isNew, forceUpdate);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Error during {nameof(UpdateJob)}");
             }
@@ -202,16 +202,16 @@ namespace Cybercore.Blockchain.Equihash
 
         public override async Task<bool> ValidateAddressAsync(string address, CancellationToken ct)
         {
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 return false;
 
-            if(await base.ValidateAddressAsync(address, ct))
+            if (await base.ValidateAddressAsync(address, ct))
                 return true;
 
             var result = await daemon.ExecuteCmdAnyAsync<ValidateAddressResponse>(logger, ct,
                 EquihashCommands.ZValidateAddress, new[] { address });
 
-            return result.Response is {IsValid: true};
+            return result.Response is { IsValid: true };
         }
 
         public object[] GetSubscriberData(StratumConnection worker)
@@ -238,7 +238,7 @@ namespace Cybercore.Blockchain.Equihash
 
             logger.LogInvoke(new object[] { worker.ConnectionId });
 
-            if(submission is not object[] submitParams)
+            if (submission is not object[] submitParams)
                 throw new StratumException(StratumError.Other, "invalid params");
 
             var context = worker.ContextAs<BitcoinWorkerContext>();
@@ -248,25 +248,25 @@ namespace Cybercore.Blockchain.Equihash
             var extraNonce2 = submitParams[3] as string;
             var solution = submitParams[4] as string;
 
-            if(string.IsNullOrEmpty(workerValue))
+            if (string.IsNullOrEmpty(workerValue))
                 throw new StratumException(StratumError.Other, "missing or invalid workername");
 
-            if(string.IsNullOrEmpty(solution))
+            if (string.IsNullOrEmpty(solution))
                 throw new StratumException(StratumError.Other, "missing or invalid solution");
 
             EquihashJob job;
 
-            lock(jobLock)
+            lock (jobLock)
             {
                 job = validJobs.FirstOrDefault(x => x.JobId == jobId);
             }
 
-            if(job == null)
+            if (job == null)
                 throw new StratumException(StratumError.JobNotFound, "job not found");
 
             var (share, blockHex) = job.ProcessShare(worker, extraNonce2, nTime, solution);
 
-            if(share.IsBlockCandidate)
+            if (share.IsBlockCandidate)
             {
                 logger.Info(() => $"Submitting block {share.BlockHeight} [{share.BlockHash}]");
 
@@ -274,7 +274,7 @@ namespace Cybercore.Blockchain.Equihash
 
                 share.IsBlockCandidate = acceptResponse.Accepted;
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                 {
                     logger.Info(() => $"Daemon accepted block {share.BlockHeight} [{share.BlockHash}] submitted by {context.Miner}");
 

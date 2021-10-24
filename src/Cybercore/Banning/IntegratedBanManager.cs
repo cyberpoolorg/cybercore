@@ -25,7 +25,7 @@ namespace Cybercore.Banning
             Contract.RequiresNonNull(address, nameof(address));
             Contract.Requires<ArgumentException>(duration.TotalMilliseconds > 0, $"{nameof(duration)} must not be empty");
 
-            if(address.Equals(IPAddress.Loopback) || address.Equals(IPAddress.IPv6Loopback))
+            if (address.Equals(IPAddress.Loopback) || address.Equals(IPAddress.IPv6Loopback))
                 return;
 
             cache.Set(address.ToString(), string.Empty, duration);

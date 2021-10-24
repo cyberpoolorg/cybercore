@@ -72,7 +72,7 @@ namespace Cybercore.Blockchain.Cryptonote
             {
                 var response = string.IsNullOrEmpty(json) ? await GetBlockTemplateAsync(ct) : GetBlockTemplateFromJson(json);
 
-                if(response.Error != null)
+                if (response.Error != null)
                 {
                     logger.Warn(() => $"Unable to update job. Daemon responded with: {response.Error.Message} Code {response.Error.Code}");
                     return false;
@@ -84,24 +84,24 @@ namespace Cybercore.Blockchain.Cryptonote
 
                 var isNew = job == null || newHash != job.PrevHash;
 
-                if(isNew)
+                if (isNew)
                 {
                     messageBus.NotifyChainHeight(poolConfig.Id, blockTemplate.Height, poolConfig.Template);
 
-                    if(via != null)
+                    if (via != null)
                         logger.Info(() => $"Detected new block {blockTemplate.Height} [{via}]");
                     else
                         logger.Info(() => $"Detected new block {blockTemplate.Height}");
 
-                    if(currentSeedHash != blockTemplate.SeedHash)
+                    if (currentSeedHash != blockTemplate.SeedHash)
                     {
-                        logger.Info(()=> $"Detected new seed hash {blockTemplate.SeedHash} starting @ height {blockTemplate.Height}");
+                        logger.Info(() => $"Detected new seed hash {blockTemplate.SeedHash} starting @ height {blockTemplate.Height}");
 
-                        if(poolConfig.EnableInternalStratum == true)
+                        if (poolConfig.EnableInternalStratum == true)
                         {
                             LibRandomX.WithLock(() =>
                             {
-                                if(currentSeedHash != null)
+                                if (currentSeedHash != null)
                                     LibRandomX.DeleteSeed(randomXRealm, currentSeedHash);
 
                                 currentSeedHash = blockTemplate.SeedHash;
@@ -121,12 +121,12 @@ namespace Cybercore.Blockchain.Cryptonote
                     BlockchainStats.NetworkDifficulty = job.BlockTemplate.Difficulty;
                     BlockchainStats.NextNetworkTarget = "";
                     BlockchainStats.NextNetworkBits = "";
-                    BlockchainStats.BlockReward = (double) blockTemplate.ExpectedReward / 1000000000000;
+                    BlockchainStats.BlockReward = (double)blockTemplate.ExpectedReward / 1000000000000;
                 }
 
                 else
                 {
-                    if(via != null)
+                    if (via != null)
                         logger.Debug(() => $"Template update {blockTemplate.Height} [{via}]");
                     else
                         logger.Debug(() => $"Template update {blockTemplate.Height}");
@@ -135,7 +135,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 return isNew;
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Error during {nameof(UpdateJob)}");
             }
@@ -173,13 +173,13 @@ namespace Cybercore.Blockchain.Cryptonote
             var infos = await daemon.ExecuteCmdAllAsync<GetInfoResponse>(logger, CryptonoteCommands.GetInfo, ct);
             var firstValidResponse = infos.FirstOrDefault(x => x.Error == null && x.Response != null)?.Response;
 
-            if(firstValidResponse != null)
+            if (firstValidResponse != null)
             {
                 var lowestHeight = infos.Where(x => x.Error == null && x.Response != null)
                     .Min(x => x.Response.Height);
 
                 var totalBlocks = firstValidResponse.TargetHeight;
-                var percent = (double) lowestHeight / totalBlocks * 100;
+                var percent = (double)lowestHeight / totalBlocks * 100;
 
                 logger.Info(() => $"Daemons have downloaded {percent:0.00}% of blockchain from {firstValidResponse.OutgoingConnectionsCount} peers");
             }
@@ -193,20 +193,20 @@ namespace Cybercore.Blockchain.Cryptonote
             {
                 var infoResponse = await daemon.ExecuteCmdAnyAsync(logger, CryptonoteCommands.GetInfo, ct);
 
-                if(infoResponse.Error != null)
+                if (infoResponse.Error != null)
                     logger.Warn(() => $"Error(s) refreshing network stats: {infoResponse.Error.Message} (Code {infoResponse.Error.Code})");
 
-                if(infoResponse.Response != null)
+                if (infoResponse.Response != null)
                 {
                     var info = infoResponse.Response.ToObject<GetInfoResponse>();
 
-                    BlockchainStats.NetworkHashrate = info.Target > 0 ? (double) info.Difficulty / info.Target : 0;
+                    BlockchainStats.NetworkHashrate = info.Target > 0 ? (double)info.Difficulty / info.Target : 0;
                     BlockchainStats.ConnectedPeers = info.OutgoingConnectionsCount + info.IncomingConnectionsCount;
-		    BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
+                    BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
                 }
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
             }
@@ -216,7 +216,7 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var response = await daemon.ExecuteCmdAnyAsync<SubmitResponse>(logger, CryptonoteCommands.SubmitBlock, CancellationToken.None, new[] { blobHex });
 
-            if(response.Error != null || response?.Response?.Status != "OK")
+            if (response.Error != null || response?.Response?.Status != "OK")
             {
                 var error = response.Error?.Message ?? response.Response?.Status;
 
@@ -245,7 +245,7 @@ namespace Cybercore.Blockchain.Cryptonote
             extraPoolConfig = poolConfig.Extra.SafeExtensionDataAs<CryptonotePoolConfigExtra>();
             coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 randomXRealm = !string.IsNullOrEmpty(extraPoolConfig.RandomXRealm) ? extraPoolConfig.RandomXRealm : poolConfig.Id;
                 randomXFlagsOverride = MakeRandomXFlags(extraPoolConfig.RandomXFlagsOverride);
@@ -256,27 +256,27 @@ namespace Cybercore.Blockchain.Cryptonote
                 .Where(x => string.IsNullOrEmpty(x.Category))
                 .Select(x =>
                 {
-                    if(string.IsNullOrEmpty(x.HttpPath))
+                    if (string.IsNullOrEmpty(x.HttpPath))
                         x.HttpPath = CryptonoteConstants.DaemonRpcLocation;
 
                     return x;
                 })
                 .ToArray();
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 walletDaemonEndpoints = poolConfig.Daemons
                     .Where(x => x.Category?.ToLower() == CryptonoteConstants.WalletDaemonCategory)
                     .Select(x =>
                     {
-                        if(string.IsNullOrEmpty(x.HttpPath))
+                        if (string.IsNullOrEmpty(x.HttpPath))
                             x.HttpPath = CryptonoteConstants.DaemonRpcLocation;
 
                         return x;
                     })
                     .ToArray();
 
-                if(walletDaemonEndpoints.Length == 0)
+                if (walletDaemonEndpoints.Length == 0)
                     logger.ThrowLogPoolStartupException("Wallet-RPC daemon is not configured (Daemon configuration for monero-pools require an additional entry of category \'wallet' pointing to the wallet daemon)");
             }
 
@@ -285,29 +285,29 @@ namespace Cybercore.Blockchain.Cryptonote
 
         public bool ValidateAddress(string address)
         {
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 return false;
 
             var addressPrefix = LibCryptonote.DecodeAddress(address);
             var addressIntegratedPrefix = LibCryptonote.DecodeIntegratedAddress(address);
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-            switch(networkType)
+            switch (networkType)
             {
                 case CryptonoteNetworkType.Main:
-                    if(addressPrefix != coin.AddressPrefix &&
+                    if (addressPrefix != coin.AddressPrefix &&
                         addressIntegratedPrefix != coin.AddressPrefixIntegrated)
                         return false;
                     break;
 
                 case CryptonoteNetworkType.Test:
-                    if(addressPrefix != coin.AddressPrefixTestnet &&
+                    if (addressPrefix != coin.AddressPrefixTestnet &&
                         addressIntegratedPrefix != coin.AddressPrefixIntegratedTestnet)
                         return false;
                     break;
 
                 case CryptonoteNetworkType.Stage:
-                    if(addressPrefix != coin.AddressPrefixStagenet &&
+                    if (addressPrefix != coin.AddressPrefixStagenet &&
                        addressIntegratedPrefix != coin.AddressPrefixIntegratedStagenet)
                         return false;
                     break;
@@ -325,9 +325,9 @@ namespace Cybercore.Blockchain.Cryptonote
 
             var job = currentJob;
 
-            if(job != null)
+            if (job != null)
             {
-                lock(job)
+                lock (job)
                 {
                     job.PrepareWorkerJob(workerJob, out blob, out target);
                 }
@@ -344,7 +344,7 @@ namespace Cybercore.Blockchain.Cryptonote
             var context = worker.ContextAs<CryptonoteWorkerContext>();
 
             var job = currentJob;
-            if(workerJob.Height != job?.BlockTemplate.Height)
+            if (workerJob.Height != job?.BlockTemplate.Height)
                 throw new StratumException(StratumError.MinusOne, "block expired");
 
             var (share, blobHex) = job.ProcessShare(request.Nonce, workerJob.ExtraNonce, request.Hash, worker);
@@ -358,13 +358,13 @@ namespace Cybercore.Blockchain.Cryptonote
             share.NetworkDifficulty = job.BlockTemplate.Difficulty;
             share.Created = clock.Now;
 
-            if(share.IsBlockCandidate)
+            if (share.IsBlockCandidate)
             {
                 logger.Info(() => $"Submitting block {share.BlockHeight} [{share.BlockHash[..6]}]");
 
                 share.IsBlockCandidate = await SubmitBlockAsync(share, blobHex, share.BlockHash);
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                 {
                     logger.Info(() => $"Daemon accepted block {share.BlockHeight} [{share.BlockHash[..6]}] submitted by {context.Miner}");
 
@@ -400,20 +400,20 @@ namespace Cybercore.Blockchain.Cryptonote
 
         private LibRandomX.randomx_flags? MakeRandomXFlags(JToken token)
         {
-            if(token == null)
+            if (token == null)
                 return null;
 
-            if(token.Type == JTokenType.Integer)
-                return (LibRandomX.randomx_flags) token.Value<ulong>();
-            else if(token.Type == JTokenType.String)
+            if (token.Type == JTokenType.Integer)
+                return (LibRandomX.randomx_flags)token.Value<ulong>();
+            else if (token.Type == JTokenType.String)
             {
                 LibRandomX.randomx_flags result = 0;
                 var value = token.Value<string>();
 
-                foreach(var flag in value.Split("|").Select(x=> x.Trim()).Where(x=> !string.IsNullOrEmpty(x)))
+                foreach (var flag in value.Split("|").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)))
                 {
-                    if(Enum.TryParse(typeof(LibRandomX.randomx_flags), flag, true, out var flagVal))
-                        result |= (LibRandomX.randomx_flags) flagVal;
+                    if (Enum.TryParse(typeof(LibRandomX.randomx_flags), flag, true, out var flagVal))
+                        result |= (LibRandomX.randomx_flags)flagVal;
                 }
 
                 return result;
@@ -431,7 +431,7 @@ namespace Cybercore.Blockchain.Cryptonote
             daemon = new DaemonClient(jsonSerializerSettings, messageBus, clusterConfig.ClusterName ?? poolConfig.PoolName, poolConfig.Id);
             daemon.Configure(daemonEndpoints);
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 walletDaemon = new DaemonClient(jsonSerializerSettings, messageBus, clusterConfig.ClusterName ?? poolConfig.PoolName, poolConfig.Id);
                 walletDaemon.Configure(walletDaemonEndpoints);
@@ -442,20 +442,20 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var responses = await daemon.ExecuteCmdAllAsync<GetInfoResponse>(logger, CryptonoteCommands.GetInfo, ct);
 
-            if(responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
-                .Select(x => (DaemonClientException) x.Error.InnerException)
+            if (responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
+                .Select(x => (DaemonClientException)x.Error.InnerException)
                 .Any(x => x.Code == HttpStatusCode.Unauthorized))
                 logger.ThrowLogPoolStartupException("Daemon reports invalid credentials");
 
-            if(responses.Any(x => x.Error != null))
+            if (responses.Any(x => x.Error != null))
                 return false;
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 var responses2 = await walletDaemon.ExecuteCmdAllAsync<object>(logger, CryptonoteWalletCommands.GetAddress, ct);
 
-                if(responses2.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
-                    .Select(x => (DaemonClientException) x.Error.InnerException)
+                if (responses2.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
+                    .Select(x => (DaemonClientException)x.Error.InnerException)
                     .Any(x => x.Code == HttpStatusCode.Unauthorized))
                     logger.ThrowLogPoolStartupException("Wallet-Daemon reports invalid credentials");
 
@@ -477,7 +477,7 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var syncPendingNotificationShown = false;
 
-            while(true)
+            while (true)
             {
                 var request = new GetBlockTemplateRequest
                 {
@@ -490,13 +490,13 @@ namespace Cybercore.Blockchain.Cryptonote
 
                 var isSynched = responses.All(x => x.Error == null || x.Error.Code != -9);
 
-                if(isSynched)
+                if (isSynched)
                 {
                     logger.Info(() => "All daemons synched with blockchain");
                     break;
                 }
 
-                if(!syncPendingNotificationShown)
+                if (!syncPendingNotificationShown)
                 {
                     logger.Info(() => "Daemons still syncing with network. Manager will be started once synced");
                     syncPendingNotificationShown = true;
@@ -515,22 +515,22 @@ namespace Cybercore.Blockchain.Cryptonote
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
             var infoResponse = await daemon.ExecuteCmdAnyAsync(logger, CryptonoteCommands.GetInfo, ct);
 
-            if(infoResponse.Error != null)
+            if (infoResponse.Error != null)
                 logger.ThrowLogPoolStartupException($"Init RPC failed: {infoResponse.Error.Message} (Code {infoResponse.Error.Code})");
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 var addressResponse = await walletDaemon.ExecuteCmdAnyAsync<GetAddressResponse>(logger, ct, CryptonoteWalletCommands.GetAddress);
 
-                if(clusterConfig.PaymentProcessing?.Enabled == true && addressResponse.Response?.Address != poolConfig.Address)
+                if (clusterConfig.PaymentProcessing?.Enabled == true && addressResponse.Response?.Address != poolConfig.Address)
                     logger.ThrowLogPoolStartupException($"Wallet-Daemon does not own pool-address '{poolConfig.Address}'");
             }
 
             var info = infoResponse.Response.ToObject<GetInfoResponse>();
 
-            if(!string.IsNullOrEmpty(info.NetType))
+            if (!string.IsNullOrEmpty(info.NetType))
             {
-                switch(info.NetType.ToLower())
+                switch (info.NetType.ToLower())
                 {
                     case "mainnet":
                         networkType = CryptonoteNetworkType.Main;
@@ -551,28 +551,28 @@ namespace Cybercore.Blockchain.Cryptonote
                 networkType = info.IsTestnet ? CryptonoteNetworkType.Test : CryptonoteNetworkType.Main;
 
             poolAddressBase58Prefix = LibCryptonote.DecodeAddress(poolConfig.Address);
-            if(poolAddressBase58Prefix == 0)
+            if (poolAddressBase58Prefix == 0)
                 logger.ThrowLogPoolStartupException("Unable to decode pool-address");
 
-            switch(networkType)
+            switch (networkType)
             {
                 case CryptonoteNetworkType.Main:
-                    if(poolAddressBase58Prefix != coin.AddressPrefix)
+                    if (poolAddressBase58Prefix != coin.AddressPrefix)
                         logger.ThrowLogPoolStartupException($"Invalid pool address prefix. Expected {coin.AddressPrefix}, got {poolAddressBase58Prefix}");
                     break;
 
                 case CryptonoteNetworkType.Stage:
-                    if(poolAddressBase58Prefix != coin.AddressPrefixStagenet)
+                    if (poolAddressBase58Prefix != coin.AddressPrefixStagenet)
                         logger.ThrowLogPoolStartupException($"Invalid pool address prefix. Expected {coin.AddressPrefixStagenet}, got {poolAddressBase58Prefix}");
                     break;
 
                 case CryptonoteNetworkType.Test:
-                    if(poolAddressBase58Prefix != coin.AddressPrefixTestnet)
+                    if (poolAddressBase58Prefix != coin.AddressPrefixTestnet)
                         logger.ThrowLogPoolStartupException($"Invalid pool address prefix. Expected {coin.AddressPrefixTestnet}, got {poolAddressBase58Prefix}");
                     break;
             }
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
                 ConfigureRewards();
 
             BlockchainStats.RewardType = "POW";
@@ -582,8 +582,8 @@ namespace Cybercore.Blockchain.Cryptonote
 
             Observable.Interval(TimeSpan.FromMinutes(1))
                 .Select(via => Observable.FromAsync(() =>
-                    Guard(()=> UpdateNetworkStatsAsync(ct),
-                        ex=> logger.Error(ex))))
+                    Guard(() => UpdateNetworkStatsAsync(ct),
+                        ex => logger.Error(ex))))
                 .Concat()
                 .Subscribe();
 
@@ -594,18 +594,18 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             instanceId = new byte[CryptonoteConstants.InstanceIdSize];
 
-            using(var rng = RandomNumberGenerator.Create())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetNonZeroBytes(instanceId);
             }
 
-            if(clusterConfig.InstanceId.HasValue)
+            if (clusterConfig.InstanceId.HasValue)
                 instanceId[0] = clusterConfig.InstanceId.Value;
         }
 
         private void ConfigureRewards()
         {
-            if(networkType == CryptonoteNetworkType.Main &&
+            if (networkType == CryptonoteNetworkType.Main &&
                 DevDonation.Addresses.TryGetValue(poolConfig.Template.Symbol, out var address))
             {
                 poolConfig.RewardRecipients = poolConfig.RewardRecipients.Concat(new[]
@@ -630,7 +630,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 blockSubmission.Select(x => (JobRefreshBy.BlockFound, (string) null))
             };
 
-            if(extraPoolConfig?.BtStream == null)
+            if (extraPoolConfig?.BtStream == null)
             {
                 var zmq = poolConfig.Daemons
                     .Where(x => !string.IsNullOrEmpty(x.Extra.SafeExtensionDataAs<CryptonoteDaemonEndpointConfigExtra>()?.ZmqBlockNotifySocket))
@@ -642,7 +642,7 @@ namespace Cybercore.Blockchain.Cryptonote
                         return (Socket: extra.ZmqBlockNotifySocket, Topic: topic);
                     });
 
-                if(zmq.Count > 0)
+                if (zmq.Count > 0)
                 {
                     logger.Info(() => $"Subscribing to ZMQ push-updates from {string.Join(", ", zmq.Values)}");
 
@@ -662,14 +662,14 @@ namespace Cybercore.Blockchain.Cryptonote
                             {
                             }
 
-                            if(!result)
+                            if (!result)
                                 msg.Dispose();
 
                             return result;
                         })
                         .Select(msg =>
                         {
-                            using(msg)
+                            using (msg)
                             {
                                 var token = GetFrameAsJToken(msg[0].Read());
 
@@ -680,7 +680,7 @@ namespace Cybercore.Blockchain.Cryptonote
                             }
                         })
                         .DistinctUntilChanged()
-                        .Select(_ => (JobRefreshBy.PubSub, (string) null))
+                        .Select(_ => (JobRefreshBy.PubSub, (string)null))
                         .Publish()
                         .RefCount();
 
@@ -693,20 +693,20 @@ namespace Cybercore.Blockchain.Cryptonote
                     triggers.Add(blockNotify);
                 }
 
-                if(poolConfig.BlockRefreshInterval > 0)
+                if (poolConfig.BlockRefreshInterval > 0)
                 {
                     var pollingInterval = poolConfig.BlockRefreshInterval > 0 ? poolConfig.BlockRefreshInterval : 1000;
 
                     triggers.Add(Observable.Timer(TimeSpan.FromMilliseconds(pollingInterval))
                         .TakeUntil(pollTimerRestart)
-                        .Select(_ => (JobRefreshBy.Poll, (string) null))
+                        .Select(_ => (JobRefreshBy.Poll, (string)null))
                         .Repeat());
                 }
 
                 else
                 {
                     triggers.Add(Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                        .Select(_ => (JobRefreshBy.Initial, (string) null))
+                        .Select(_ => (JobRefreshBy.Initial, (string)null))
                         .TakeWhile(_ => !hasInitialBlockTemplate));
                 }
             }
@@ -719,7 +719,7 @@ namespace Cybercore.Blockchain.Cryptonote
                     .RefCount());
 
                 triggers.Add(Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                    .Select(_ => (JobRefreshBy.Initial, (string) null))
+                    .Select(_ => (JobRefreshBy.Initial, (string)null))
                     .TakeWhile(_ => !hasInitialBlockTemplate));
             }
 

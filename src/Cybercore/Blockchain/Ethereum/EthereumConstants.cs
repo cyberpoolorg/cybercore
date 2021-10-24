@@ -19,11 +19,11 @@ namespace Cybercore.Blockchain.Ethereum
         public const decimal StaticTransactionFeeReserve = 0.0025m;
         public const string BlockTypeUncle = "uncle";
 
-	#if !DEBUG
+#if !DEBUG
         public const int MinPayoutPeerCount = 1;
-	#else
+#else
         public const int MinPayoutPeerCount = 1;
-	#endif
+#endif
 
         public static readonly Regex ValidAddressPattern = new("^0x[0-9a-fA-F]{40}$", RegexOptions.Compiled);
         public static readonly Regex ZeroHashPattern = new("^0?x?0+$", RegexOptions.Compiled);

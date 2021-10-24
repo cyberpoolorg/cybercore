@@ -28,11 +28,11 @@ namespace Cybercore.VarDiff
         {
             Contract.RequiresNonNull(ctx, nameof(ctx));
 
-            lock(ctx)
+            lock (ctx)
             {
                 var ts = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
 
-                if(!ctx.LastTs.HasValue)
+                if (!ctx.LastTs.HasValue)
                 {
                     ctx.LastRtc = ts;
                     ctx.LastTs = ts;
@@ -47,36 +47,36 @@ namespace Cybercore.VarDiff
                 var timeCount = ctx.TimeBuffer.Size;
                 var avg = (timeTotal + sinceLast) / (timeCount + 1);
 
-                if(!isIdleUpdate)
+                if (!isIdleUpdate)
                 {
                     ctx.TimeBuffer.PushBack(sinceLast);
                     ctx.LastTs = ts;
                 }
 
-                if(ts - ctx.LastRtc < options.RetargetTime || avg >= tMin && avg <= tMax)
+                if (ts - ctx.LastRtc < options.RetargetTime || avg >= tMin && avg <= tMax)
                     return null;
 
                 var newDiff = difficulty * options.TargetTime / avg;
 
-                if(options.MaxDelta.HasValue && options.MaxDelta > 0)
+                if (options.MaxDelta.HasValue && options.MaxDelta > 0)
                 {
                     var delta = Math.Abs(newDiff - difficulty);
 
-                    if(delta > options.MaxDelta)
+                    if (delta > options.MaxDelta)
                     {
-                        if(newDiff > difficulty)
+                        if (newDiff > difficulty)
                             newDiff -= delta - options.MaxDelta.Value;
-                        else if(newDiff < difficulty)
+                        else if (newDiff < difficulty)
                             newDiff += delta - options.MaxDelta.Value;
                     }
                 }
 
-                if(newDiff < minDiff)
+                if (newDiff < minDiff)
                     newDiff = minDiff;
-                if(newDiff > maxDiff)
+                if (newDiff > maxDiff)
                     newDiff = maxDiff;
 
-                if(newDiff < difficulty || newDiff > difficulty)
+                if (newDiff < difficulty || newDiff > difficulty)
                 {
                     ctx.LastRtc = ts;
                     ctx.LastUpdate = clock.Now;

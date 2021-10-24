@@ -25,7 +25,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
 
         public void Dispose()
         {
-            if(handle != IntPtr.Zero)
+            if (handle != IntPtr.Zero)
             {
                 LibEthash.ethash_light_delete(handle);
                 handle = IntPtr.Zero;
@@ -36,9 +36,9 @@ namespace Cybercore.Crypto.Hashing.Ethash
         {
             await Task.Run(() =>
             {
-                lock(genLock)
+                lock (genLock)
                 {
-                    if(!isGenerated)
+                    if (!isGenerated)
                     {
                         var started = DateTime.Now;
                         logger.Debug(() => $"Generating cache for epoch {Epoch}");
@@ -69,7 +69,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                 LibEthash.ethash_light_compute(handle, input, nonce, ref value);
             }
 
-            if(value.success)
+            if (value.success)
             {
                 mixDigest = value.mix_hash.value;
                 result = value.result.value;

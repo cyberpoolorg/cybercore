@@ -58,18 +58,18 @@ namespace Cybercore.Mining
                 .Subscribe(share =>
                 {
                     share.Source = clusterConfig.ClusterName;
-                    share.BlockRewardDouble = (double) share.BlockReward;
+                    share.BlockRewardDouble = (double)share.BlockReward;
 
                     try
                     {
-                        const int flags = (int) WireFormat.ProtocolBuffers;
+                        const int flags = (int)WireFormat.ProtocolBuffers;
 
-                        using(var msg = new ZMessage())
+                        using (var msg = new ZMessage())
                         {
                             msg.Add(new ZFrame(share.PoolId));
                             msg.Add(new ZFrame(flags));
 
-                            using(var stream = new MemoryStream())
+                            using (var stream = new MemoryStream())
                             {
                                 Serializer.Serialize(stream, share);
                                 msg.Add(new ZFrame(stream.ToArray()));
@@ -79,7 +79,7 @@ namespace Cybercore.Mining
                         }
                     }
 
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(ex);
                     }
@@ -88,16 +88,16 @@ namespace Cybercore.Mining
 
         private void CheckQueueBacklog()
         {
-            if(queue.Count > QueueSizeWarningThreshold)
+            if (queue.Count > QueueSizeWarningThreshold)
             {
-                if(!hasWarnedAboutBacklogSize)
+                if (!hasWarnedAboutBacklogSize)
                 {
                     logger.Warn(() => $"Share relay queue backlog has crossed {QueueSizeWarningThreshold}");
                     hasWarnedAboutBacklogSize = true;
                 }
             }
 
-            else if(hasWarnedAboutBacklogSize && queue.Count <= QueueSizeWarningThreshold / 2)
+            else if (hasWarnedAboutBacklogSize && queue.Count <= QueueSizeWarningThreshold / 2)
             {
                 hasWarnedAboutBacklogSize = false;
             }
@@ -109,13 +109,13 @@ namespace Cybercore.Mining
 
             pubSocket = new ZSocket(ZSocketType.PUB);
 
-            if(!clusterConfig.ShareRelay.Connect)
+            if (!clusterConfig.ShareRelay.Connect)
             {
                 pubSocket.SetupCurveTlsServer(clusterConfig.ShareRelay.SharedEncryptionKey, logger);
 
                 pubSocket.Bind(clusterConfig.ShareRelay.PublishUrl);
 
-                if(pubSocket.CurveServer)
+                if (pubSocket.CurveServer)
                     logger.Info(() => $"Bound to {clusterConfig.ShareRelay.PublishUrl} using Curve public-key {pubSocket.CurvePublicKey.ToHexString()}");
                 else
                     logger.Info(() => $"Bound to {clusterConfig.ShareRelay.PublishUrl}");
@@ -123,7 +123,7 @@ namespace Cybercore.Mining
 
             else
             {
-                if(!string.IsNullOrEmpty(clusterConfig.ShareRelay.SharedEncryptionKey?.Trim()))
+                if (!string.IsNullOrEmpty(clusterConfig.ShareRelay.SharedEncryptionKey?.Trim()))
                     logger.ThrowLogPoolStartupException("ZeroMQ Curve is not supported in ShareRelay Connect-Mode");
 
                 pubSocket.Connect(clusterConfig.ShareRelay.PublishUrl);

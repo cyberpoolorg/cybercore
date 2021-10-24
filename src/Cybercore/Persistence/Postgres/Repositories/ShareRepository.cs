@@ -44,19 +44,19 @@ namespace Cybercore.Persistence.Postgres.Repositories
         {
             logger.LogInvoke();
 
-            var pgCon = (NpgsqlConnection) con;
+            var pgCon = (NpgsqlConnection)con;
 
             const string query = "COPY shares (poolid, blockheight, difficulty, " +
                 "networkdifficulty, miner, worker, useragent, ipaddress, source, created) FROM STDIN (FORMAT BINARY)";
 
-            await using(var writer = pgCon.BeginBinaryImport(query))
+            await using (var writer = pgCon.BeginBinaryImport(query))
             {
-                foreach(var share in shares)
+                foreach (var share in shares)
                 {
                     await writer.StartRowAsync();
 
                     await writer.WriteAsync(share.PoolId);
-                    await writer.WriteAsync((long) share.BlockHeight, NpgsqlDbType.Bigint);
+                    await writer.WriteAsync((long)share.BlockHeight, NpgsqlDbType.Bigint);
                     await writer.WriteAsync(share.Difficulty, NpgsqlDbType.Double);
                     await writer.WriteAsync(share.NetworkDifficulty, NpgsqlDbType.Double);
                     await writer.WriteAsync(share.Miner);
@@ -123,7 +123,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             const string query = "SELECT count(*) FROM shares WHERE poolid = @poolId AND miner = @miner";
 
-            return con.QuerySingleAsync<long>(query, new { poolId, miner}, tx);
+            return con.QuerySingleAsync<long>(query, new { poolId, miner }, tx);
         }
 
         public async Task DeleteSharesByMinerAsync(IDbConnection con, IDbTransaction tx, string poolId, string miner)
@@ -132,7 +132,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             const string query = "DELETE FROM shares WHERE poolid = @poolId AND miner = @miner";
 
-            await con.ExecuteAsync(query, new { poolId, miner}, tx);
+            await con.ExecuteAsync(query, new { poolId, miner }, tx);
         }
 
         public async Task DeleteSharesBeforeCreatedAsync(IDbConnection con, IDbTransaction tx, string poolId, DateTime before)
@@ -150,9 +150,9 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             var whereClause = "poolid = @poolId AND miner = @miner";
 
-            if(start.HasValue)
+            if (start.HasValue)
                 whereClause += " AND created >= @start ";
-            if(end.HasValue)
+            if (end.HasValue)
                 whereClause += " AND created <= @end";
 
             var query = $"SELECT count(*) FROM shares WHERE {whereClause}";
@@ -171,7 +171,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
         public async Task<MinerWorkerHashes[]> GetAccumulatedShareDifficultyTotalAsync(IDbConnection con, string poolId)
         {
-            logger.LogInvoke(new object[] { (object) poolId });
+            logger.LogInvoke(new object[] { (object)poolId });
 
             const string query = "SELECT SUM(difficulty) AS sum, COUNT(difficulty) AS count, miner, worker FROM shares WHERE poolid = @poolid group by miner, worker";
 

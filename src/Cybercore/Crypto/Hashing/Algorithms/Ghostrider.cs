@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibGrhash.ghostrider(input, output, (uint) data.Length);
+                    LibGrhash.ghostrider(input, output, (uint)data.Length);
                 }
             }
         }

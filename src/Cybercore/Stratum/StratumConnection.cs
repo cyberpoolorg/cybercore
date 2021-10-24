@@ -91,9 +91,9 @@ namespace Cybercore.Stratum
 
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
 
-                using(var disposables = new CompositeDisposable(networkStream))
+                using (var disposables = new CompositeDisposable(networkStream))
                 {
-                    if(endpoint.PoolEndpoint.Tls)
+                    if (endpoint.PoolEndpoint.Tls)
                     {
                         var sslStream = new SslStream(networkStream, false);
                         disposables.Add(sslStream);
@@ -131,14 +131,14 @@ namespace Cybercore.Stratum
 
                     var error = tasks.FirstOrDefault(t => t.IsFaulted)?.Exception;
 
-                    if(error == null)
+                    if (error == null)
                         onCompleted(this);
                     else
                         onError(this, error);
                 }
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 onError(this, ex);
             }
@@ -166,7 +166,7 @@ namespace Cybercore.Stratum
 
         public T ContextAs<T>() where T : WorkerContextBase
         {
-            return (T) context;
+            return (T)context;
         }
 
         public ValueTask RespondAsync<T>(T payload, object id)
@@ -176,7 +176,7 @@ namespace Cybercore.Stratum
 
         public ValueTask RespondErrorAsync(StratumError code, string message, object id, object result = null, object data = null)
         {
-            return RespondAsync(new JsonRpcResponse(new JsonRpcException((int) code, message, null), id, result));
+            return RespondAsync(new JsonRpcResponse(new JsonRpcException((int)code, message, null), id, result));
         }
 
         public ValueTask RespondAsync<T>(JsonRpcResponse<T> response)
@@ -205,11 +205,11 @@ namespace Cybercore.Stratum
         {
             Contract.RequiresNonNull(payload, nameof(payload));
 
-            using(var ctsTimeout = new CancellationTokenSource())
+            using (var ctsTimeout = new CancellationTokenSource())
             {
                 ctsTimeout.CancelAfter(sendTimeout);
 
-                if(!await sendQueue.SendAsync(payload, ctsTimeout.Token))
+                if (!await sendQueue.SendAsync(payload, ctsTimeout.Token))
                 {
                     throw new IOException($"Send queue stalled at {sendQueue.Count} of {SendQueueCapacity} items");
                 }
@@ -218,14 +218,14 @@ namespace Cybercore.Stratum
 
         private async Task FillReceivePipeAsync(CancellationToken ct)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 logger.Debug(() => $"[{ConnectionId}] [NET] Waiting for data ...");
 
                 var memory = receivePipe.Writer.GetMemory(MaxInboundRequestLength + 1);
 
                 var cb = await networkStream.ReadAsync(memory, ct);
-                if(cb == 0)
+                if (cb == 0)
                     break;
 
                 logger.Debug(() => $"[{ConnectionId}] [NET] Received data: {StratumConstants.Encoding.GetString(memory.ToArray(), 0, cb)}");
@@ -235,14 +235,14 @@ namespace Cybercore.Stratum
                 receivePipe.Writer.Advance(cb);
 
                 var result = await receivePipe.Writer.FlushAsync(ct);
-                if(result.IsCompleted)
+                if (result.IsCompleted)
                     break;
             }
         }
 
         private async Task ProcessReceivePipeAsync(CancellationToken ct, TcpProxyProtocolConfig proxyProtocol, Func<StratumConnection, JsonRpcRequest, CancellationToken, Task> onRequestAsync)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 logger.Debug(() => $"[{ConnectionId}] [PIPE] Waiting for data ...");
 
@@ -251,36 +251,36 @@ namespace Cybercore.Stratum
                 var buffer = result.Buffer;
                 SequencePosition? position;
 
-                if(buffer.Length > MaxInboundRequestLength)
+                if (buffer.Length > MaxInboundRequestLength)
                     throw new InvalidDataException($"Incoming data exceeds maximum of {MaxInboundRequestLength}");
 
                 logger.Debug(() => $"[{ConnectionId}] [PIPE] Received data: {result.Buffer.AsString(StratumConstants.Encoding)}");
 
                 do
                 {
-                    position = buffer.PositionOf((byte) '\n');
+                    position = buffer.PositionOf((byte)'\n');
 
-                    if(position != null)
+                    if (position != null)
                     {
                         var slice = buffer.Slice(0, position.Value);
 
-                        if(!expectingProxyHeader || !ProcessProxyHeader(slice, proxyProtocol))
+                        if (!expectingProxyHeader || !ProcessProxyHeader(slice, proxyProtocol))
                             await ProcessRequestAsync(ct, onRequestAsync, slice);
 
                         buffer = buffer.Slice(buffer.GetPosition(1, position.Value));
                     }
-                } while(position != null);
+                } while (position != null);
 
                 receivePipe.Reader.AdvanceTo(buffer.Start, buffer.End);
 
-                if(result.IsCompleted)
+                if (result.IsCompleted)
                     break;
             }
         }
 
         private async Task ProcessSendQueueAsync(CancellationToken ct)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 var msg = await sendQueue.ReceiveAsync(ct);
 
@@ -296,7 +296,7 @@ namespace Cybercore.Stratum
 
             try
             {
-                using(var ctsTimeout = CancellationTokenSource.CreateLinkedTokenSource(ct))
+                using (var ctsTimeout = CancellationTokenSource.CreateLinkedTokenSource(ct))
                 {
                     ctsTimeout.CancelAfter(sendTimeout);
 
@@ -322,18 +322,18 @@ namespace Cybercore.Stratum
                 serializer.Serialize(writer, msg);
             }
 
-            stream.WriteByte((byte) '\n');
+            stream.WriteByte((byte)'\n');
 
-            return (int) stream.Position;
+            return (int)stream.Position;
         }
 
         private async Task ProcessRequestAsync(CancellationToken ct, Func<StratumConnection, JsonRpcRequest, CancellationToken, Task> onRequestAsync, ReadOnlySequence<byte> lineBuffer)
         {
-            using(var reader = new JsonTextReader(new StreamReader(new MemoryStream(lineBuffer.ToArray()), StratumConstants.Encoding)))
+            using (var reader = new JsonTextReader(new StreamReader(new MemoryStream(lineBuffer.ToArray()), StratumConstants.Encoding)))
             {
                 var request = serializer.Deserialize<JsonRpcRequest>(reader);
 
-                if(request == null)
+                if (request == null)
                     throw new JsonException("Unable to deserialize request");
 
                 await onRequestAsync(this, request, ct);
@@ -347,13 +347,13 @@ namespace Cybercore.Stratum
             var line = seq.AsString(StratumConstants.Encoding);
             var peerAddress = RemoteEndpoint.Address;
 
-            if(line.StartsWith("PROXY "))
+            if (line.StartsWith("PROXY "))
             {
                 var proxyAddresses = proxyProtocol.ProxyAddresses?.Select(IPAddress.Parse).ToArray();
-                if(proxyAddresses == null || !proxyAddresses.Any())
+                if (proxyAddresses == null || !proxyAddresses.Any())
                     proxyAddresses = new[] { IPAddress.Loopback, IPUtils.IPv4LoopBackOnIPv6, IPAddress.IPv6Loopback };
 
-                if(proxyAddresses.Any(x => x.Equals(peerAddress)))
+                if (proxyAddresses.Any(x => x.Equals(peerAddress)))
                 {
                     logger.Debug(() => $"[{ConnectionId}] Received Proxy-Protocol header: {line}");
 
@@ -373,7 +373,7 @@ namespace Cybercore.Stratum
                 return true;
             }
 
-            else if(proxyProtocol.Mandatory)
+            else if (proxyProtocol.Mandatory)
             {
                 throw new InvalidDataException($"[{ConnectionId}] Missing mandatory Proxy-Protocol header from {peerAddress}. Closing connection.");
             }

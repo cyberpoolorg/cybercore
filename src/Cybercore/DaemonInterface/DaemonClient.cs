@@ -95,7 +95,7 @@ namespace Cybercore.DaemonInterface
                 await Task.WhenAll(tasks);
             }
 
-            catch(Exception)
+            catch (Exception)
             {
             }
 
@@ -225,20 +225,20 @@ namespace Cybercore.DaemonInterface
 
             var protocol = (endPoint.Ssl || endPoint.Http2) ? "https" : "http";
             var requestUrl = $"{protocol}://{endPoint.Host}:{endPoint.Port}";
-            if(!string.IsNullOrEmpty(endPoint.HttpPath))
+            if (!string.IsNullOrEmpty(endPoint.HttpPath))
                 requestUrl += $"{(endPoint.HttpPath.StartsWith("/") ? string.Empty : "/")}{endPoint.HttpPath}";
 
-            using(var request = new HttpRequestMessage(HttpMethod.Post, requestUrl))
+            using (var request = new HttpRequestMessage(HttpMethod.Post, requestUrl))
             {
                 request.Headers.ConnectionClose = false;
 
-                if(endPoint.Http2)
+                if (endPoint.Http2)
                     request.Version = new Version(2, 0);
 
                 var json = JsonConvert.SerializeObject(rpcRequest, payloadJsonSerializerSettings ?? serializerSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                if(!string.IsNullOrEmpty(endPoint.User))
+                if (!string.IsNullOrEmpty(endPoint.User))
                 {
                     var auth = $"{endPoint.User}:{endPoint.Password}";
                     var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(auth));
@@ -247,11 +247,11 @@ namespace Cybercore.DaemonInterface
 
                 logger.Trace(() => $"Sending RPC request to {requestUrl}: {json}");
 
-                using(var response = await httpClient.SendAsync(request, ct))
+                using (var response = await httpClient.SendAsync(request, ct))
                 {
                     var responseContent = await response.Content.ReadAsStringAsync(ct);
 
-                    using(var jreader = new JsonTextReader(new StringReader(responseContent)))
+                    using (var jreader = new JsonTextReader(new StringReader(responseContent)))
                     {
                         var result = serializer.Deserialize<JsonRpcResponse>(jreader);
 
@@ -270,20 +270,20 @@ namespace Cybercore.DaemonInterface
             var rpcRequests = batch.Select(x => new JsonRpcRequest<object>(x.Method, x.Payload, GetRequestId()));
             var protocol = (endPoint.Ssl || endPoint.Http2) ? "https" : "http";
             var requestUrl = $"{protocol}://{endPoint.Host}:{endPoint.Port}";
-            if(!string.IsNullOrEmpty(endPoint.HttpPath))
+            if (!string.IsNullOrEmpty(endPoint.HttpPath))
                 requestUrl += $"{(endPoint.HttpPath.StartsWith("/") ? string.Empty : "/")}{endPoint.HttpPath}";
 
-            using(var request = new HttpRequestMessage(HttpMethod.Post, requestUrl))
+            using (var request = new HttpRequestMessage(HttpMethod.Post, requestUrl))
             {
                 request.Headers.ConnectionClose = false;
 
-                if(endPoint.Http2)
+                if (endPoint.Http2)
                     request.Version = new Version(2, 0);
 
                 var json = JsonConvert.SerializeObject(rpcRequests, serializerSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                if(!string.IsNullOrEmpty(endPoint.User))
+                if (!string.IsNullOrEmpty(endPoint.User))
                 {
                     var auth = $"{endPoint.User}:{endPoint.Password}";
                     var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(auth));
@@ -292,11 +292,11 @@ namespace Cybercore.DaemonInterface
 
                 logger.Trace(() => $"Sending RPC request to {requestUrl}: {json}");
 
-                using(var response = await httpClient.SendAsync(request, ct))
+                using (var response = await httpClient.SendAsync(request, ct))
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync(ct);
 
-                    using(var jreader = new JsonTextReader(new StringReader(jsonResponse)))
+                    using (var jreader = new JsonTextReader(new StringReader(jsonResponse)))
                     {
                         var result = serializer.Deserialize<JsonRpcResponse<JToken>[]>(jreader);
 
@@ -323,22 +323,22 @@ namespace Cybercore.DaemonInterface
                 Instance = endPoints[i]
             };
 
-            if(x.IsFaulted)
+            if (x.IsFaulted)
             {
                 Exception inner;
 
-                if(x.Exception.InnerExceptions.Count == 1)
+                if (x.Exception.InnerExceptions.Count == 1)
                     inner = x.Exception.InnerException;
                 else
                     inner = x.Exception;
 
-                if(throwOnError)
+                if (throwOnError)
                     throw inner;
 
                 resp.Error = new JsonRpcException(-500, x.Exception.Message, null, inner);
             }
 
-            else if(x.IsCanceled)
+            else if (x.IsCanceled)
             {
                 resp.Error = new JsonRpcException(-500, "Cancelled", null);
             }
@@ -347,10 +347,10 @@ namespace Cybercore.DaemonInterface
             {
                 Debug.Assert(x.IsCompletedSuccessfully);
 
-                if(x.Result?.Result is JToken token)
+                if (x.Result?.Result is JToken token)
                     resp.Response = token?.ToObject<TResponse>(serializer);
                 else
-                    resp.Response = (TResponse) x.Result?.Result;
+                    resp.Response = (TResponse)x.Result?.Result;
 
                 resp.Error = x.Result?.Error;
             }
@@ -360,7 +360,7 @@ namespace Cybercore.DaemonInterface
 
         private DaemonResponse<JToken>[] MapDaemonBatchResponse(int i, Task<JsonRpcResponse<JToken>[]> x)
         {
-            if(x.IsFaulted)
+            if (x.IsFaulted)
                 return x.Result?.Select(y => new DaemonResponse<JToken>
                 {
                     Instance = endPoints[i],
@@ -387,15 +387,15 @@ namespace Cybercore.DaemonInterface
 
                 Task.Run(async () =>
                 {
-                    using(cts)
+                    using (cts)
                     {
                         var buf = new byte[0x10000];
 
-                        while(!cts.IsCancellationRequested)
+                        while (!cts.IsCancellationRequested)
                         {
                             try
                             {
-                                using(var client = new ClientWebSocket())
+                                using (var client = new ClientWebSocket())
                                 {
                                     var protocol = conf.Ssl ? "wss" : "ws";
                                     var uri = new Uri($"{protocol}://{endPoint.Host}:{conf.Port}{conf.HttpPath}");
@@ -413,22 +413,22 @@ namespace Cybercore.DaemonInterface
 
                                     var stream = new MemoryStream();
 
-                                    while(!cts.IsCancellationRequested && client.State == WebSocketState.Open)
+                                    while (!cts.IsCancellationRequested && client.State == WebSocketState.Open)
                                     {
                                         stream.SetLength(0);
                                         var complete = false;
 
                                         do
                                         {
-                                            using(var ctsTimeout = new CancellationTokenSource())
+                                            using (var ctsTimeout = new CancellationTokenSource())
                                             {
-                                                using(var ctsComposite = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, ctsTimeout.Token))
+                                                using (var ctsComposite = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, ctsTimeout.Token))
                                                 {
                                                     ctsTimeout.CancelAfter(TimeSpan.FromMinutes(10));
 
                                                     var response = await client.ReceiveAsync(buf, ctsComposite.Token);
 
-                                                    if(response.MessageType == WebSocketMessageType.Binary)
+                                                    if (response.MessageType == WebSocketMessageType.Binary)
                                                         throw new InvalidDataException("expected text, received binary data");
 
                                                     await stream.WriteAsync(buf, 0, response.Count, ctsComposite.Token);
@@ -436,7 +436,7 @@ namespace Cybercore.DaemonInterface
                                                     complete = response.EndOfMessage;
                                                 }
                                             }
-                                        } while(!complete && !cts.IsCancellationRequested && client.State == WebSocketState.Open);
+                                        } while (!complete && !cts.IsCancellationRequested && client.State == WebSocketState.Open);
 
                                         logger.Debug(() => $"Received WebSocket message with length {stream.Length}");
 
@@ -445,12 +445,12 @@ namespace Cybercore.DaemonInterface
                                 }
                             }
 
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 logger.Error(() => $"{ex.GetType().Name} '{ex.Message}' while streaming websocket responses. Reconnecting in 5s");
                             }
 
-                            if(!cts.IsCancellationRequested)
+                            if (!cts.IsCancellationRequested)
                                 await Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
                         }
                     }
@@ -468,20 +468,20 @@ namespace Cybercore.DaemonInterface
 
                 Task.Run(() =>
                 {
-                    using(tcs)
+                    using (tcs)
                     {
-                        while(!tcs.IsCancellationRequested)
+                        while (!tcs.IsCancellationRequested)
                         {
                             try
                             {
-                                using(var subSocket = new ZSocket(ZSocketType.SUB))
+                                using (var subSocket = new ZSocket(ZSocketType.SUB))
                                 {
                                     subSocket.Connect(url);
                                     subSocket.Subscribe(topic);
 
                                     logger.Debug($"Subscribed to {url}/{topic}");
 
-                                    while(!tcs.IsCancellationRequested)
+                                    while (!tcs.IsCancellationRequested)
                                     {
                                         var msg = subSocket.ReceiveMessage();
                                         obs.OnNext(msg);
@@ -489,7 +489,7 @@ namespace Cybercore.DaemonInterface
                                 }
                             }
 
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 logger.Error(ex);
                             }

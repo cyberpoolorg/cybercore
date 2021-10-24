@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibMultihash.groestl_myriad(input, output, (uint) data.Length);
+                    LibMultihash.groestl_myriad(input, output, (uint)data.Length);
                 }
             }
         }

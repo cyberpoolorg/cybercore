@@ -41,7 +41,7 @@ namespace Cybercore.Blockchain
 
         protected virtual async Task StartDaemonAsync(CancellationToken ct)
         {
-            while(!await AreDaemonsHealthyAsync(ct))
+            while (!await AreDaemonsHealthyAsync(ct))
             {
                 logger.Info(() => "Waiting for daemons to come online ...");
 
@@ -50,7 +50,7 @@ namespace Cybercore.Blockchain
 
             logger.Info(() => "All daemons online");
 
-            while(!await AreDaemonsConnectedAsync(ct))
+            while (!await AreDaemonsConnectedAsync(ct))
             {
                 logger.Info(() => "Waiting for daemons to connect to peers ...");
 
@@ -63,7 +63,7 @@ namespace Cybercore.Blockchain
             Interlocked.Increment(ref jobId);
             var value = Interlocked.CompareExchange(ref jobId, 0, int.MinValue);
 
-            if(format != null)
+            if (format != null)
                 return value.ToString(format);
 
             return value.ToStringHex8();

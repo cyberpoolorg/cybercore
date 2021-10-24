@@ -91,14 +91,14 @@ namespace Cybercore.Payments
         {
             var blockRewardRemaining = block.Reward;
 
-            foreach(var recipient in poolConfig.RewardRecipients.Where(x => x.Percentage > 0))
+            foreach (var recipient in poolConfig.RewardRecipients.Where(x => x.Percentage > 0))
             {
                 var amount = block.Reward * (recipient.Percentage / 100.0m);
                 var address = recipient.Address;
 
                 blockRewardRemaining -= amount;
 
-                if(address != poolConfig.Address)
+                if (address != poolConfig.Address)
                 {
                     logger.Info(() => $"Adding {FormatAmount(amount)} to balance of {address}");
                     await balanceRepo.AddAmountAsync(con, tx, poolConfig.Id, address, amount, $"Reward for block {block.BlockHeight}");
@@ -118,9 +118,9 @@ namespace Cybercore.Payments
                 {
                     await cf.RunTx(async (con, tx) =>
                     {
-                        foreach(var balance in balances)
+                        foreach (var balance in balances)
                         {
-                            if(!string.IsNullOrEmpty(transactionConfirmation) && poolConfig.RewardRecipients.All(x => x.Address != balance.Address))
+                            if (!string.IsNullOrEmpty(transactionConfirmation) && poolConfig.RewardRecipients.All(x => x.Address != balance.Address))
                             {
                                 var payment = new Payment
                                 {
@@ -142,7 +142,7 @@ namespace Cybercore.Payments
                 });
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"[{LogCategory}] Failed to persist the following payments: " +
                     $"{JsonConvert.SerializeObject(balances.Where(x => x.Amount > 0).ToDictionary(x => x.Address, x => x.Amount))}");

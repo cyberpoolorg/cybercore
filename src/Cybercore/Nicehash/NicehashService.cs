@@ -43,21 +43,21 @@ namespace Cybercore.Nicehash
 
                     var response = await client.Get<NicehashMiningAlgorithmsResponse>("/mining/algorithms", cts.Token);
 
-                    return response.Algorithms.ToDictionary(x => x.Algorithm, x=> x, StringComparer.InvariantCultureIgnoreCase);
+                    return response.Algorithms.ToDictionary(x => x.Algorithm, x => x, StringComparer.InvariantCultureIgnoreCase);
                 });
 
                 var niceHashAlgo = GetNicehashAlgo(coin, algo);
 
-                if(!algos.TryGetValue(niceHashAlgo, out var item))
-                    return (double?) null;
+                if (!algos.TryGetValue(niceHashAlgo, out var item))
+                    return (double?)null;
 
                 return item.MinimalPoolDifficulty;
-            }, ex=> logger.Error(()=> $"Error updating Nicehash diffs: {ex.Message}"));
+            }, ex => logger.Error(() => $"Error updating Nicehash diffs: {ex.Message}"));
         }
 
         private string GetNicehashAlgo(string coin, string algo)
         {
-            if(coin == "Monero" && algo == "RandomX")
+            if (coin == "Monero" && algo == "RandomX")
                 return "randomxmonero";
 
             return algo;

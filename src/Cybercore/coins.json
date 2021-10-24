@@ -758,7 +758,12 @@
     },
     "blockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "neoscrypt", "args": [ 0 ] } ]
+      "args": [
+        {
+          "hash": "neoscrypt",
+          "args": [ 0 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/ftc/block.dws?$height$.htm",
@@ -784,7 +789,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "coinbaseMinConfimations": 21,
@@ -811,7 +821,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "http://70.179.122.29:60000/block/$height$",
@@ -837,7 +852,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "coinbaseTxVersion": 2,
     "coinbaseTxComment": "FLO Cybercore",
@@ -1017,7 +1037,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "http://hfrco.in/blockcrawler/block/$height$",
@@ -1130,7 +1155,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/ltc/block.dws?$height$.htm",
@@ -1311,7 +1341,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/moon/block.dws?$height$.htm",
@@ -1357,7 +1392,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://blocks.notebc.space/block/$height$",
@@ -1424,7 +1464,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/pak/block.dws?$height$.htm",
@@ -1491,7 +1536,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "hasMasterNodes": true,
     "shareMultiplier": 65536,
@@ -1539,7 +1589,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "hasMasterNodes": true,
     "shareMultiplier": 65536,
@@ -1652,7 +1707,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://be.rosebird.org/block/$height$",
@@ -1835,7 +1895,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://explorer.theholyroger.com/block/$height$",
@@ -1944,7 +2009,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/vls/block.dws?$height$.htm",
@@ -2132,7 +2202,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://chainz.cryptoid.info/via/block.dws?$height$.htm",
@@ -2158,7 +2233,12 @@
     },
     "posBlockHasher": {
       "hash": "reverse",
-      "args": [ { "hash": "scrypt", "args": [ 1024, 1 ] } ]
+      "args": [
+        {
+          "hash": "scrypt",
+          "args": [ 1024, 1 ]
+        }
+      ]
     },
     "shareMultiplier": 65536,
     "explorerBlockLink": "https://explorer.voltpot.org/block/$height$",

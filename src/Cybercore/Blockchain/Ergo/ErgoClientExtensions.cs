@@ -13,7 +13,7 @@ namespace Cybercore.Blockchain.Ergo
 
         private Task PrepareRequestAsync(HttpClient client, HttpRequestMessage request, StringBuilder url)
         {
-            foreach(var pair in RequestHeaders)
+            foreach (var pair in RequestHeaders)
                 request.Headers.Add(pair.Key, pair.Value);
 
             return Task.CompletedTask;

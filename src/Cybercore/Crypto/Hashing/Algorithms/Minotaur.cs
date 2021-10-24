@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibMultihash.minotaur(input, output, (uint) data.Length);
+                    LibMultihash.minotaur(input, output, (uint)data.Length);
                 }
             }
         }

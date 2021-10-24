@@ -32,20 +32,20 @@ namespace Cybercore.Crypto
             var startL = 2;
             var Ll = L.Count;
 
-            if(Ll > 1)
-                while(true)
+            if (Ll > 1)
+                while (true)
                 {
-                    if(Ll == 1)
+                    if (Ll == 1)
                         break;
 
                     steps.Add(L[1]);
 
-                    if(Ll % 2 == 1)
+                    if (Ll % 2 == 1)
                         L.Add(L[^1]);
 
                     var Ld = new List<byte[]>();
 
-                    for(var i = startL; i < Ll; i += 2)
+                    for (var i = startL; i < Ll; i += 2)
                         Ld.Add(MerkleJoin(L[i], L[i + 1]));
 
                     L = new List<byte[]> { null };
@@ -67,7 +67,7 @@ namespace Cybercore.Crypto
         {
             Contract.RequiresNonNull(first, nameof(first));
 
-            foreach(var step in Steps)
+            foreach (var step in Steps)
                 first = DoubleDigest(first.Concat(step)).ToArray();
 
             return first;
@@ -75,7 +75,7 @@ namespace Cybercore.Crypto
 
         private static byte[] DoubleDigest(byte[] input)
         {
-            using(var hash = SHA256.Create())
+            using (var hash = SHA256.Create())
             {
                 var first = hash.ComputeHash(input, 0, input.Length);
                 return hash.ComputeHash(first);

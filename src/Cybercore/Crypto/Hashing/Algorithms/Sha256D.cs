@@ -13,7 +13,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
         {
             Contract.Requires<ArgumentException>(result.Length >= 32, $"{nameof(result)} must be greater or equal 32 bytes");
 
-            using(var hasher = SHA256.Create())
+            using (var hasher = SHA256.Create())
             {
                 hasher.TryComputeHash(data, result, out _);
                 hasher.TryComputeHash(result, result, out _);

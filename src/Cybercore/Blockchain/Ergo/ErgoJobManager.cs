@@ -59,7 +59,7 @@ namespace Cybercore.Blockchain.Ergo
                 blockFound.Select(x => (false, JobRefreshBy.BlockFound, (string) null))
             };
 
-            if(extraPoolConfig?.BtStream != null)
+            if (extraPoolConfig?.BtStream != null)
             {
                 var btStream = BtStreamSubscribe(extraPoolConfig.BtStream);
 
@@ -73,11 +73,11 @@ namespace Cybercore.Blockchain.Ergo
 
             triggers.Add(Observable.Timer(TimeSpan.FromMilliseconds(pollingInterval))
                 .TakeUntil(pollTimerRestart)
-                .Select(_ => (false, JobRefreshBy.Poll, (string) null))
+                .Select(_ => (false, JobRefreshBy.Poll, (string)null))
                 .Repeat());
 
             triggers.Add(Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                .Select(_ => (false, JobRefreshBy.Initial, (string) null))
+                .Select(_ => (false, JobRefreshBy.Initial, (string)null))
                 .TakeWhile(_ => !hasInitialBlockTemplate));
 
             Jobs = Observable.Merge(triggers)
@@ -86,7 +86,7 @@ namespace Cybercore.Blockchain.Ergo
                 .Where(x => x.IsNew || x.Force)
                 .Do(x =>
                 {
-                    if(x.IsNew)
+                    if (x.IsNew)
                         hasInitialBlockTemplate = true;
                 })
                 .Select(x => GetJobParamsForStratum(x.IsNew))
@@ -111,26 +111,26 @@ namespace Cybercore.Blockchain.Ergo
                              (job.BlockTemplate?.Msg != blockTemplate.Msg ||
                               blockTemplate.Height > job.BlockTemplate.Height));
 
-                if(isNew)
+                if (isNew)
                     messageBus.NotifyChainHeight(poolConfig.Id, blockTemplate.Height, poolConfig.Template);
 
-                if(isNew || forceUpdate)
+                if (isNew || forceUpdate)
                 {
                     job = new ErgoJob();
 
                     job.Init(blockTemplate, blockVersion, extraNonceSize, NextJobId());
 
-                    lock(jobLock)
+                    lock (jobLock)
                     {
                         validJobs.Insert(0, job);
 
-                        while(validJobs.Count > maxActiveJobs)
+                        while (validJobs.Count > maxActiveJobs)
                             validJobs.RemoveAt(validJobs.Count - 1);
                     }
 
-                    if(isNew)
+                    if (isNew)
                     {
-                        if(via != null)
+                        if (via != null)
                             logger.Info(() => $"Detected new block {job.Height} [{via}]");
                         else
                             logger.Info(() => $"Detected new block {job.Height}");
@@ -145,7 +145,7 @@ namespace Cybercore.Blockchain.Ergo
 
                     else
                     {
-                        if(via != null)
+                        if (via != null)
                             logger.Debug(() => $"Template update {job.Height} [{via}]");
                         else
                             logger.Debug(() => $"Template update {job.Height}");
@@ -157,12 +157,12 @@ namespace Cybercore.Blockchain.Ergo
                 return (isNew, forceUpdate);
             }
 
-            catch(ApiException<ApiError> ex)
+            catch (ApiException<ApiError> ex)
             {
                 logger.Error(() => $"Error during {nameof(UpdateJob)}: {ex.Result.Detail ?? ex.Result.Reason}");
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Error during {nameof(UpdateJob)}");
             }
@@ -191,9 +191,9 @@ namespace Cybercore.Blockchain.Ergo
             var info = await Guard(() => ergoClient.GetNodeInfoAsync(),
                 ex => logger.Debug(ex));
 
-            if(info?.FullHeight.HasValue == true && info.HeadersHeight.HasValue)
+            if (info?.FullHeight.HasValue == true && info.HeadersHeight.HasValue)
             {
-                var percent = (double) info.FullHeight.Value / info.HeadersHeight.Value * 100;
+                var percent = (double)info.FullHeight.Value / info.HeadersHeight.Value * 100;
 
                 logger.Info(() => $"Daemon has downloaded {percent:0.00}% of blockchain from {info.PeersCount} peers");
             }
@@ -204,7 +204,7 @@ namespace Cybercore.Blockchain.Ergo
 
         private void ConfigureRewards()
         {
-            if(network == "mainnet" &&
+            if (network == "mainnet" &&
                DevDonation.Addresses.TryGetValue(poolConfig.Template.Symbol, out var address))
             {
                 poolConfig.RewardRecipients = poolConfig.RewardRecipients.Concat(new[]
@@ -231,13 +231,13 @@ namespace Cybercore.Blockchain.Ergo
                 return true;
             }
 
-            catch(ApiException<ApiError> ex)
+            catch (ApiException<ApiError> ex)
             {
                 logger.Warn(() => $"Block {share.BlockHeight} submission failed with: {ex.Result.Detail ?? ex.Result.Reason ?? ex.Message}");
                 messageBus.SendMessage(new AdminNotification("Block submission failed", $"Pool {poolConfig.Id} {(!string.IsNullOrEmpty(share.Source) ? $"[{share.Source.ToUpper()}] " : string.Empty)}failed to submit block {share.BlockHeight}: {ex.Result.Detail ?? ex.Result.Reason ?? ex.Message}"));
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Warn(() => $"Block {share.BlockHeight} submission failed with: {ex.Message}");
                 messageBus.SendMessage(new AdminNotification("Block submission failed", $"Pool {poolConfig.Id} {(!string.IsNullOrEmpty(share.Source) ? $"[{share.Source.ToUpper()}] " : string.Empty)}failed to submit block {share.BlockHeight}: {ex.Message}"));
@@ -278,7 +278,7 @@ namespace Cybercore.Blockchain.Ergo
 
             logger.LogInvoke(new[] { worker.ConnectionId });
 
-            if(submission is not object[] submitParams)
+            if (submission is not object[] submitParams)
                 throw new StratumException(StratumError.Other, "invalid params");
 
             var context = worker.ContextAs<ErgoWorkerContext>();
@@ -289,17 +289,17 @@ namespace Cybercore.Blockchain.Ergo
             var nTime = submitParams[3] as string;
             var nonce = submitParams[4] as string;
 
-            if(string.IsNullOrEmpty(workerValue))
+            if (string.IsNullOrEmpty(workerValue))
                 throw new StratumException(StratumError.Other, "missing or invalid workername");
 
             ErgoJob job;
 
-            lock(jobLock)
+            lock (jobLock)
             {
                 job = validJobs.FirstOrDefault(x => x.JobId == jobId);
             }
 
-            if(job == null)
+            if (job == null)
                 throw new StratumException(StratumError.JobNotFound, "job not found");
 
             var share = job.ProcessShare(worker, extraNonce2, nTime, nonce);
@@ -312,7 +312,7 @@ namespace Cybercore.Blockchain.Ergo
             share.Source = clusterConfig.ClusterName;
             share.Created = clock.Now;
 
-            if(share.IsBlockCandidate)
+            if (share.IsBlockCandidate)
             {
                 logger.Info(() => $"Submitting block {share.BlockHeight} [{share.BlockHash}]");
 
@@ -320,7 +320,7 @@ namespace Cybercore.Blockchain.Ergo
 
                 share.IsBlockCandidate = acceptResponse;
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                 {
                     logger.Info(() => $"Daemon accepted block {share.BlockHeight} [{share.BlockHash}] submitted by {context.Miner}");
 
@@ -340,7 +340,7 @@ namespace Cybercore.Blockchain.Ergo
 
         public async Task<bool> ValidateAddress(string address, CancellationToken ct)
         {
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 return false;
 
             var validity = await Guard(() => ergoClient.CheckAddressValidityAsync(address, ct),
@@ -355,18 +355,18 @@ namespace Cybercore.Blockchain.Ergo
 
             try
             {
-		var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
-		    ex=> logger.Debug(ex));
+                var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
+                    ex => logger.Debug(ex));
 
-		var chainPeers = info.PeersCount;
-		var blockReward = info.MinerReward;
+                var chainPeers = info.PeersCount;
+                var blockReward = info.MinerReward;
 
                 BlockchainStats.ConnectedPeers = chainPeers;
-                BlockchainStats.BlockReward = (double) blockReward;
-		BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
+                BlockchainStats.BlockReward = (double)blockReward;
+                BlockchainStats.BlockTime = poolConfig.BlockTimeInterval;
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
             }
@@ -378,31 +378,31 @@ namespace Cybercore.Blockchain.Ergo
 
         protected override async Task PostStartInitAsync(CancellationToken ct)
         {
-            if(string.IsNullOrEmpty(poolConfig.Address))
+            if (string.IsNullOrEmpty(poolConfig.Address))
                 logger.ThrowLogPoolStartupException($"Pool address is not configured");
 
             var validity = await Guard(() => ergoClient.CheckAddressValidityAsync(poolConfig.Address, ct),
-                ex=> logger.ThrowLogPoolStartupException($"Error validating pool address: {ex}"));
+                ex => logger.ThrowLogPoolStartupException($"Error validating pool address: {ex}"));
 
-            if(!validity.IsValid)
+            if (!validity.IsValid)
                 logger.ThrowLogPoolStartupException($"Daemon reports pool address {poolConfig.Address} as invalid: {validity.Error}");
 
             var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
-                ex=> logger.ThrowLogPoolStartupException($"Daemon reports: {ex.Message}"));
+                ex => logger.ThrowLogPoolStartupException($"Daemon reports: {ex.Message}"));
 
             blockVersion = info.Parameters.BlockVersion;
 
             var m = ErgoConstants.RegexChain.Match(info.Name);
-            if(!m.Success)
+            if (!m.Success)
                 logger.ThrowLogPoolStartupException($"Unable to identify network type ({info.Name}");
 
             network = m.Groups[1].Value.ToLower();
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 var walletAddresses = await ergoClient.WalletAddressesAsync(ct);
 
-                if(!walletAddresses.Contains(poolConfig.Address))
+                if (!walletAddresses.Contains(poolConfig.Address))
                     logger.ThrowLogPoolStartupException($"Pool address {poolConfig.Address} is not controlled by wallet");
 
                 ConfigureRewards();
@@ -415,7 +415,7 @@ namespace Cybercore.Blockchain.Ergo
 
             Observable.Interval(TimeSpan.FromMinutes(5))
                 .Select(via => Observable.FromAsync(() =>
-                    Guard(()=> (UpdateNetworkStatsAsync(ct)),
+                    Guard(() => (UpdateNetworkStatsAsync(ct)),
                         ex => logger.Error(ex))))
                 .Concat()
                 .Subscribe();
@@ -429,7 +429,7 @@ namespace Cybercore.Blockchain.Ergo
 
             extraPoolConfig = poolConfig.Extra.SafeExtensionDataAs<ErgoPoolConfigExtra>();
 
-            if(extraPoolConfig?.MaxActiveJobs.HasValue == true)
+            if (extraPoolConfig?.MaxActiveJobs.HasValue == true)
                 maxActiveJobs = extraPoolConfig.MaxActiveJobs.Value;
 
             base.Configure(poolConfig, clusterConfig);
@@ -443,9 +443,9 @@ namespace Cybercore.Blockchain.Ergo
         protected override async Task<bool> AreDaemonsHealthyAsync(CancellationToken ct)
         {
             var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
-                ex=> logger.ThrowLogPoolStartupException($"Daemon reports: {ex.Message}"));
+                ex => logger.ThrowLogPoolStartupException($"Daemon reports: {ex.Message}"));
 
-            if(info?.IsMining != true)
+            if (info?.IsMining != true)
                 logger.ThrowLogPoolStartupException($"Mining is disabled in Ergo Daemon");
 
             return true;
@@ -454,7 +454,7 @@ namespace Cybercore.Blockchain.Ergo
         protected override async Task<bool> AreDaemonsConnectedAsync(CancellationToken ct)
         {
             var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
-                ex=> logger.Debug(ex));
+                ex => logger.Debug(ex));
 
             return info?.PeersCount > 0;
         }
@@ -463,21 +463,21 @@ namespace Cybercore.Blockchain.Ergo
         {
             var syncPendingNotificationShown = false;
 
-            while(true)
+            while (true)
             {
                 var info = await Guard(() => ergoClient.GetNodeInfoAsync(ct),
-                    ex=> logger.Debug(ex));
+                    ex => logger.Debug(ex));
 
                 var isSynched = info?.FullHeight.HasValue == true && info?.HeadersHeight.HasValue == true &&
                                 info.FullHeight.Value >= info.HeadersHeight.Value;
 
-                if(isSynched)
+                if (isSynched)
                 {
                     logger.Info(() => "Daemon is synced with blockchain");
                     break;
                 }
 
-                if(!syncPendingNotificationShown)
+                if (!syncPendingNotificationShown)
                 {
                     logger.Info(() => "Daemon is still syncing with network. Manager will be started once synced");
                     syncPendingNotificationShown = true;

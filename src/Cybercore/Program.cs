@@ -71,7 +71,7 @@ namespace Cybercore
             {
                 AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
 
-                if(!ParseCommandLine(args, out var configFile))
+                if (!ParseCommandLine(args, out var configFile))
                     return;
 
                 isShareRecoveryMode = shareRecoveryOption.HasValue();
@@ -79,7 +79,7 @@ namespace Cybercore
                 Logo();
                 clusterConfig = ReadConfig(configFile);
 
-                if(dumpConfigOption.HasValue())
+                if (dumpConfigOption.HasValue())
                 {
                     DumpParsedConfig(clusterConfig);
                     return;
@@ -94,7 +94,7 @@ namespace Cybercore
 
                 hostBuilder
                     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                    .ConfigureContainer((Action<ContainerBuilder>) ConfigureAutofac)
+                    .ConfigureContainer((Action<ContainerBuilder>)ConfigureAutofac)
                     .UseNLog()
                     .ConfigureLogging(logging =>
                     {
@@ -112,7 +112,7 @@ namespace Cybercore
                         services.AddHostedService<Program>();
                     });
 
-                if(clusterConfig.Api == null || clusterConfig.Api.Enabled)
+                if (clusterConfig.Api == null || clusterConfig.Api.Enabled)
                 {
                     var address = clusterConfig.Api?.ListenAddress != null
                         ? (clusterConfig.Api.ListenAddress != "*" ? IPAddress.Parse(clusterConfig.Api.ListenAddress) : IPAddress.Any)
@@ -125,9 +125,9 @@ namespace Cybercore
                         clusterConfig.Api?.Tls?.Enabled == true ||
                         !string.IsNullOrEmpty(clusterConfig.Api?.Tls?.TlsPfxFile);
 
-                    if(apiTlsEnable)
+                    if (apiTlsEnable)
                     {
-                        if(!File.Exists(clusterConfig.Api.Tls.TlsPfxFile))
+                        if (!File.Exists(clusterConfig.Api.Tls.TlsPfxFile))
                             logger.ThrowLogPoolStartupException($"Certificate file {clusterConfig.Api.Tls.TlsPfxFile} does not exist!");
                     }
 
@@ -135,7 +135,7 @@ namespace Cybercore
                     {
                         builder.ConfigureServices(services =>
                         {
-                            if(enableApiRateLimiting)
+                            if (enableApiRateLimiting)
                             {
                                 services.Configure<IpRateLimitOptions>(ConfigureIpRateLimitOptions);
                                 services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
@@ -161,13 +161,13 @@ namespace Cybercore
                         {
                             options.Listen(address, port, listenOptions =>
                             {
-                                if(apiTlsEnable)
+                                if (apiTlsEnable)
                                     listenOptions.UseHttps(clusterConfig.Api.Tls.TlsPfxFile, clusterConfig.Api.Tls.TlsPfxPassword);
                             });
                         })
                         .Configure(app =>
                         {
-                            if(enableApiRateLimiting)
+                            if (enableApiRateLimiting)
                                 app.UseIpRateLimiting();
 
                             app.UseMiddleware<ApiExceptionHandlingMiddleware>();
@@ -196,35 +196,35 @@ namespace Cybercore
                 await host.RunAsync();
             }
 
-            catch(PoolStartupAbortException ex)
+            catch (PoolStartupAbortException ex)
             {
-                if(!string.IsNullOrEmpty(ex.Message))
+                if (!string.IsNullOrEmpty(ex.Message))
                     await Console.Error.WriteLineAsync(ex.Message);
 
                 await Console.Error.WriteLineAsync("\nCluster cannot start. Good Bye!");
             }
 
-            catch(JsonException)
+            catch (JsonException)
             {
             }
 
-            catch(IOException)
+            catch (IOException)
             {
             }
 
-            catch(AggregateException ex)
+            catch (AggregateException ex)
             {
-                if(ex.InnerExceptions.First() is not PoolStartupAbortException)
+                if (ex.InnerExceptions.First() is not PoolStartupAbortException)
                     Console.Error.WriteLine(ex);
 
                 await Console.Error.WriteLineAsync("Cluster cannot start. Good Bye!");
             }
 
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine(ex);
 
@@ -237,7 +237,7 @@ namespace Cybercore
             services.AddHostedService<NotificationService>();
             services.AddHostedService<BtStreamReceiver>();
 
-            if(clusterConfig.ShareRelay == null)
+            if (clusterConfig.ShareRelay == null)
             {
                 services.AddHostedService<ShareRecorder>();
                 services.AddHostedService<ShareReceiver>();
@@ -246,17 +246,17 @@ namespace Cybercore
             else
                 services.AddHostedService<ShareRelay>();
 
-            if(clusterConfig.Api == null || clusterConfig.Api.Enabled)
+            if (clusterConfig.Api == null || clusterConfig.Api.Enabled)
                 services.AddHostedService<MetricsPublisher>();
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true &&
+            if (clusterConfig.PaymentProcessing?.Enabled == true &&
                clusterConfig.Pools.Any(x => x.PaymentProcessing?.Enabled == true))
                 services.AddHostedService<PayoutManager>();
             else
                 logger.Info("Payment processing is not enabled");
 
 
-            if(clusterConfig.ShareRelay == null)
+            if (clusterConfig.ShareRelay == null)
             {
                 services.AddHostedService<StatsRecorder>();
             }
@@ -295,7 +295,7 @@ namespace Cybercore
 
         protected override async Task ExecuteAsync(CancellationToken ct)
         {
-            if(isShareRecoveryMode)
+            if (isShareRecoveryMode)
             {
                 await RecoverSharesAsync(shareRecoveryOption.Value());
                 return;
@@ -303,7 +303,7 @@ namespace Cybercore
 
             ConfigureMisc();
 
-            if(clusterConfig.InstanceId.HasValue)
+            if (clusterConfig.InstanceId.HasValue)
                 logger.Info($"This is cluster node {clusterConfig.InstanceId.Value}{(!string.IsNullOrEmpty(clusterConfig.ClusterName) ? $" [{clusterConfig.ClusterName}]" : string.Empty)}");
 
             var coinTemplates = LoadCoinTemplates();
@@ -311,14 +311,14 @@ namespace Cybercore
 
             await Task.WhenAll(clusterConfig.Pools
                 .Where(config => config.Enabled)
-                .Select(config=> RunPool(config, coinTemplates, ct)));
+                .Select(config => RunPool(config, coinTemplates, ct)));
         }
 
         private Task RunPool(PoolConfig poolConfig, Dictionary<string, CoinTemplate> coinTemplates, CancellationToken ct)
         {
             return Task.Run(async () =>
             {
-                if(!coinTemplates.TryGetValue(poolConfig.Coin, out var template))
+                if (!coinTemplates.TryGetValue(poolConfig.Coin, out var template))
                     logger.ThrowLogPoolStartupException($"Pool {poolConfig.Id} references undefined coin '{poolConfig.Coin}'");
 
                 poolConfig.Template = template;
@@ -347,7 +347,7 @@ namespace Cybercore
 
         private static void ValidateConfig()
         {
-            foreach(var config in clusterConfig.Pools)
+            foreach (var config in clusterConfig.Pools)
             {
                 config.EnableInternalStratum ??= clusterConfig.ShareRelays == null || clusterConfig.ShareRelays.Length == 0;
             }
@@ -356,20 +356,20 @@ namespace Cybercore
             {
                 clusterConfig.Validate();
 
-                if(clusterConfig.Notifications?.Admin?.Enabled == true)
+                if (clusterConfig.Notifications?.Admin?.Enabled == true)
                 {
-                    if(string.IsNullOrEmpty(clusterConfig.Notifications?.Email?.FromName))
+                    if (string.IsNullOrEmpty(clusterConfig.Notifications?.Email?.FromName))
                         logger.ThrowLogPoolStartupException($"Notifications are enabled but email sender name is not configured (notifications.email.fromName)");
 
-                    if(string.IsNullOrEmpty(clusterConfig.Notifications?.Email?.FromAddress))
+                    if (string.IsNullOrEmpty(clusterConfig.Notifications?.Email?.FromAddress))
                         logger.ThrowLogPoolStartupException($"Notifications are enabled but email sender address name is not configured (notifications.email.fromAddress)");
 
-                    if(string.IsNullOrEmpty(clusterConfig.Notifications?.Admin?.EmailAddress))
+                    if (string.IsNullOrEmpty(clusterConfig.Notifications?.Admin?.EmailAddress))
                         logger.ThrowLogPoolStartupException($"Admin notifications are enabled but recipient address is not configured (notifications.admin.emailAddress)");
                 }
             }
 
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
                 Console.Error.WriteLine($"Configuration is not valid:\n\n{string.Join("\n", ex.Errors.Select(x => "=> " + x.ErrorMessage))}");
                 throw new PoolStartupAbortException(string.Empty);
@@ -410,13 +410,13 @@ namespace Cybercore
 
             app.Execute(args);
 
-            if(versionOption.HasValue())
+            if (versionOption.HasValue())
             {
                 app.ShowVersion();
                 return false;
             }
 
-            if(!configFileOption.HasValue())
+            if (!configFileOption.HasValue())
             {
                 app.ShowHelp();
                 return false;
@@ -438,28 +438,28 @@ namespace Cybercore
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
 
-                using(var reader = new StreamReader(file, Encoding.UTF8))
+                using (var reader = new StreamReader(file, Encoding.UTF8))
                 {
-                    using(var jsonReader = new JsonTextReader(reader))
+                    using (var jsonReader = new JsonTextReader(reader))
                     {
                         return serializer.Deserialize<ClusterConfig>(jsonReader);
                     }
                 }
             }
 
-            catch(JsonSerializationException ex)
+            catch (JsonSerializationException ex)
             {
                 HumanizeJsonParseException(ex);
                 throw;
             }
 
-            catch(JsonException ex)
+            catch (JsonException ex)
             {
                 Console.Error.WriteLine($"Error: {ex.Message}");
                 throw;
             }
 
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 Console.Error.WriteLine($"Error: {ex.Message}");
                 throw;
@@ -470,14 +470,14 @@ namespace Cybercore
         {
             var m = regexJsonTypeConversionError.Match(ex.Message);
 
-            if(m.Success)
+            if (m.Success)
             {
                 var value = m.Groups[1].Value;
                 var type = Type.GetType(m.Groups[2].Value);
                 var line = m.Groups[3].Value;
                 var col = m.Groups[4].Value;
 
-                if(type == typeof(PayoutScheme))
+                if (type == typeof(PayoutScheme))
                     Console.Error.WriteLine($"Error: Payout scheme '{value}' is not (yet) supported (line {line}, column {col})");
             }
 
@@ -489,16 +489,16 @@ namespace Cybercore
 
         private static void ValidateRuntimeEnvironment()
         {
-            if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Environment.UserName == "root")
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Environment.UserName == "root")
                 logger.Warn(() => "Running as root is discouraged!");
 
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
                 throw new PoolStartupAbortException("Cybercore requires 64-Bit Windows");
         }
 
         private static void Logo()
-	{
-	    Console.WriteLine(@"
+        {
+            Console.WriteLine(@"
 	    ______________.___.________________________________________  ________ _____________________  ____   ____________  
 	    \_   ___ \__  |   |\______   \_   _____/\______   \_   ___ \ \_____  \\______   \_   _____/  \   \ /   /\_____  \ 
 	    /    \  \//   |   | |    |  _/|    __)_  |       _/    \  \/  /   |   \|       _/|    __)_    \   Y   /  /  ____/ 
@@ -506,13 +506,13 @@ namespace Cybercore
 	     \______  / ______| |______  /_______  / |____|_  /\______  /\_______  /____|_  /_______  /     \___/   \_______ \
 	            \/\/               \/        \/         \/        \/         \/       \/        \/                      \/
 	    ");
-	    Console.WriteLine(" https://github.com/cyberpoolorg/cybercore\n");
-	    Console.WriteLine(" Please contribute to the development of the project by donating:\n");
-	    Console.WriteLine(" BTC - 1H8Ze41raYGXYAiLAEiN12vmGH34A7cuua");
-	    Console.WriteLine(" LTC - LSE19SHK3DMxFVyk35rhTFaw7vr1f8zLkT");
-	    Console.WriteLine(" ETH - 0x52FdE416C1D51525aEA390E39CfD5016dAFC01F7");
-	    Console.WriteLine(" ETC - 0x6F2B787312Df5B08a6b7073Bdb8fF04442B6A11f");
-	    Console.WriteLine();
+            Console.WriteLine(" https://github.com/cyberpoolorg/cybercore\n");
+            Console.WriteLine(" Please contribute to the development of the project by donating:\n");
+            Console.WriteLine(" BTC - 1H8Ze41raYGXYAiLAEiN12vmGH34A7cuua");
+            Console.WriteLine(" LTC - LSE19SHK3DMxFVyk35rhTFaw7vr1f8zLkT");
+            Console.WriteLine(" ETH - 0x52FdE416C1D51525aEA390E39CfD5016dAFC01F7");
+            Console.WriteLine(" ETC - 0x6F2B787312Df5B08a6b7073Bdb8fF04442B6A11f");
+            Console.WriteLine();
         }
 
         private static void ConfigureLogging()
@@ -520,7 +520,7 @@ namespace Cybercore
             var config = clusterConfig.Logging;
             var loggingConfig = new LoggingConfiguration();
 
-            if(config != null)
+            if (config != null)
             {
                 var level = !string.IsNullOrEmpty(config.Level)
                     ? NLog.LogLevel.FromString(config.Level)
@@ -535,7 +535,7 @@ namespace Cybercore
                 loggingConfig.AddRule(level, NLog.LogLevel.Info, nullTarget, "Microsoft.AspNetCore.Mvc.Infrastructure.*", true);
                 loggingConfig.AddRule(level, NLog.LogLevel.Warn, nullTarget, "System.Net.Http.HttpClient.*", true);
 
-                if(!string.IsNullOrEmpty(config.ApiLogFile) && !isShareRecoveryMode)
+                if (!string.IsNullOrEmpty(config.ApiLogFile) && !isShareRecoveryMode)
                 {
                     var target = new FileTarget("file")
                     {
@@ -548,9 +548,9 @@ namespace Cybercore
                     loggingConfig.AddRule(level, NLog.LogLevel.Fatal, target, "Microsoft.AspNetCore.*", true);
                 }
 
-                if(config.EnableConsoleLog || isShareRecoveryMode)
+                if (config.EnableConsoleLog || isShareRecoveryMode)
                 {
-                    if(config.EnableConsoleColors)
+                    if (config.EnableConsoleColors)
                     {
                         var target = new ColoredConsoleTarget("console")
                         {
@@ -597,7 +597,7 @@ namespace Cybercore
                     }
                 }
 
-                if(!string.IsNullOrEmpty(config.LogFile) && !isShareRecoveryMode)
+                if (!string.IsNullOrEmpty(config.LogFile) && !isShareRecoveryMode)
                 {
                     var target = new FileTarget("file")
                     {
@@ -610,9 +610,9 @@ namespace Cybercore
                     loggingConfig.AddRule(level, NLog.LogLevel.Fatal, target);
                 }
 
-                if(config.PerPoolLogFile && !isShareRecoveryMode)
+                if (config.PerPoolLogFile && !isShareRecoveryMode)
                 {
-                    foreach(var poolConfig in clusterConfig.Pools)
+                    foreach (var poolConfig in clusterConfig.Pools)
                     {
                         var target = new FileTarget(poolConfig.Id)
                         {
@@ -634,7 +634,7 @@ namespace Cybercore
 
         private static Layout GetLogPath(ClusterLoggingConfig config, string name)
         {
-            if(string.IsNullOrEmpty(config.LogBaseDirectory))
+            if (string.IsNullOrEmpty(config.LogBaseDirectory))
                 return name;
 
             return Path.Combine(config.LogBaseDirectory, name);
@@ -646,7 +646,7 @@ namespace Cybercore
             var messageBus = container.Resolve<IMessageBus>();
             EquihashSolver.messageBus = messageBus;
 
-            if(clusterConfig.EquihashMaxThreads.HasValue)
+            if (clusterConfig.EquihashMaxThreads.HasValue)
                 EquihashSolver.MaxThreads = clusterConfig.EquihashMaxThreads.Value;
 
             Dag.messageBus = messageBus;
@@ -656,12 +656,12 @@ namespace Cybercore
 
         private static void ConfigurePersistence(ContainerBuilder builder)
         {
-            if(clusterConfig.Persistence == null &&
+            if (clusterConfig.Persistence == null &&
                 clusterConfig.PaymentProcessing?.Enabled == true &&
                 clusterConfig.ShareRelay == null)
                 logger.ThrowLogPoolStartupException("Persistence is not configured!");
 
-            if(clusterConfig.Persistence?.Postgres != null)
+            if (clusterConfig.Persistence?.Postgres != null)
                 ConfigurePostgres(clusterConfig.Persistence.Postgres, builder);
             else
                 ConfigureDummyPersistence(builder);
@@ -669,16 +669,16 @@ namespace Cybercore
 
         private static void ConfigurePostgres(DatabaseConfig pgConfig, ContainerBuilder builder)
         {
-            if(string.IsNullOrEmpty(pgConfig.Host))
+            if (string.IsNullOrEmpty(pgConfig.Host))
                 logger.ThrowLogPoolStartupException("Postgres configuration: invalid or missing 'host'");
 
-            if(pgConfig.Port == 0)
+            if (pgConfig.Port == 0)
                 logger.ThrowLogPoolStartupException("Postgres configuration: invalid or missing 'port'");
 
-            if(string.IsNullOrEmpty(pgConfig.Database))
+            if (string.IsNullOrEmpty(pgConfig.Database))
                 logger.ThrowLogPoolStartupException("Postgres configuration: invalid or missing 'database'");
 
-            if(string.IsNullOrEmpty(pgConfig.User))
+            if (string.IsNullOrEmpty(pgConfig.User))
                 logger.ThrowLogPoolStartupException("Postgres configuration: invalid or missing 'user'");
 
             var connectionString = $"Server={pgConfig.Host};Port={pgConfig.Port};Database={pgConfig.Database};User Id={pgConfig.User};Password={pgConfig.Password};CommandTimeout=900;";
@@ -725,16 +725,16 @@ namespace Cybercore
         private static void UseIpWhiteList(IApplicationBuilder app, bool defaultToLoopback, string[] locations, string[] whitelist)
         {
             var ipList = whitelist?.Select(IPAddress.Parse).ToList();
-            if(defaultToLoopback && (ipList == null || ipList.Count == 0))
+            if (defaultToLoopback && (ipList == null || ipList.Count == 0))
                 ipList = new List<IPAddress>(new[] { IPAddress.Loopback, IPAddress.IPv6Loopback, IPUtils.IPv4LoopBackOnIPv6 });
 
-            if(ipList.Count > 0)
+            if (ipList.Count > 0)
             {
-                if(!ipList.Any(x => x.Equals(IPAddress.Loopback)))
+                if (!ipList.Any(x => x.Equals(IPAddress.Loopback)))
                     ipList.Add(IPAddress.Loopback);
-                if(!ipList.Any(x => x.Equals(IPAddress.IPv6Loopback)))
+                if (!ipList.Any(x => x.Equals(IPAddress.IPv6Loopback)))
                     ipList.Add(IPAddress.IPv6Loopback);
-                if(!ipList.Any(x => x.Equals(IPUtils.IPv4LoopBackOnIPv6)))
+                if (!ipList.Any(x => x.Equals(IPUtils.IPv4LoopBackOnIPv6)))
                     ipList.Add(IPUtils.IPv4LoopBackOnIPv6);
 
                 logger.Info(() => $"API Access to {string.Join(",", locations)} restricted to {string.Join(",", ipList.Select(x => x.ToString()))}");
@@ -756,7 +756,7 @@ namespace Cybercore
 
             options.IpWhitelist = clusterConfig.Api?.RateLimiting?.IpWhitelist?.ToList();
 
-            if(options.IpWhitelist == null || options.IpWhitelist.Count == 0)
+            if (options.IpWhitelist == null || options.IpWhitelist.Count == 0)
             {
                 options.IpWhitelist = new List<string>
                 {
@@ -768,7 +768,7 @@ namespace Cybercore
 
             var rules = clusterConfig.Api?.RateLimiting?.Rules?.ToList();
 
-            if(rules == null || rules.Count == 0)
+            if (rules == null || rules.Count == 0)
             {
                 rules = new List<RateLimitRule>
                 {
@@ -788,7 +788,7 @@ namespace Cybercore
 
         private static void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            if(logger != null)
+            if (logger != null)
             {
                 logger.Error(e.ExceptionObject);
                 LogManager.Flush(TimeSpan.Zero);

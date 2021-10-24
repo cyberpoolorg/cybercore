@@ -8,9 +8,9 @@ namespace Cybercore.Blockchain.Bitcoin.DaemonResponses
 {
     public class CoinbaseDevReward
     {
-        public string Payee        { get; set; }
+        public string Payee { get; set; }
         public string ScriptPubKey { get; set; }
-        public long   Value        { get; set; }
+        public long Value { get; set; }
     }
 
     public class CoinbaseDevRewardTemplateExtra

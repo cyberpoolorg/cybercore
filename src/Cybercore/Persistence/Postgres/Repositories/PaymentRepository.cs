@@ -40,13 +40,13 @@ namespace Cybercore.Persistence.Postgres.Repositories
         {
             logger.LogInvoke();
 
-            var pgCon = (NpgsqlConnection) con;
+            var pgCon = (NpgsqlConnection)con;
 
             const string query = "COPY payments (poolid, coin, address, amount, transactionconfirmationdata, created) FROM STDIN (FORMAT BINARY)";
 
-            await using(var writer = pgCon.BeginBinaryImport(query))
+            await using (var writer = pgCon.BeginBinaryImport(query))
             {
-                foreach(var payment in payments)
+                foreach (var payment in payments)
                 {
                     await writer.StartRowAsync();
 
@@ -68,7 +68,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             var query = "SELECT * FROM payments WHERE poolid = @poolid ";
 
-            if(!string.IsNullOrEmpty(address))
+            if (!string.IsNullOrEmpty(address))
                 query += " AND address = @address ";
 
             query += "ORDER BY created DESC OFFSET @offset FETCH NEXT (@pageSize) ROWS ONLY";
@@ -110,7 +110,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             string query = "SELECT COUNT(*) FROM payments WHERE poolid = @poolId";
 
-            if(!string.IsNullOrEmpty(address))
+            if (!string.IsNullOrEmpty(address))
                 query += " AND address = @address ";
 
 
@@ -135,7 +135,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             string query = "SELECT COUNT(*) FROM balance_changes WHERE poolid = @poolId";
 
-            if(!string.IsNullOrEmpty(address))
+            if (!string.IsNullOrEmpty(address))
                 query += " AND address = @address ";
 
 

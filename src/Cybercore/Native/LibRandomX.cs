@@ -95,7 +95,7 @@ namespace Cybercore.Native
 
             public void Dispose()
             {
-                if(dataset != IntPtr.Zero)
+                if (dataset != IntPtr.Zero)
                 {
                     randomx_release_dataset(dataset);
                     dataset = IntPtr.Zero;
@@ -121,7 +121,7 @@ namespace Cybercore.Native
 
             public void Dispose()
             {
-                if(vm != IntPtr.Zero)
+                if (vm != IntPtr.Zero)
                 {
                     randomx_destroy_vm(vm);
                     vm = IntPtr.Zero;
@@ -129,7 +129,7 @@ namespace Cybercore.Native
 
                 ds?.Dispose();
 
-                if(cache != IntPtr.Zero)
+                if (cache != IntPtr.Zero)
                 {
                     randomx_release_cache(cache);
                     cache = IntPtr.Zero;
@@ -142,12 +142,12 @@ namespace Cybercore.Native
 
                 cache = randomx_alloc_cache(flags);
 
-                fixed(byte* key_ptr = key)
+                fixed (byte* key_ptr = key)
                 {
-                    randomx_init_cache(cache, (IntPtr) key_ptr, key.Length);
+                    randomx_init_cache(cache, (IntPtr)key_ptr, key.Length);
                 }
 
-                if((flags & randomx_flags.RANDOMX_FLAG_FULL_MEM) != 0)
+                if ((flags & randomx_flags.RANDOMX_FLAG_FULL_MEM) != 0)
                 {
                     ds = new RxDataSet();
                     ds_ptr = ds.Init(key, flags, cache);
@@ -173,7 +173,7 @@ namespace Cybercore.Native
 
         public static void WithLock(Action action)
         {
-            lock(realms)
+            lock (realms)
             {
                 action();
             }
@@ -182,20 +182,20 @@ namespace Cybercore.Native
         public static void CreateSeed(string realm, string seedHex,
             randomx_flags? flagsOverride = null, randomx_flags? flagsAdd = null, int vmCount = 1)
         {
-            lock(realms)
+            lock (realms)
             {
-                if(!realms.TryGetValue(realm, out var seeds))
+                if (!realms.TryGetValue(realm, out var seeds))
                 {
                     seeds = new Dictionary<string, Tuple<GenContext, BlockingCollection<RxVm>>>();
 
                     realms[realm] = seeds;
                 }
 
-                if(!seeds.TryGetValue(seedHex, out var seed))
+                if (!seeds.TryGetValue(seedHex, out var seed))
                 {
                     var flags = flagsOverride ?? randomx_get_flags();
 
-                    if(flagsAdd.HasValue)
+                    if (flagsAdd.HasValue)
                         flags |= flagsAdd.Value;
 
                     if (vmCount == -1)
@@ -239,12 +239,12 @@ namespace Cybercore.Native
         {
             Tuple<GenContext, BlockingCollection<RxVm>> seed;
 
-            lock(realms)
+            lock (realms)
             {
-                if(!realms.TryGetValue(realm, out var seeds))
+                if (!realms.TryGetValue(realm, out var seeds))
                     return;
 
-                if(!seeds.Remove(seedHex, out seed))
+                if (!seeds.Remove(seedHex, out seed))
                     return;
             }
 
@@ -265,12 +265,12 @@ namespace Cybercore.Native
 
         public static Tuple<GenContext, BlockingCollection<RxVm>> GetSeed(string realm, string seedHex)
         {
-            lock(realms)
+            lock (realms)
             {
-                if(!realms.TryGetValue(realm, out var seeds))
+                if (!realms.TryGetValue(realm, out var seeds))
                     return null;
 
-                if(!seeds.TryGetValue(seedHex, out var seed))
+                if (!seeds.TryGetValue(seedHex, out var seed))
                     return null;
 
                 return seed;
@@ -286,7 +286,7 @@ namespace Cybercore.Native
 
             var (ctx, seedVms) = GetSeed(realm, seedHex);
 
-            if(ctx != null)
+            if (ctx != null)
             {
                 RxVm vm = null;
 
@@ -302,19 +302,19 @@ namespace Cybercore.Native
                     messageBus?.SendTelemetry("RandomX", TelemetryCategory.Hash, sw.Elapsed, true);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(() => ex.Message);
                 }
 
                 finally
                 {
-                    if(vm != null)
+                    if (vm != null)
                         seedVms.Add(vm);
                 }
             }
 
-            if(!success)
+            if (!success)
             {
                 empty.CopyTo(result);
             }

@@ -7,26 +7,26 @@ namespace Cybercore.Blockchain.Ethereum
         public static void DetectNetworkAndChain(string netVersionResponse, string gethChainResponse,
             out EthereumNetworkType networkType, out GethChainType chainType)
         {
-            if(int.TryParse(netVersionResponse, out var netWorkTypeInt))
+            if (int.TryParse(netVersionResponse, out var netWorkTypeInt))
             {
-                networkType = (EthereumNetworkType) netWorkTypeInt;
+                networkType = (EthereumNetworkType)netWorkTypeInt;
 
-                if(!Enum.IsDefined(typeof(EthereumNetworkType), networkType))
+                if (!Enum.IsDefined(typeof(EthereumNetworkType), networkType))
                     networkType = EthereumNetworkType.Unknown;
             }
 
             else
                 networkType = EthereumNetworkType.Unknown;
 
-            if(!Enum.TryParse(gethChainResponse, true, out chainType))
+            if (!Enum.TryParse(gethChainResponse, true, out chainType))
             {
-               chainType = GethChainType.Unknown;
+                chainType = GethChainType.Unknown;
             }
 
-            if(chainType == GethChainType.Ethereum)
+            if (chainType == GethChainType.Ethereum)
                 chainType = GethChainType.Ethereum;
 
-            if(chainType == GethChainType.Callisto)
+            if (chainType == GethChainType.Callisto)
                 chainType = GethChainType.Callisto;
         }
     }

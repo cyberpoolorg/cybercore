@@ -46,12 +46,12 @@ namespace Cybercore.Blockchain.Ethereum
             var request = tsRequest.Value;
             var context = connection.ContextAs<EthereumWorkerContext>();
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.Other, "missing request id");
 
             var requestParams = request.ParamsAs<string[]>();
 
-            if(requestParams == null || requestParams.Length < 2 || requestParams.Any(string.IsNullOrEmpty))
+            if (requestParams == null || requestParams.Length < 2 || requestParams.Any(string.IsNullOrEmpty))
                 throw new StratumException(StratumError.MinusOne, "invalid request");
 
             manager.PrepareWorker(connection);
@@ -79,7 +79,7 @@ namespace Cybercore.Blockchain.Ethereum
             var request = tsRequest.Value;
             var context = connection.ContextAs<EthereumWorkerContext>();
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var requestParams = request.ParamsAs<string[]>();
@@ -90,14 +90,14 @@ namespace Cybercore.Blockchain.Ethereum
             var minerName = workerParts[0].Trim();
             var workerName = workerParts?.Length > 1 ? workerParts[1].Trim() : "0";
 
-            if(!EthereumConstants.WorkerPattern.IsMatch(workerName))
+            if (!EthereumConstants.WorkerPattern.IsMatch(workerName))
                 workerName = "0";
 
             context.IsAuthorized = manager.ValidateAddress(minerName);
 
             await connection.RespondAsync(context.IsAuthorized, request.Id);
 
-            if(context.IsAuthorized)
+            if (context.IsAuthorized)
             {
                 context.Miner = minerName.ToLower();
                 context.Worker = workerName;
@@ -106,9 +106,9 @@ namespace Cybercore.Blockchain.Ethereum
 
                 var nicehashDiff = await GetNicehashStaticMinDiff(connection, context.UserAgent, coin.Name, coin.GetAlgorithmName());
 
-                if(nicehashDiff.HasValue)
+                if (nicehashDiff.HasValue)
                 {
-                    if(!staticDiff.HasValue || nicehashDiff > staticDiff)
+                    if (!staticDiff.HasValue || nicehashDiff > staticDiff)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using API supplied difficulty of {nicehashDiff.Value}");
 
@@ -119,7 +119,7 @@ namespace Cybercore.Blockchain.Ethereum
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using miner supplied difficulty of {staticDiff.Value}");
                 }
 
-                if(staticDiff.HasValue &&
+                if (staticDiff.HasValue &&
                    (context.VarDiff != null && staticDiff.Value >= context.VarDiff.Config.MinDiff ||
                     context.VarDiff == null && staticDiff.Value > context.Difficulty))
                 {
@@ -151,25 +151,25 @@ namespace Cybercore.Blockchain.Ethereum
 
             try
             {
-                if(request.Id == null)
+                if (request.Id == null)
                     throw new StratumException(StratumError.MinusOne, "missing request id");
 
                 var requestAge = clock.Now - tsRequest.Timestamp.UtcDateTime;
 
-                if(requestAge > maxShareAge)
+                if (requestAge > maxShareAge)
                 {
                     logger.Warn(() => $"[{connection.ConnectionId}] Dropping stale share submission request (server overloaded?)");
                     return;
                 }
 
-                if(!context.IsAuthorized)
+                if (!context.IsAuthorized)
                     throw new StratumException(StratumError.UnauthorizedWorker, "unauthorized worker");
-                else if(!context.IsSubscribed)
+                else if (!context.IsSubscribed)
                     throw new StratumException(StratumError.NotSubscribed, "not subscribed");
 
                 var submitRequest = request.ParamsAs<string[]>();
 
-                if(submitRequest.Length != 3 ||
+                if (submitRequest.Length != 3 ||
                     submitRequest.Any(string.IsNullOrEmpty))
                     throw new StratumException(StratumError.MinusOne, "malformed PoW result");
 
@@ -188,14 +188,14 @@ namespace Cybercore.Blockchain.Ethereum
                 logger.Info(() => $"[{connection.ConnectionId}] Share accepted: D={Math.Round(share.Difficulty / EthereumConstants.Pow2x32, 3)}");
                 await EnsureInitialWorkSent(connection);
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                     poolStats.LastPoolBlockTime = clock.Now;
 
                 context.Stats.ValidShares++;
                 await UpdateVarDiffAsync(connection);
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 PublishTelemetry(TelemetryCategory.Share, clock.Now - tsRequest.Timestamp.UtcDateTime, false);
 
@@ -213,16 +213,16 @@ namespace Cybercore.Blockchain.Ethereum
             var context = connection.ContextAs<EthereumWorkerContext>();
             var sendInitialWork = false;
 
-            lock(context)
+            lock (context)
             {
-                if(context.IsSubscribed && context.IsAuthorized && !context.IsInitialWorkSent)
+                if (context.IsSubscribed && context.IsAuthorized && !context.IsInitialWorkSent)
                 {
                     context.IsInitialWorkSent = true;
                     sendInitialWork = true;
                 }
             }
 
-            if(sendInitialWork)
+            if (sendInitialWork)
             {
                 await connection.NotifyAsync(EthereumStratumMethods.SetDifficulty, new object[] { context.Difficulty });
                 await connection.NotifyAsync(EthereumStratumMethods.MiningNotify, currentJobParams);
@@ -235,21 +235,21 @@ namespace Cybercore.Blockchain.Ethereum
 
             logger.Info(() => "Broadcasting job");
 
-            return Guard(()=> Task.WhenAll(ForEachConnection(async connection =>
-            {
-                if(!connection.IsAlive)
-                    return;
+            return Guard(() => Task.WhenAll(ForEachConnection(async connection =>
+             {
+                 if (!connection.IsAlive)
+                     return;
 
-                var context = connection.ContextAs<EthereumWorkerContext>();
+                 var context = connection.ContextAs<EthereumWorkerContext>();
 
-                if(!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
-                    return;
+                 if (!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
+                     return;
 
-                if(context.ApplyPendingDifficulty())
-                    await connection.NotifyAsync(EthereumStratumMethods.SetDifficulty, new object[] { context.Difficulty });
+                 if (context.ApplyPendingDifficulty())
+                     await connection.NotifyAsync(EthereumStratumMethods.SetDifficulty, new object[] { context.Difficulty });
 
-                await connection.NotifyAsync(EthereumStratumMethods.MiningNotify, currentJobParams);
-            })), ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
+                 await connection.NotifyAsync(EthereumStratumMethods.MiningNotify, currentJobParams);
+             })), ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
         }
 
         #region Overrides
@@ -270,12 +270,12 @@ namespace Cybercore.Blockchain.Ethereum
 
             await manager.StartAsync(ct);
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 disposables.Add(manager.Jobs
                     .Select(job => Observable.FromAsync(() =>
-                        Guard(()=> OnNewJobAsync(job),
-                            ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
+                        Guard(() => OnNewJobAsync(job),
+                            ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
                     .Concat()
                     .Subscribe(_ => { }, ex =>
                     {
@@ -310,7 +310,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             try
             {
-                switch(request.Method)
+                switch (request.Method)
                 {
                     case EthereumStratumMethods.Subscribe:
                         await OnSubscribeAsync(client, tsRequest);
@@ -336,7 +336,7 @@ namespace Cybercore.Blockchain.Ethereum
                 }
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 await client.RespondErrorAsync(ex.Code, ex.Message, request.Id, false);
             }
@@ -356,7 +356,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             var context = client.ContextAs<EthereumWorkerContext>();
 
-            if(context.HasPendingDifficulty)
+            if (context.HasPendingDifficulty)
             {
                 context.ApplyPendingDifficulty();
 

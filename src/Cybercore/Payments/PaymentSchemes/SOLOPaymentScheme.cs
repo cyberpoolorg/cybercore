@@ -41,11 +41,11 @@ namespace Cybercore.Payments.PaymentSchemes
             var rewards = new Dictionary<string, decimal>();
             var shareCutOffDate = CalculateRewards(block, blockReward, rewards, ct);
 
-            foreach(var address in rewards.Keys)
+            foreach (var address in rewards.Keys)
             {
                 var amount = rewards[address];
 
-                if(amount > 0)
+                if (amount > 0)
                 {
                     logger.Info(() => $"Adding {payoutHandler.FormatAmount(amount)} to balance of {address} for block {block.BlockHeight}");
 
@@ -53,11 +53,11 @@ namespace Cybercore.Payments.PaymentSchemes
                 }
             }
 
-            if(shareCutOffDate.HasValue)
+            if (shareCutOffDate.HasValue)
             {
                 var cutOffCount = await shareRepo.CountSharesByMinerAsync(con, tx, poolConfig.Id, block.Miner);
 
-                if(cutOffCount > 0)
+                if (cutOffCount > 0)
                 {
 #if !DEBUG
                     logger.Info(() => $"Deleting {cutOffCount} discarded shares for {block.Miner}");

@@ -56,7 +56,7 @@ namespace Cybercore.Blockchain.Equihash
 
             extraConfig = poolConfig.Extra.SafeExtensionDataAs<EquihashPoolConfigExtra>();
 
-            if(poolConfig.Template.As<EquihashCoinTemplate>().UsesZCashAddressFormat &&
+            if (poolConfig.Template.As<EquihashCoinTemplate>().UsesZCashAddressFormat &&
                 string.IsNullOrEmpty(extraConfig?.ZAddress))
                 logger.ThrowLogPoolStartupException("Pool z-address is not configured");
         }
@@ -70,12 +70,12 @@ namespace Cybercore.Blockchain.Equihash
 
             await manager.StartAsync(ct);
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 disposables.Add(manager.Jobs
                     .Select(job => Observable.FromAsync(() =>
-                        Guard(()=> OnNewJobAsync(job),
-                            ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
+                        Guard(() => OnNewJobAsync(job),
+                            ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
                     .Concat()
                     .Subscribe(_ => { }, ex =>
                     {
@@ -90,7 +90,7 @@ namespace Cybercore.Blockchain.Equihash
                 disposables.Add(manager.Jobs.Subscribe());
             }
 
-            hashrateDivisor = (double) new BigRational(manager.ChainConfig.Diff1BValue, EquihashConstants.ZCashDiff1b);
+            hashrateDivisor = (double)new BigRational(manager.ChainConfig.Diff1BValue, EquihashConstants.ZCashDiff1b);
         }
 
         protected override async Task InitStatsAsync()
@@ -105,7 +105,7 @@ namespace Cybercore.Blockchain.Equihash
             var request = tsRequest.Value;
             var context = connection.ContextAs<BitcoinWorkerContext>();
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var requestParams = request.ParamsAs<string[]>();
@@ -127,7 +127,7 @@ namespace Cybercore.Blockchain.Equihash
         {
             var request = tsRequest.Value;
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var context = connection.ContextAs<BitcoinWorkerContext>();
@@ -143,7 +143,7 @@ namespace Cybercore.Blockchain.Equihash
             context.Miner = minerName;
             context.Worker = workerName;
 
-            if(context.IsAuthorized)
+            if (context.IsAuthorized)
             {
                 await connection.RespondAsync(context.IsAuthorized, request.Id);
 
@@ -153,9 +153,9 @@ namespace Cybercore.Blockchain.Equihash
 
                 var nicehashDiff = await GetNicehashStaticMinDiff(connection, context.UserAgent, coin.Name, coin.GetAlgorithmName());
 
-                if(nicehashDiff.HasValue)
+                if (nicehashDiff.HasValue)
                 {
-                    if(!staticDiff.HasValue || nicehashDiff > staticDiff)
+                    if (!staticDiff.HasValue || nicehashDiff > staticDiff)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using API supplied difficulty of {nicehashDiff.Value}");
 
@@ -166,7 +166,7 @@ namespace Cybercore.Blockchain.Equihash
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using miner supplied difficulty of {staticDiff.Value}");
                 }
 
-                if(staticDiff.HasValue &&
+                if (staticDiff.HasValue &&
                    (context.VarDiff != null && staticDiff.Value >= context.VarDiff.Config.MinDiff ||
                     context.VarDiff == null && staticDiff.Value > context.Difficulty))
                 {
@@ -201,12 +201,12 @@ namespace Cybercore.Blockchain.Equihash
 
             try
             {
-                if(request.Id == null)
+                if (request.Id == null)
                     throw new StratumException(StratumError.MinusOne, "missing request id");
 
                 var requestAge = clock.Now - tsRequest.Timestamp.UtcDateTime;
 
-                if(requestAge > maxShareAge)
+                if (requestAge > maxShareAge)
                 {
                     logger.Warn(() => $"[{connection.ConnectionId}] Dropping stale share submission request (server overloaded?)");
                     return;
@@ -214,9 +214,9 @@ namespace Cybercore.Blockchain.Equihash
 
                 context.LastActivity = clock.Now;
 
-                if(!context.IsAuthorized)
+                if (!context.IsAuthorized)
                     throw new StratumException(StratumError.UnauthorizedWorker, "unauthorized worker");
-                else if(!context.IsSubscribed)
+                else if (!context.IsSubscribed)
                     throw new StratumException(StratumError.NotSubscribed, "not subscribed");
 
                 var requestParams = request.ParamsAs<string[]>();
@@ -231,14 +231,14 @@ namespace Cybercore.Blockchain.Equihash
 
                 logger.Info(() => $"[{connection.ConnectionId}] Share accepted: D={Math.Round(share.Difficulty, 3)}");
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                     poolStats.LastPoolBlockTime = clock.Now;
 
                 context.Stats.ValidShares++;
                 await UpdateVarDiffAsync(connection);
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 PublishTelemetry(TelemetryCategory.Share, clock.Now - tsRequest.Timestamp.UtcDateTime, false);
 
@@ -256,20 +256,20 @@ namespace Cybercore.Blockchain.Equihash
             var request = tsRequest.Value;
             var context = connection.ContextAs<BitcoinWorkerContext>();
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var requestParams = request.ParamsAs<string[]>();
             var target = requestParams.FirstOrDefault();
 
-            if(!string.IsNullOrEmpty(target))
+            if (!string.IsNullOrEmpty(target))
             {
-                if(System.Numerics.BigInteger.TryParse(target, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var targetBig))
+                if (System.Numerics.BigInteger.TryParse(target, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var targetBig))
                 {
-                    var newDiff = (double) new BigRational(manager.ChainConfig.Diff1BValue, targetBig);
+                    var newDiff = (double)new BigRational(manager.ChainConfig.Diff1BValue, targetBig);
                     var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
 
-                    if(newDiff >= poolEndpoint.Difficulty)
+                    if (newDiff >= poolEndpoint.Difficulty)
                     {
                         context.EnqueueNewDifficulty(newDiff);
                         context.ApplyPendingDifficulty();
@@ -296,7 +296,7 @@ namespace Cybercore.Blockchain.Equihash
 
             try
             {
-                switch(request.Method)
+                switch (request.Method)
                 {
                     case BitcoinStratumMethods.Subscribe:
                         await OnSubscribeAsync(connection, tsRequest);
@@ -325,7 +325,7 @@ namespace Cybercore.Blockchain.Equihash
                 }
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 await connection.RespondErrorAsync(ex.Code, ex.Message, request.Id, false);
             }
@@ -337,21 +337,21 @@ namespace Cybercore.Blockchain.Equihash
 
             logger.Info(() => "Broadcasting job");
 
-            return Guard(()=> Task.WhenAll(ForEachConnection(async connection =>
-            {
-                if(!connection.IsAlive)
-                    return;
+            return Guard(() => Task.WhenAll(ForEachConnection(async connection =>
+             {
+                 if (!connection.IsAlive)
+                     return;
 
-                var context = connection.ContextAs<BitcoinWorkerContext>();
+                 var context = connection.ContextAs<BitcoinWorkerContext>();
 
-                if(!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
-                    return;
+                 if (!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
+                     return;
 
-                if(context.ApplyPendingDifficulty())
-                    await connection.NotifyAsync(EquihashStratumMethods.SetTarget, new object[] { EncodeTarget(context.Difficulty) });
+                 if (context.ApplyPendingDifficulty())
+                     await connection.NotifyAsync(EquihashStratumMethods.SetTarget, new object[] { EncodeTarget(context.Difficulty) });
 
-                await connection.NotifyAsync(BitcoinStratumMethods.MiningNotify, currentJobParams);
-            })), ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
+                 await connection.NotifyAsync(BitcoinStratumMethods.MiningNotify, currentJobParams);
+             })), ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
         }
 
         public override double HashrateFromShares(double shares, double interval)
@@ -371,7 +371,7 @@ namespace Cybercore.Blockchain.Equihash
 
             context.EnqueueNewDifficulty(newDiff);
 
-            if(context.HasPendingDifficulty)
+            if (context.HasPendingDifficulty)
             {
                 context.ApplyPendingDifficulty();
 

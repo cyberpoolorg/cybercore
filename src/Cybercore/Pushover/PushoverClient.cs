@@ -33,8 +33,8 @@ namespace Cybercore.Pushover
                 Token = config.Token,
                 Title = title,
                 Message = message,
-                Priority = (int) priority,
-                Timestamp = (int) DateTimeOffset.Now.ToUnixTimeSeconds(),
+                Priority = (int)priority,
+                Timestamp = (int)DateTimeOffset.Now.ToUnixTimeSeconds(),
             };
 
             return await client.Post<PushoverReponse>("/messages.json", msg, ct);

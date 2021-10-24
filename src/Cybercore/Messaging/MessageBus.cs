@@ -69,9 +69,9 @@ namespace Cybercore.Messaging
 
             withMessageBus(typeof(T), contract, (mb, tuple) =>
             {
-                if(mb.TryGetValue(tuple, out var subjRef) && subjRef.IsAlive)
+                if (mb.TryGetValue(tuple, out var subjRef) && subjRef.IsAlive)
                 {
-                    ret = (ISubject<T>) subjRef.Target;
+                    ret = (ISubject<T>)subjRef.Target;
                     return;
                 }
 
@@ -87,11 +87,11 @@ namespace Cybercore.Messaging
             Action<Dictionary<Tuple<Type, string>, NotAWeakReference>,
                 Tuple<Type, string>> block)
         {
-            lock(messageBus)
+            lock (messageBus)
             {
                 var tuple = new Tuple<Type, string>(type, contract);
                 block(messageBus, tuple);
-                if(messageBus.ContainsKey(tuple) && !messageBus[tuple].IsAlive)
+                if (messageBus.ContainsKey(tuple) && !messageBus[tuple].IsAlive)
                     messageBus.Remove(tuple);
             }
         }

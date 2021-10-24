@@ -34,7 +34,7 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
 
             rewardToPool = new Money(blockReward + rewardFees, MoneyUnit.Satoshi);
             tx.Outputs.Add(rewardToPool, poolAddressDestination);
-            
+
 
             return tx;
         }
@@ -43,7 +43,7 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
         {
             var blockHeader = new EquihashBlockHeader
             {
-                Version = (int) BlockTemplate.Version,
+                Version = (int)BlockTemplate.Version,
                 Bits = new Target(Encoders.Hex.DecodeData(BlockTemplate.Bits)),
                 HashPrevBlock = uint256.Parse(BlockTemplate.PreviousBlockhash),
                 HashMerkleRoot = new uint256(merkleRoot),
@@ -51,10 +51,10 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
                 Nonce = nonce
             };
 
-            if(isSaplingActive && !string.IsNullOrEmpty(BlockTemplate.FinalSaplingRootHash))
+            if (isSaplingActive && !string.IsNullOrEmpty(BlockTemplate.FinalSaplingRootHash))
                 blockHeader.HashReserved = BlockTemplate.FinalSaplingRootHash.HexToReverseByteArray();
-            
-            if(!string.IsNullOrEmpty(BlockTemplate.Solution))
+
+            if (!string.IsNullOrEmpty(BlockTemplate.Solution))
                 blockHeader.SolutionIn = BlockTemplate.Solution.HexToReverseByteArray().ToHexString();
 
             return blockHeader.ToBytes();
@@ -63,32 +63,32 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
         protected override (Share Share, string BlockHex) ProcessShareInternal(StratumConnection worker, string nonce, uint nTime, string solution)
         {
             var context = worker.ContextAs<BitcoinWorkerContext>();
-            var solutionBytes = (Span<byte>) solution.HexToByteArray();
+            var solutionBytes = (Span<byte>)solution.HexToByteArray();
             var headerBytes = SerializeHeader(nTime, nonce);
-            var length =  headerBytes.Length+3 ;
-          
+            var length = headerBytes.Length + 3;
+
             Span<byte> headerSolutionBytes = stackalloc byte[length];
             headerBytes.CopyTo(headerSolutionBytes);
-            
+
             solutionBytes.CopyTo(headerSolutionBytes.Slice(140));
 
             Span<byte> headerHash = stackalloc byte[32];
-     
+
             headerHasherverus.Digest(headerSolutionBytes, headerHash, headerSolutionBytes.Length);
 
             var headerValue = new uint256(headerHash);
-            var shareDiff = (double) new BigRational(networkParams.Diff1BValue, headerHash.ToBigInteger());
+            var shareDiff = (double)new BigRational(networkParams.Diff1BValue, headerHash.ToBigInteger());
             var stratumDifficulty = context.Difficulty;
             var ratio = shareDiff / stratumDifficulty;
             var isBlockCandidate = headerValue <= blockTargetValue;
 
-            if(!isBlockCandidate && ratio < 0.99)
+            if (!isBlockCandidate && ratio < 0.99)
             {
-                if(context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
+                if (context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
                 {
                     ratio = shareDiff / context.PreviousDifficulty.Value;
 
-                    if(ratio < 0.99)
+                    if (ratio < 0.99)
                         throw new StratumException(StratumError.LowDifficultyShare, $"low difficulty share ({shareDiff})");
 
                     stratumDifficulty = context.PreviousDifficulty.Value;
@@ -105,7 +105,7 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
                 Difficulty = stratumDifficulty,
             };
 
-            if(isBlockCandidate)
+            if (isBlockCandidate)
             {
                 var headerHashReversed = headerHash.ToNewReverseArray();
 
@@ -115,7 +115,7 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
                 var headertemp = headerBytes.Take(140).ToArray();
                 var blockBytes = SerializeBlock(headertemp, coinbaseInitial, solutionBytes);
                 var blockHex = blockBytes.ToHexString();
-            
+
                 return (result, blockHex);
             }
 
@@ -142,17 +142,17 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
             this.network = network;
             BlockTemplate = blockTemplate;
             JobId = jobId;
-            Difficulty = (double) new BigRational(networkParams.Diff1BValue, BlockTemplate.Target.HexToReverseByteArray().AsSpan().ToBigInteger());
+            Difficulty = (double)new BigRational(networkParams.Diff1BValue, BlockTemplate.Target.HexToReverseByteArray().AsSpan().ToBigInteger());
 
             isSaplingActive = true;
             isOverwinterActive = true;
-          
+
             txVersion = 4;
             txVersionGroupId = 2301567109;
-            
+
             this.solver = solver;
 
-            if(!string.IsNullOrEmpty(BlockTemplate.Target))
+            if (!string.IsNullOrEmpty(BlockTemplate.Target))
                 blockTargetValue = new uint256(BlockTemplate.Target);
             else
             {
@@ -165,16 +165,16 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
                 .ReverseInPlace()
                 .ToHexString();
 
-            if(blockTemplate.Subsidy != null)
+            if (blockTemplate.Subsidy != null)
                 blockReward = blockTemplate.Subsidy.Miner * BitcoinConstants.SatoshisPerBitcoin;
             else
                 blockReward = BlockTemplate.CoinbaseValue;
 
-            if(networkParams?.PayFoundersReward == true)
+            if (networkParams?.PayFoundersReward == true)
             {
                 var founders = blockTemplate.Subsidy.Founders ?? blockTemplate.Subsidy.Community;
 
-                if(!founders.HasValue)
+                if (!founders.HasValue)
                     throw new Exception("Error, founders reward missing for block template");
 
                 blockReward = (blockTemplate.Subsidy.Miner + founders.Value) * BitcoinConstants.SatoshisPerBitcoin;
@@ -195,7 +195,7 @@ namespace Cybercore.Blockchain.Equihash.Custom.VerusCoin
                 blockTemplate.FinalSaplingRootHash.HexToReverseByteArray().ToHexString() :
                 sha256Empty.ToHexString();
 
-            char[] charsToTrim = {'0'};
+            char[] charsToTrim = { '0' };
 
             var solutionIn = !string.IsNullOrEmpty(blockTemplate.Solution) ?
                 blockTemplate.Solution.HexToByteArray().ToHexString().TrimEnd(charsToTrim) :

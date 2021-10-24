@@ -25,19 +25,19 @@ namespace Cybercore.Blockchain.Equihash.Custom.Minexcoin
 
             tx.Outputs.Add(bankReward, bankScript);
 
-            tx.Inputs.Add(TxIn.CreateCoinbase((int) BlockTemplate.Height));
+            tx.Inputs.Add(TxIn.CreateCoinbase((int)BlockTemplate.Height));
 
             return tx;
         }
 
         private Money ComputeBankReward(uint blockHeight, Money totalReward)
         {
-            if(blockHeight <= 4500000)
+            if (blockHeight <= 4500000)
             {
-                return new Money(Math.Floor((decimal) totalReward.Satoshi / 10) * (2.0m + Math.Floor(((decimal) blockHeight - 1) / 900000)), MoneyUnit.Satoshi);
+                return new Money(Math.Floor((decimal)totalReward.Satoshi / 10) * (2.0m + Math.Floor(((decimal)blockHeight - 1) / 900000)), MoneyUnit.Satoshi);
             }
 
-            return new Money(Math.Floor((decimal) totalReward.Satoshi / 10) * 7, MoneyUnit.Satoshi);
+            return new Money(Math.Floor((decimal)totalReward.Satoshi / 10) * 7, MoneyUnit.Satoshi);
         }
     }
 }

@@ -83,7 +83,7 @@ namespace Cybercore.Mining
         {
             var context = new Dictionary<string, object> { { PolicyContextKeyShares, shares } };
 
-            await faultPolicy.ExecuteAsync(ctx => PersistSharesCoreAsync((IList<Share>) ctx[PolicyContextKeyShares]), context);
+            await faultPolicy.ExecuteAsync(ctx => PersistSharesCoreAsync((IList<Share>)ctx[PolicyContextKeyShares]), context);
         }
 
         private async Task PersistSharesCoreAsync(IList<Share> shares)
@@ -93,19 +93,19 @@ namespace Cybercore.Mining
                 var mapped = shares.Select(mapper.Map<Persistence.Model.Share>).ToArray();
                 await shareRepo.BatchInsertAsync(con, tx, mapped);
 
-                foreach(var share in shares)
+                foreach (var share in shares)
                 {
-                    if(!share.IsBlockCandidate)
+                    if (!share.IsBlockCandidate)
                         continue;
 
                     var blockEntity = mapper.Map<Block>(share);
                     blockEntity.Status = BlockStatus.Pending;
                     await blockRepo.InsertAsync(con, tx, blockEntity);
 
-                    if(pools.TryGetValue(share.PoolId, out var poolConfig))
+                    if (pools.TryGetValue(share.PoolId, out var poolConfig))
                         messageBus.NotifyBlockFound(share.PoolId, blockEntity, poolConfig.Template);
                     else
-                        logger.Warn(()=> $"Block found for unknown pool {share.PoolId}");
+                        logger.Warn(() => $"Block found for unknown pool {share.PoolId}");
                 }
             });
         }
@@ -123,18 +123,18 @@ namespace Cybercore.Mining
 
         private async Task OnExecutePolicyFallbackAsync(Context context, CancellationToken ct)
         {
-            var shares = (IList<Share>) context[PolicyContextKeyShares];
+            var shares = (IList<Share>)context[PolicyContextKeyShares];
 
             try
             {
-                await using(var stream = new FileStream(recoveryFilename, FileMode.Append, FileAccess.Write))
+                await using (var stream = new FileStream(recoveryFilename, FileMode.Append, FileAccess.Write))
                 {
-                    await using(var writer = new StreamWriter(stream, new UTF8Encoding(false)))
+                    await using (var writer = new StreamWriter(stream, new UTF8Encoding(false)))
                     {
-                        if(stream.Length == 0)
+                        if (stream.Length == 0)
                             WriteRecoveryFileheader(writer);
 
-                        foreach(var share in shares)
+                        foreach (var share in shares)
                         {
                             var json = JsonConvert.SerializeObject(share, jsonSerializerSettings);
                             await writer.WriteLineAsync(json);
@@ -145,9 +145,9 @@ namespace Cybercore.Mining
                 NotifyAdminOnPolicyFallback();
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                if(!hasLoggedPolicyFallbackFailure)
+                if (!hasLoggedPolicyFallbackFailure)
                 {
                     logger.Fatal(ex, "Fatal error during policy fallback execution. Share(s) will be lost!");
                     hasLoggedPolicyFallbackFailure = true;
@@ -172,21 +172,21 @@ namespace Cybercore.Mining
                 var failCount = 0;
                 const int bufferSize = 100;
 
-                await using(var stream = new FileStream(recoveryFilename, FileMode.Open, FileAccess.Read))
+                await using (var stream = new FileStream(recoveryFilename, FileMode.Open, FileAccess.Read))
                 {
-                    using(var reader = new StreamReader(stream, new UTF8Encoding(false)))
+                    using (var reader = new StreamReader(stream, new UTF8Encoding(false)))
                     {
                         var shares = new List<Share>();
                         var lastProgressUpdate = DateTime.UtcNow;
 
-                        while(!reader.EndOfStream)
+                        while (!reader.EndOfStream)
                         {
                             var line = reader.ReadLine().Trim();
 
-                            if(line.Length == 0)
+                            if (line.Length == 0)
                                 continue;
 
-                            if(line.StartsWith("#"))
+                            if (line.StartsWith("#"))
                                 continue;
 
                             try
@@ -195,7 +195,7 @@ namespace Cybercore.Mining
                                 shares.Add(share);
                             }
 
-                            catch(JsonException ex)
+                            catch (JsonException ex)
                             {
                                 logger.Error(ex, () => $"Unable to parse share record: {line}");
                                 failCount++;
@@ -203,7 +203,7 @@ namespace Cybercore.Mining
 
                             try
                             {
-                                if(shares.Count == bufferSize)
+                                if (shares.Count == bufferSize)
                                 {
                                     await PersistSharesCoreAsync(shares);
 
@@ -212,14 +212,14 @@ namespace Cybercore.Mining
                                 }
                             }
 
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 logger.Error(ex, () => "Unable to import shares");
                                 failCount++;
                             }
 
                             var now = DateTime.UtcNow;
-                            if(now - lastProgressUpdate > TimeSpan.FromSeconds(10))
+                            if (now - lastProgressUpdate > TimeSpan.FromSeconds(10))
                             {
                                 logger.Info($"{successCount} shares imported");
                                 lastProgressUpdate = now;
@@ -228,7 +228,7 @@ namespace Cybercore.Mining
 
                         try
                         {
-                            if(shares.Count > 0)
+                            if (shares.Count > 0)
                             {
                                 await PersistSharesCoreAsync(shares);
 
@@ -236,7 +236,7 @@ namespace Cybercore.Mining
                             }
                         }
 
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             logger.Error(ex, () => "Unable to import shares");
                             failCount++;
@@ -244,13 +244,13 @@ namespace Cybercore.Mining
                     }
                 }
 
-                if(failCount == 0)
+                if (failCount == 0)
                     logger.Info(() => $"Successfully imported {successCount} shares");
                 else
                     logger.Warn(() => $"Successfully imported {successCount} shares with {failCount} failures");
             }
 
-            catch(FileNotFoundException)
+            catch (FileNotFoundException)
             {
                 logger.Error(() => $"Recovery file {recoveryFilename} was not found");
             }
@@ -258,7 +258,7 @@ namespace Cybercore.Mining
 
         private void NotifyAdminOnPolicyFallback()
         {
-            if(clusterConfig.Notifications?.Admin?.Enabled == true &&
+            if (clusterConfig.Notifications?.Admin?.Enabled == true &&
                 clusterConfig.Notifications?.Admin?.NotifyPaymentSuccess == true &&
                 !notifiedAdminOnPolicyFallback)
             {
@@ -324,7 +324,7 @@ namespace Cybercore.Mining
                 .ToTask(ct)
                 .ContinueWith(task =>
                 {
-                    if(task.IsFaulted)
+                    if (task.IsFaulted)
                         logger.Fatal(() => $"Terminated due to error {task.Exception?.InnerException ?? task.Exception}");
                     else
                         logger.Info(() => "Offline");

@@ -162,7 +162,7 @@ namespace Cybercore.Configuration
             RuleFor(j => j.Ports)
                 .Must((pc, ports, ctx) =>
                 {
-                    if(ports?.Keys.Any(port => port < 0) == true)
+                    if (ports?.Keys.Any(port => port < 0) == true)
                     {
                         ctx.MessageFormatter.AppendArgument("port", ports.Keys.First(port => port < 0));
                         return false;
@@ -207,9 +207,9 @@ namespace Cybercore.Configuration
                 .NotEmpty();
 
             RuleFor(j => j.InstanceId)
-                .GreaterThan((byte) 0)
+                .GreaterThan((byte)0)
                 .When(x => x.InstanceId.HasValue)
-                .WithMessage("instanceId must either be omitted or be non-zero");;
+                .WithMessage("instanceId must either be omitted or be non-zero"); ;
 
             RuleFor(j => j.Pools)
                 .Must((pc, pools, ctx) =>
@@ -218,7 +218,7 @@ namespace Cybercore.Configuration
                         .GroupBy(x => x.Id)
                         .ToArray();
 
-                    if(ids.Any(id => id.Count() > 1))
+                    if (ids.Any(id => id.Count() > 1))
                     {
                         ctx.MessageFormatter.AppendArgument("poolId", ids.First(id => id.Count() > 1).Key);
                         return false;
@@ -235,9 +235,9 @@ namespace Cybercore.Configuration
                         .GroupBy(x => x)
                         .ToArray();
 
-                    foreach(var port in ports)
+                    foreach (var port in ports)
                     {
-                        if(port.Count() > 1)
+                        if (port.Count() > 1)
                         {
                             ctx.MessageFormatter.AppendArgument("port", port.Key);
                             return false;
@@ -314,7 +314,7 @@ namespace Cybercore.Configuration
             var validator = new ClusterConfigValidator();
             var result = validator.Validate(this);
 
-            if(!result.IsValid)
+            if (!result.IsValid)
                 throw new ValidationException(result.Errors);
         }
     }

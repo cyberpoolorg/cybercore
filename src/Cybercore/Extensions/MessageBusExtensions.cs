@@ -15,7 +15,7 @@ namespace Cybercore.Extensions
         {
             string minerExplorerLink = null;
 
-            if(!string.IsNullOrEmpty(coin.ExplorerAccountLink))
+            if (!string.IsNullOrEmpty(coin.ExplorerAccountLink))
                 minerExplorerLink = string.Format(coin.ExplorerAccountLink, block.Miner);
 
             messageBus.SendMessage(new BlockFoundNotification
@@ -48,17 +48,17 @@ namespace Cybercore.Extensions
             string blockExplorerLink = null;
             string minerExplorerLink = null;
 
-            if(block.Status != BlockStatus.Orphaned)
+            if (block.Status != BlockStatus.Orphaned)
             {
-                if(coin.ExplorerBlockLinks.TryGetValue(!string.IsNullOrEmpty(block.Type) ? block.Type : "block", out var blockInfobaseUrl))
+                if (coin.ExplorerBlockLinks.TryGetValue(!string.IsNullOrEmpty(block.Type) ? block.Type : "block", out var blockInfobaseUrl))
                 {
-                    if(blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
+                    if (blockInfobaseUrl.Contains(CoinMetaData.BlockHeightPH))
                         blockExplorerLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHeightPH, block.BlockHeight.ToString(CultureInfo.InvariantCulture));
-                    else if(blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
+                    else if (blockInfobaseUrl.Contains(CoinMetaData.BlockHashPH) && !string.IsNullOrEmpty(block.Hash))
                         blockExplorerLink = blockInfobaseUrl.Replace(CoinMetaData.BlockHashPH, block.Hash);
                 }
 
-                if(!string.IsNullOrEmpty(coin.ExplorerAccountLink))
+                if (!string.IsNullOrEmpty(coin.ExplorerAccountLink))
                     minerExplorerLink = string.Format(coin.ExplorerAccountLink, block.Miner);
             }
 

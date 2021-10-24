@@ -83,7 +83,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 blockFound.Select(x => (false, JobRefreshBy.BlockFound, (string) null))
             };
 
-            if(extraPoolConfig?.BtStream == null)
+            if (extraPoolConfig?.BtStream == null)
             {
                 var zmq = poolConfig.Daemons
                     .Where(x => !string.IsNullOrEmpty(x.Extra.SafeExtensionDataAs<BitcoinDaemonEndpointConfigExtra>()?.ZmqBlockNotifySocket))
@@ -95,21 +95,21 @@ namespace Cybercore.Blockchain.Bitcoin
                         return (Socket: extra.ZmqBlockNotifySocket, Topic: topic);
                     });
 
-                if(zmq.Count > 0)
+                if (zmq.Count > 0)
                 {
                     logger.Info(() => $"Subscribing to ZMQ push-updates from {string.Join(", ", zmq.Values)}");
 
                     var blockNotify = daemon.ZmqSubscribe(logger, ct, zmq)
                         .Select(msg =>
                         {
-                            using(msg)
+                            using (msg)
                             {
                                 var result = msg[1].Read().ToHexString();
                                 return result;
                             }
                         })
                         .DistinctUntilChanged()
-                        .Select(_ => (false, JobRefreshBy.PubSub, (string) null))
+                        .Select(_ => (false, JobRefreshBy.PubSub, (string)null))
                         .Publish()
                         .RefCount();
 
@@ -122,28 +122,28 @@ namespace Cybercore.Blockchain.Bitcoin
                     triggers.Add(blockNotify);
                 }
 
-                if(poolConfig.BlockRefreshInterval > 0)
+                if (poolConfig.BlockRefreshInterval > 0)
                 {
                     var pollingInterval = poolConfig.BlockRefreshInterval > 0 ? poolConfig.BlockRefreshInterval : 1000;
 
                     triggers.Add(Observable.Timer(TimeSpan.FromMilliseconds(pollingInterval))
                         .TakeUntil(pollTimerRestart)
-                        .Select(_ => (false, JobRefreshBy.Poll, (string) null))
+                        .Select(_ => (false, JobRefreshBy.Poll, (string)null))
                         .Repeat());
                 }
 
                 else
                 {
                     triggers.Add(Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                        .Select(_ => (false, JobRefreshBy.Initial, (string) null))
+                        .Select(_ => (false, JobRefreshBy.Initial, (string)null))
                         .TakeWhile(_ => !hasInitialBlockTemplate));
                 }
 
-                if(poolConfig.JobRebroadcastTimeout > 0)
+                if (poolConfig.JobRebroadcastTimeout > 0)
                 {
                     triggers.Add(Observable.Timer(jobRebroadcastTimeout)
                         .TakeUntil(pollTimerRestart)
-                        .Select(_ => (true, JobRefreshBy.PollRefresh, (string) null))
+                        .Select(_ => (true, JobRefreshBy.PollRefresh, (string)null))
                         .Repeat());
                 }
             }
@@ -152,7 +152,7 @@ namespace Cybercore.Blockchain.Bitcoin
             {
                 var btStream = BtStreamSubscribe(extraPoolConfig.BtStream);
 
-                if(poolConfig.JobRebroadcastTimeout > 0)
+                if (poolConfig.JobRebroadcastTimeout > 0)
                 {
                     var interval = TimeSpan.FromSeconds(Math.Max(1, poolConfig.JobRebroadcastTimeout - 0.1d));
 
@@ -175,7 +175,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 }
 
                 triggers.Add(Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                    .Select(_ => (false, JobRefreshBy.Initial, (string) null))
+                    .Select(_ => (false, JobRefreshBy.Initial, (string)null))
                     .TakeWhile(_ => !hasInitialBlockTemplate));
             }
 
@@ -185,7 +185,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 .Where(x => x.IsNew || x.Force)
                 .Do(x =>
                 {
-                    if(x.IsNew)
+                    if (x.IsNew)
                         hasInitialBlockTemplate = true;
                 })
                 .Select(x => GetJobParamsForStratum(x.IsNew))
@@ -195,7 +195,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual async Task ShowDaemonSyncProgressAsync(CancellationToken ct)
         {
-            if(hasLegacyDaemon)
+            if (hasLegacyDaemon)
             {
                 await ShowDaemonSyncProgressLegacyAsync(ct);
                 return;
@@ -203,20 +203,20 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var infos = await daemon.ExecuteCmdAllAsync<BlockchainInfo>(logger, BitcoinCommands.GetBlockchainInfo, ct);
 
-            if(infos.Length > 0)
+            if (infos.Length > 0)
             {
                 var blockCount = infos
                     .Max(x => x.Response?.Blocks);
 
-                if(blockCount.HasValue)
+                if (blockCount.HasValue)
                 {
                     var peerInfo = await daemon.ExecuteCmdAnyAsync<PeerInfo[]>(logger, BitcoinCommands.GetPeerInfo, ct);
                     var peers = peerInfo.Response;
 
-                    if(peers != null && peers.Length > 0)
+                    if (peers != null && peers.Length > 0)
                     {
                         var totalBlocks = peers.Max(x => x.StartingHeight);
-                        var percent = totalBlocks > 0 ? (double) blockCount / totalBlocks * 100 : 0;
+                        var percent = totalBlocks > 0 ? (double)blockCount / totalBlocks * 100 : 0;
                         logger.Info(() => $"Daemons have downloaded {percent:0.00}% of blockchain from {peers.Length} peers");
                     }
                 }
@@ -235,11 +235,11 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetNetworkHashPS)
                 );
 
-                if(results.Any(x => x.Error != null))
+                if (results.Any(x => x.Error != null))
                 {
                     var errors = results.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) refreshing network stats: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
@@ -247,7 +247,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 var networkInfoResponse = results[1].Response.ToObject<NetworkInfo>();
 
                 var latestBlockHeight = miningInfoResponse.Blocks;
-		var sampleSize = 300;
+                var sampleSize = 300;
                 var sampleBlockNumber = (latestBlockHeight - sampleSize);
 
                 var blocksHash = await daemon.ExecuteBatchAnyAsync(logger, ct,
@@ -255,11 +255,11 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { sampleBlockNumber })
                 );
 
-                if(blocksHash.Any(x => x.Error != null))
+                if (blocksHash.Any(x => x.Error != null))
                 {
                     var errors = blocksHash.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) get blockhash: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
@@ -271,31 +271,31 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash2 })
                 );
 
-                if(blocksInfo.Any(x => x.Error != null))
+                if (blocksInfo.Any(x => x.Error != null))
                 {
                     var errors = blocksInfo.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) get blockinfo: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
                 var blockInfo1 = blocksInfo[0].Response.ToObject<BlockInfo1>();
                 var blockInfo2 = blocksInfo[1].Response.ToObject<BlockInfo2>();
 
-		var latestBlockTime = blockInfo1.Time;
-		var sampleBlockTime = blockInfo2.Time;
+                var latestBlockTime = blockInfo1.Time;
+                var sampleBlockTime = blockInfo2.Time;
 
-		var blockTime = (double) (latestBlockTime - sampleBlockTime) / sampleSize;
+                var blockTime = (double)(latestBlockTime - sampleBlockTime) / sampleSize;
 
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetworkHashps;
                 BlockchainStats.ConnectedPeers = networkInfoResponse.Connections;
-		BlockchainStats.BlockTime = blockTime;
+                BlockchainStats.BlockTime = blockTime;
 
-                if(BlockchainStats.NetworkHashrate == 0 && results[2].Error == null)
+                if (BlockchainStats.NetworkHashrate == 0 && results[2].Error == null)
                     BlockchainStats.NetworkHashrate = results[2].Response.Value<double>();
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
             }
@@ -314,7 +314,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 submitResult.Error?.Code.ToString(CultureInfo.InvariantCulture) ??
                 submitResult.Response?.ToString();
 
-            if(!string.IsNullOrEmpty(submitError))
+            if (!string.IsNullOrEmpty(submitError))
             {
                 logger.Warn(() => $"Block {share.BlockHeight} submission failed with: {submitError}");
                 messageBus.SendMessage(new AdminNotification("Block submission failed", $"Pool {poolConfig.Id} {(!string.IsNullOrEmpty(share.Source) ? $"[{share.Source.ToUpper()}] " : string.Empty)}failed to submit block {share.BlockHeight}: {submitError}"));
@@ -325,7 +325,7 @@ namespace Cybercore.Blockchain.Bitcoin
             var block = acceptResult.Response?.ToObject<DaemonResponses.Block>();
             var accepted = acceptResult.Error == null && block?.Hash == share.BlockHash;
 
-            if(!accepted)
+            if (!accepted)
             {
                 logger.Warn(() => $"Block {share.BlockHeight} submission failed for pool {poolConfig.Id} because block was not found after submission");
                 messageBus.SendMessage(new AdminNotification($"[{share.PoolId.ToUpper()}]-[{share.Source}] Block submission failed", $"[{share.PoolId.ToUpper()}]-[{share.Source}] Block {share.BlockHeight} submission failed for pool {poolConfig.Id} because block was not found after submission"));
@@ -338,8 +338,8 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var responses = await daemon.ExecuteCmdAllAsync<DaemonInfo>(logger, BitcoinCommands.GetInfo, ct);
 
-            if(responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
-                .Select(x => (DaemonClientException) x.Error.InnerException)
+            if (responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
+                .Select(x => (DaemonClientException)x.Error.InnerException)
                 .Any(x => x.Code == HttpStatusCode.Unauthorized))
                 logger.ThrowLogPoolStartupException("Daemon reports invalid credentials");
 
@@ -357,20 +357,20 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var infos = await daemon.ExecuteCmdAllAsync<DaemonInfo>(logger, BitcoinCommands.GetInfo, ct);
 
-            if(infos.Length > 0)
+            if (infos.Length > 0)
             {
                 var blockCount = infos
                     .Max(x => x.Response?.Blocks);
 
-                if(blockCount.HasValue)
+                if (blockCount.HasValue)
                 {
                     var peerInfo = await daemon.ExecuteCmdAnyAsync<PeerInfo[]>(logger, BitcoinCommands.GetPeerInfo, ct);
                     var peers = peerInfo.Response;
 
-                    if(peers != null && peers.Length > 0)
+                    if (peers != null && peers.Length > 0)
                     {
                         var totalBlocks = peers.Max(x => x.StartingHeight);
-                        var percent = totalBlocks > 0 ? (double) blockCount / totalBlocks * 100 : 0;
+                        var percent = totalBlocks > 0 ? (double)blockCount / totalBlocks * 100 : 0;
                         logger.Info(() => $"Daemons have downloaded {percent:0.00}% of blockchain from {peers.Length} peers");
                     }
                 }
@@ -388,11 +388,11 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetMiningInfo)
                 );
 
-                if(results.Any(x => x.Error != null))
+                if (results.Any(x => x.Error != null))
                 {
                     var errors = results.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) refreshing network stats: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
@@ -400,7 +400,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 var miningInfoResponse = results[1].Response.ToObject<MiningInfo>();
 
                 var latestBlockHeight = miningInfoResponse.Blocks;
-		var sampleSize = 300;
+                var sampleSize = 300;
                 var sampleBlockNumber = (latestBlockHeight - sampleSize);
 
                 var blocksHash = await daemon.ExecuteBatchAnyAsync(logger, ct,
@@ -408,11 +408,11 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetBlockHash, new[] { sampleBlockNumber })
                 );
 
-                if(blocksHash.Any(x => x.Error != null))
+                if (blocksHash.Any(x => x.Error != null))
                 {
                     var errors = blocksHash.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) get blockhash: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
@@ -424,28 +424,28 @@ namespace Cybercore.Blockchain.Bitcoin
                     new DaemonCmd(BitcoinCommands.GetBlock, new[] { blockHash2 })
                 );
 
-                if(blocksInfo.Any(x => x.Error != null))
+                if (blocksInfo.Any(x => x.Error != null))
                 {
                     var errors = blocksInfo.Where(x => x.Error != null).ToArray();
 
-                    if(errors.Any())
+                    if (errors.Any())
                         logger.Warn(() => $"Error(s) get blockinfo: {string.Join(", ", errors.Select(y => y.Error.Message))}");
                 }
 
                 var blockInfo1 = blocksInfo[0].Response.ToObject<BlockInfo1>();
                 var blockInfo2 = blocksInfo[1].Response.ToObject<BlockInfo2>();
 
-		var latestBlockTime = blockInfo1.Time;
-		var sampleBlockTime = blockInfo2.Time;
+                var latestBlockTime = blockInfo1.Time;
+                var sampleBlockTime = blockInfo2.Time;
 
-		var blockTime = (double) (latestBlockTime - sampleBlockTime) / sampleSize;
+                var blockTime = (double)(latestBlockTime - sampleBlockTime) / sampleSize;
 
-                BlockchainStats.ConnectedPeers = (int) (long) connectionCountResponse;
+                BlockchainStats.ConnectedPeers = (int)(long)connectionCountResponse;
                 BlockchainStats.NetworkHashrate = miningInfoResponse.NetmHashps *= 1000000;
-		BlockchainStats.BlockTime = blockTime;
+                BlockchainStats.BlockTime = blockTime;
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
             }
@@ -465,13 +465,13 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected override async Task<bool> AreDaemonsHealthyAsync(CancellationToken ct)
         {
-            if(hasLegacyDaemon)
+            if (hasLegacyDaemon)
                 return await AreDaemonsHealthyLegacyAsync(ct);
 
             var responses = await daemon.ExecuteCmdAllAsync<BlockchainInfo>(logger, BitcoinCommands.GetBlockchainInfo, ct);
 
-            if(responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
-                .Select(x => (DaemonClientException) x.Error.InnerException)
+            if (responses.Where(x => x.Error?.InnerException?.GetType() == typeof(DaemonClientException))
+                .Select(x => (DaemonClientException)x.Error.InnerException)
                 .Any(x => x.Code == HttpStatusCode.Unauthorized))
                 logger.ThrowLogPoolStartupException("Daemon reports invalid credentials");
 
@@ -480,7 +480,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected override async Task<bool> AreDaemonsConnectedAsync(CancellationToken ct)
         {
-            if(hasLegacyDaemon)
+            if (hasLegacyDaemon)
                 return await AreDaemonsConnectedLegacyAsync(ct);
 
             var response = await daemon.ExecuteCmdAnyAsync<NetworkInfo>(logger, BitcoinCommands.GetNetworkInfo, ct);
@@ -492,20 +492,20 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var syncPendingNotificationShown = false;
 
-            while(true)
+            while (true)
             {
                 var response = await daemon.ExecuteCmdAllAsync<BlockTemplate>(logger,
                     BitcoinCommands.GetBlockTemplate, ct, GetBlockTemplateParams());
 
                 var isSynched = response.All(x => x.Error == null);
 
-                if(isSynched)
+                if (isSynched)
                 {
                     logger.Info(() => "All daemons synched with blockchain");
                     break;
                 }
 
-                if(!syncPendingNotificationShown)
+                if (!syncPendingNotificationShown)
                 {
                     logger.Info(() => "Daemons still syncing with network. Manager will be started once synced");
                     syncPendingNotificationShown = true;
@@ -530,7 +530,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var results = await daemon.ExecuteBatchAnyAsync(logger, ct, commands);
 
-            if(results.Any(x => x.Error != null))
+            if (results.Any(x => x.Error != null))
             {
                 var resultList = results.ToList();
 
@@ -539,7 +539,7 @@ namespace Cybercore.Blockchain.Bitcoin
                     .Where(x => x.Error != null && commands[resultList.IndexOf(x)].Method != BitcoinCommands.GetAddressInfo)
                     .ToArray();
 
-                if(errors.Any())
+                if (errors.Any())
                     logger.ThrowLogPoolStartupException($"Init RPC failed: {string.Join(", ", errors.Select(y => y.Error.Message))}");
             }
 
@@ -550,31 +550,31 @@ namespace Cybercore.Blockchain.Bitcoin
             var difficultyResponse = results[3].Response.ToObject<JToken>();
             var addressInfoResponse = results[4].Error == null ? results[4].Response.ToObject<AddressInfo>() : null;
 
-            if(!hasLegacyDaemon)
+            if (!hasLegacyDaemon)
                 network = Network.GetNetwork(blockchainInfoResponse.Chain.ToLower());
             else
                 network = daemonInfoResponse.Testnet ? Network.TestNet : Network.Main;
 
             PostChainIdentifyConfigure();
 
-            if(validateAddressResponse is not {IsValid: true})
+            if (validateAddressResponse is not { IsValid: true })
                 logger.ThrowLogPoolStartupException($"Daemon reports pool-address '{poolConfig.Address}' as invalid");
 
             newDifficulty = difficultyResponse.Values().Any(x => x.Path == "proof-of-work");
 
-            isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true} || difficultyResponse.Values().Any(x => x.Path == "proof-of-stake");
+            isPoS = poolConfig.Template is BitcoinTemplate { IsPseudoPoS: true } || difficultyResponse.Values().Any(x => x.Path == "proof-of-stake");
 
-            if(!isPoS || !poolConfig.UseP2PK)
+            if (!isPoS || !poolConfig.UseP2PK)
             {
-                poolAddressDestination = AddressToDestination(poolConfig.Address,extraPoolConfig?.AddressType);
+                poolAddressDestination = AddressToDestination(poolConfig.Address, extraPoolConfig?.AddressType);
             }
-    
+
             else
-	    {
+            {
                 poolAddressDestination = new PubKey(poolConfig.PubKey ?? validateAddressResponse.PubKey);
             }
 
-            if(clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
+            if (clusterConfig.PaymentProcessing?.Enabled == true && poolConfig.PaymentProcessing?.Enabled == true)
             {
                 ConfigureRewards();
             }
@@ -582,21 +582,21 @@ namespace Cybercore.Blockchain.Bitcoin
             BlockchainStats.NetworkType = network.Name;
             BlockchainStats.RewardType = isPoS ? "POW / POS" : "POW";
 
-            if(submitBlockResponse.Error?.Message?.ToLower() == "method not found")
+            if (submitBlockResponse.Error?.Message?.ToLower() == "method not found")
                 hasSubmitBlockMethod = false;
-            else if(submitBlockResponse.Error?.Code == -1)
+            else if (submitBlockResponse.Error?.Code == -1)
                 hasSubmitBlockMethod = true;
             else
                 logger.ThrowLogPoolStartupException("Unable detect block submission RPC method");
 
-            if(!hasLegacyDaemon)
+            if (!hasLegacyDaemon)
                 await UpdateNetworkStatsAsync(ct);
             else
                 await UpdateNetworkStatsLegacyAsync(ct);
 
             Observable.Interval(TimeSpan.FromMinutes(10))
                 .Select(via => Observable.FromAsync(() =>
-                    Guard(()=> (!hasLegacyDaemon ? UpdateNetworkStatsAsync(ct) : UpdateNetworkStatsLegacyAsync(ct)),
+                    Guard(() => (!hasLegacyDaemon ? UpdateNetworkStatsAsync(ct) : UpdateNetworkStatsLegacyAsync(ct)),
                         ex => logger.Error(ex))))
                 .Concat()
                 .Subscribe();
@@ -607,10 +607,10 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual IDestination AddressToDestination(string address, BitcoinAddressType? addressType)
         {
-            if(!addressType.HasValue)
+            if (!addressType.HasValue)
                 return BitcoinUtils.AddressToDestination(address, network);
 
-            switch(addressType.Value)
+            switch (addressType.Value)
             {
                 case BitcoinAddressType.BechSegwit:
                     return BitcoinUtils.BechSegwitAddressToDestination(poolConfig.Address, network, extraPoolConfig?.BechPrefix);
@@ -633,7 +633,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected void ConfigureRewards()
         {
-            if(network.ChainName == ChainName.Mainnet &&
+            if (network.ChainName == ChainName.Mainnet &&
                 DevDonation.Addresses.TryGetValue(poolConfig.Template.Symbol, out var address))
             {
                 poolConfig.RewardRecipients = poolConfig.RewardRecipients.Concat(new[]
@@ -659,7 +659,7 @@ namespace Cybercore.Blockchain.Bitcoin
             extraPoolConfig = poolConfig.Extra.SafeExtensionDataAs<BitcoinPoolConfigExtra>();
             extraPoolPaymentProcessingConfig = poolConfig.PaymentProcessing?.Extra?.SafeExtensionDataAs<BitcoinPoolPaymentProcessingConfigExtra>();
 
-            if(extraPoolConfig?.MaxActiveJobs.HasValue == true)
+            if (extraPoolConfig?.MaxActiveJobs.HasValue == true)
                 maxActiveJobs = extraPoolConfig.MaxActiveJobs.Value;
 
             hasLegacyDaemon = extraPoolConfig?.HasLegacyDaemon == true;
@@ -669,12 +669,12 @@ namespace Cybercore.Blockchain.Bitcoin
 
         public virtual async Task<bool> ValidateAddressAsync(string address, CancellationToken ct)
         {
-            if(string.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
                 return false;
 
             var result = await daemon.ExecuteCmdAnyAsync<ValidateAddressResponse>(logger, ct, BitcoinCommands.ValidateAddress, new[] { address });
 
-            return result.Response is {IsValid: true};
+            return result.Response is { IsValid: true };
         }
 
         #endregion // API-Surface

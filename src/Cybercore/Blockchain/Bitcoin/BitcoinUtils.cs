@@ -33,7 +33,7 @@ namespace Cybercore.Blockchain.Bitcoin
         public static IDestination CashAddrToDestination(string address, Network expectedNetwork, bool fP2Sh = false)
         {
             BchAddr.BchAddrData bchAddr = BchAddr.DecodeCashAddressWithPrefix(address);
-            if(fP2Sh)
+            if (fP2Sh)
                 return new ScriptId(bchAddr.Hash);
             else
                 return new KeyId(bchAddr.Hash);

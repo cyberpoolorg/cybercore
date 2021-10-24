@@ -65,22 +65,22 @@ namespace Cybercore.Payments.PaymentSchemes
             var rewards = new Dictionary<string, decimal>();
             var shareCutOffDate = await CalculateRewardsAsync(pool, payoutHandler, window, block, blockReward, shares, rewards, ct);
 
-            foreach(var address in rewards.Keys)
+            foreach (var address in rewards.Keys)
             {
                 var amount = rewards[address];
 
-                if(amount > 0)
+                if (amount > 0)
                 {
                     logger.Info(() => $"Adding {payoutHandler.FormatAmount(amount)} to balance of {address} for {FormatUtil.FormatQuantity(shares[address])} ({shares[address]}) shares for block {block.BlockHeight}");
                     await balanceRepo.AddAmountAsync(con, tx, poolConfig.Id, address, amount, $"Reward for {FormatUtil.FormatQuantity(shares[address])} shares for block {block.BlockHeight}");
                 }
             }
 
-            if(shareCutOffDate.HasValue)
+            if (shareCutOffDate.HasValue)
             {
                 var cutOffCount = await shareRepo.CountSharesBeforeCreatedAsync(con, tx, poolConfig.Id, shareCutOffDate.Value);
 
-                if(cutOffCount > 0)
+                if (cutOffCount > 0)
                 {
                     await LogDiscardedSharesAsync(poolConfig, block, shareCutOffDate.Value);
 #if !DEBUG
@@ -93,8 +93,8 @@ namespace Cybercore.Payments.PaymentSchemes
             var totalShareCount = shares.Values.ToList().Sum(x => new decimal(x));
             var totalRewards = rewards.Values.ToList().Sum(x => x);
 
-            if(totalRewards > 0)
-                logger.Info(() => $"{FormatUtil.FormatQuantity((double) totalShareCount)} ({Math.Round(totalShareCount, 2)}) shares contributed to a total payout of {payoutHandler.FormatAmount(totalRewards)} ({totalRewards / blockReward * 100:0.00}% of block reward) to {rewards.Keys.Count} addresses");
+            if (totalRewards > 0)
+                logger.Info(() => $"{FormatUtil.FormatQuantity((double)totalShareCount)} ({Math.Round(totalShareCount, 2)}) shares contributed to a total payout of {payoutHandler.FormatAmount(totalRewards)} ({totalRewards / blockReward * 100:0.00}% of block reward) to {rewards.Keys.Count} addresses");
         }
 
         private async Task LogDiscardedSharesAsync(PoolConfig poolConfig, Block block, DateTime value)
@@ -104,7 +104,7 @@ namespace Cybercore.Payments.PaymentSchemes
             var currentPage = 0;
             var shares = new Dictionary<string, double>();
 
-            while(true)
+            while (true)
             {
                 logger.Info(() => $"Fetching page {currentPage} of discarded shares for pool {poolConfig.Id}, block {block.BlockHeight}");
 
@@ -113,37 +113,37 @@ namespace Cybercore.Payments.PaymentSchemes
 
                 currentPage++;
 
-                for(var i = 0; i < page.Length; i++)
+                for (var i = 0; i < page.Length; i++)
                 {
                     var share = page[i];
                     var address = share.Miner;
 
-                    if(!shares.ContainsKey(address))
+                    if (!shares.ContainsKey(address))
                         shares[address] = share.Difficulty;
                     else
                         shares[address] += share.Difficulty;
                 }
 
-                if(page.Length < pageSize)
+                if (page.Length < pageSize)
                     break;
 
                 before = page[^1].Created;
             }
 
-            if(shares.Keys.Count > 0)
+            if (shares.Keys.Count > 0)
             {
                 var addressesByShares = shares.Keys.OrderByDescending(x => shares[x]);
 
                 logger.Info(() => $"{FormatUtil.FormatQuantity(shares.Values.Sum())} ({shares.Values.Sum()}) total discarded shares, block {block.BlockHeight}");
 
-                foreach(var address in addressesByShares)
+                foreach (var address in addressesByShares)
                     logger.Info(() => $"{address} = {FormatUtil.FormatQuantity(shares[address])} ({shares[address]}) discarded shares, block {block.BlockHeight}");
             }
         }
 
         #endregion // IPayoutScheme
 
-        private async Task<DateTime?> CalculateRewardsAsync(IMiningPool pool, IPayoutHandler payoutHandler,decimal window, Block block, decimal blockReward,
+        private async Task<DateTime?> CalculateRewardsAsync(IMiningPool pool, IPayoutHandler payoutHandler, decimal window, Block block, decimal blockReward,
             Dictionary<string, double> shares, Dictionary<string, decimal> rewards, CancellationToken ct)
         {
             var poolConfig = pool.Config;
@@ -156,7 +156,7 @@ namespace Cybercore.Payments.PaymentSchemes
             var blockRewardRemaining = blockReward;
             DateTime? shareCutOffDate = null;
 
-            while(!done && !ct.IsCancellationRequested)
+            while (!done && !ct.IsCancellationRequested)
             {
                 logger.Info(() => $"Fetching page {currentPage} of shares for pool {poolConfig.Id}, block {block.BlockHeight}");
 
@@ -166,20 +166,20 @@ namespace Cybercore.Payments.PaymentSchemes
                 inclusive = false;
                 currentPage++;
 
-                for(var i = 0; !done && i < page.Length; i++)
+                for (var i = 0; !done && i < page.Length; i++)
                 {
                     var share = page[i];
                     var address = share.Miner;
                     var shareDiffAdjusted = payoutHandler.AdjustShareDifficulty(share.Difficulty);
 
-                    if(!shares.ContainsKey(address))
+                    if (!shares.ContainsKey(address))
                         shares[address] = shareDiffAdjusted;
                     else
                         shares[address] += shareDiffAdjusted;
 
-                    var score = (decimal) (shareDiffAdjusted / share.NetworkDifficulty);
+                    var score = (decimal)(shareDiffAdjusted / share.NetworkDifficulty);
 
-                    if(accumulatedScore + score >= window)
+                    if (accumulatedScore + score >= window)
                     {
                         score = window - accumulatedScore;
                         shareCutOffDate = share.Created;
@@ -190,19 +190,19 @@ namespace Cybercore.Payments.PaymentSchemes
                     accumulatedScore += score;
                     blockRewardRemaining -= reward;
 
-                    if(blockRewardRemaining <= 0 && !done)
+                    if (blockRewardRemaining <= 0 && !done)
                         throw new OverflowException("blockRewardRemaining < 0");
 
-                    if(reward > 0)
+                    if (reward > 0)
                     {
-                        if(!rewards.ContainsKey(address))
+                        if (!rewards.ContainsKey(address))
                             rewards[address] = reward;
                         else
                             rewards[address] += reward;
                     }
                 }
 
-                if(page.Length < pageSize)
+                if (page.Length < pageSize)
                     break;
 
                 before = page[^1].Created;

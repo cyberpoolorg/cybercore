@@ -56,20 +56,20 @@ namespace Cybercore.Extensions
 
         public static string ToHexString(this ReadOnlySpan<byte> value, int? off, int? len, bool withPrefix = false)
         {
-            if(value == null || value.Length == 0)
+            if (value == null || value.Length == 0)
                 return string.Empty;
 
             var length = len ?? value.Length;
             var bufferSize = length * 2;
 
-            if(withPrefix)
+            if (withPrefix)
                 bufferSize += 2;
 
             Span<char> buffer = stackalloc char[bufferSize];
 
             var offset = 0;
 
-            if(withPrefix)
+            if (withPrefix)
             {
                 buffer[offset++] = '0';
                 buffer[offset++] = 'x';
@@ -77,7 +77,7 @@ namespace Cybercore.Extensions
 
             var start = off ?? 0;
 
-            for(var i = start; i < length; i++)
+            for (var i = start; i < length; i++)
             {
                 var hex = HexStringTable[value[i]];
                 buffer[offset + i * 2 + 0] = hex[0];
@@ -89,20 +89,20 @@ namespace Cybercore.Extensions
 
         public static string ToHexString(this Span<byte> value, int? off, int? len, bool withPrefix = false)
         {
-            if(value == null || value.Length == 0)
+            if (value == null || value.Length == 0)
                 return string.Empty;
 
             var length = len ?? value.Length;
             var bufferSize = length * 2;
 
-            if(withPrefix)
+            if (withPrefix)
                 bufferSize += 2;
 
             Span<char> buffer = stackalloc char[bufferSize];
 
             var offset = 0;
 
-            if(withPrefix)
+            if (withPrefix)
             {
                 buffer[offset++] = '0';
                 buffer[offset++] = 'x';
@@ -110,7 +110,7 @@ namespace Cybercore.Extensions
 
             var start = off ?? 0;
 
-            for(var i = start; i < length; i++)
+            for (var i = start; i < length; i++)
             {
                 var hex = HexStringTable[value[i]];
                 buffer[offset + i * 2 + 0] = hex[0];
@@ -128,11 +128,11 @@ namespace Cybercore.Extensions
 
         public static byte[] ReverseByteOrder(this byte[] bytes)
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using(var writer = new BinaryWriter(stream))
+                using (var writer = new BinaryWriter(stream))
                 {
-                    for(var i = 0; i < 8; i++)
+                    for (var i = 0; i < 8; i++)
                     {
                         var value = BitConverter.ToUInt32(bytes, i * 4).ToBigEndian();
                         writer.Write(value);
@@ -166,7 +166,7 @@ namespace Cybercore.Extensions
 
         public static byte[] PadFront(this byte[] bytes, byte padValue, int desiredLength)
         {
-            if(bytes.Length >= desiredLength)
+            if (bytes.Length >= desiredLength)
                 return bytes;
 
             var result = Enumerable.Repeat(padValue, desiredLength - bytes.Length)

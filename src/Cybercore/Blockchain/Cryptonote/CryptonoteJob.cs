@@ -26,7 +26,7 @@ namespace Cybercore.Blockchain.Cryptonote
             PrepareBlobTemplate(instanceId);
             PrevHash = prevHash;
 
-            switch(coin.Hash)
+            switch (coin.Hash)
             {
                 case CryptonightHashType.RandomX:
                     hashFunc = ((seedHex, data, result, height) =>
@@ -63,14 +63,14 @@ namespace Cybercore.Blockchain.Cryptonote
 
         private string EncodeTarget(double difficulty, int size = 4)
         {
-            var diff = BigInteger.ValueOf((long) (difficulty * 255d));
+            var diff = BigInteger.ValueOf((long)(difficulty * 255d));
             var quotient = CryptonoteConstants.Diff1.Divide(diff).Multiply(BigInteger.ValueOf(255));
             var bytes = quotient.ToByteArray().AsSpan();
             Span<byte> padded = stackalloc byte[32];
 
             var padLength = padded.Length - bytes.Length;
 
-            if(padLength > 0)
+            if (padLength > 0)
                 bytes.CopyTo(padded.Slice(padLength, bytes.Length));
 
             padded = padded[..size];
@@ -82,7 +82,7 @@ namespace Cybercore.Blockchain.Cryptonote
         private void ComputeBlockHash(ReadOnlySpan<byte> blobConverted, Span<byte> result)
         {
             Span<byte> block = stackalloc byte[blobConverted.Length + 1];
-            block[0] = (byte) blobConverted.Length;
+            block[0] = (byte)blobConverted.Length;
             blobConverted.CopyTo(block[1..]);
 
             LibCryptonote.CryptonightHashFast(block, result);
@@ -96,10 +96,10 @@ namespace Cybercore.Blockchain.Cryptonote
         public void PrepareWorkerJob(CryptonoteWorkerJob workerJob, out string blob, out string target)
         {
             workerJob.Height = BlockTemplate.Height;
-            workerJob.ExtraNonce = (uint) Interlocked.Increment(ref extraNonce);
+            workerJob.ExtraNonce = (uint)Interlocked.Increment(ref extraNonce);
             workerJob.SeedHash = BlockTemplate.SeedHash;
 
-            if(extraNonce < 0)
+            if (extraNonce < 0)
                 extraNonce = 0;
 
             blob = EncodeBlob(workerJob.ExtraNonce);
@@ -114,7 +114,7 @@ namespace Cybercore.Blockchain.Cryptonote
 
             var context = worker.ContextAs<CryptonoteWorkerContext>();
 
-            if(!CryptonoteConstants.RegexValidNonce.IsMatch(nonce))
+            if (!CryptonoteConstants.RegexValidNonce.IsMatch(nonce))
                 throw new StratumException(StratumError.MinusOne, "malformed nonce");
 
             Span<byte> blob = stackalloc byte[blobTemplate.Length];
@@ -127,29 +127,29 @@ namespace Cybercore.Blockchain.Cryptonote
             bytes.CopyTo(blob[CryptonoteConstants.BlobNonceOffset..]);
 
             var blobConverted = LibCryptonote.ConvertBlob(blob, blobTemplate.Length);
-            if(blobConverted == null)
+            if (blobConverted == null)
                 throw new StratumException(StratumError.MinusOne, "malformed blob");
 
             Span<byte> headerHash = stackalloc byte[32];
             hashFunc(BlockTemplate.SeedHash, blobConverted, headerHash, BlockTemplate.Height);
 
             var headerHashString = headerHash.ToHexString();
-            if(headerHashString != workerHash)
+            if (headerHashString != workerHash)
                 throw new StratumException(StratumError.MinusOne, "bad hash");
 
             var headerValue = headerHash.ToBigInteger();
-            var shareDiff = (double) new BigRational(CryptonoteConstants.Diff1b, headerValue);
+            var shareDiff = (double)new BigRational(CryptonoteConstants.Diff1b, headerValue);
             var stratumDifficulty = context.Difficulty;
             var ratio = shareDiff / stratumDifficulty;
             var isBlockCandidate = shareDiff >= BlockTemplate.Difficulty;
 
-            if(!isBlockCandidate && ratio < 0.99)
+            if (!isBlockCandidate && ratio < 0.99)
             {
-                if(context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
+                if (context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
                 {
                     ratio = shareDiff / context.PreviousDifficulty.Value;
 
-                    if(ratio < 0.99)
+                    if (ratio < 0.99)
                         throw new StratumException(StratumError.LowDifficultyShare, $"low difficulty share ({shareDiff})");
 
                     stratumDifficulty = context.PreviousDifficulty.Value;
@@ -165,7 +165,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 Difficulty = stratumDifficulty,
             };
 
-            if(isBlockCandidate)
+            if (isBlockCandidate)
             {
                 Span<byte> blockHash = stackalloc byte[32];
                 ComputeBlockHash(blobConverted, blockHash);

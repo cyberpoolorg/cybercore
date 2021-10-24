@@ -13,7 +13,7 @@ namespace Cybercore.Contracts
         public static void Requires<TException>(bool predicate, string message = null)
             where TException : Exception, new()
         {
-            if(!predicate)
+            if (!predicate)
             {
                 var constructor = constructors.GetOrAdd(typeof(TException), CreateConstructor);
                 throw constructor(new object[] { message });
@@ -23,7 +23,7 @@ namespace Cybercore.Contracts
         [ContractAnnotation("parameter:null => halt")]
         public static void RequiresNonNull(object parameter, string paramName)
         {
-            if(parameter == null)
+            if (parameter == null)
                 throw new ArgumentNullException(paramName);
         }
 

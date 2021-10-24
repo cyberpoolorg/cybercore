@@ -49,7 +49,7 @@ namespace Cybercore.Stratum
 
         static StratumServer()
         {
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 ignoredSocketErrors = new HashSet<int>
                 {
@@ -59,14 +59,14 @@ namespace Cybercore.Stratum
                 };
             }
 
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 ignoredSocketErrors = new HashSet<int>
                 {
                     104,
                     125,
                     103,
-                    110, 
+                    110,
                     32,
                 };
             }
@@ -100,7 +100,7 @@ namespace Cybercore.Stratum
                 server.Bind(port.IPEndPoint);
                 server.Listen();
 
-                return Task.Run(()=> Listen(server, port, ct), ct);
+                return Task.Run(() => Listen(server, port, ct), ct);
             }).ToArray();
 
             return Task.WhenAll(tasks);
@@ -110,7 +110,7 @@ namespace Cybercore.Stratum
         {
             var cert = GetTlsCert(port);
 
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
@@ -119,12 +119,12 @@ namespace Cybercore.Stratum
                     AcceptConnection(socket, port, cert, ct);
                 }
 
-                catch(ObjectDisposedException)
+                catch (ObjectDisposedException)
                 {
                     break;
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
                 }
@@ -135,7 +135,7 @@ namespace Cybercore.Stratum
         {
             Task.Run(() => Guard(() =>
             {
-                var remoteEndpoint = (IPEndPoint) socket.RemoteEndPoint;
+                var remoteEndpoint = (IPEndPoint)socket.RemoteEndPoint;
 
                 if (DisconnectIfBanned(socket, remoteEndpoint))
                     return;
@@ -148,7 +148,7 @@ namespace Cybercore.Stratum
                 OnConnect(connection, port.IPEndPoint);
 
                 connection.DispatchAsync(socket, ct, port, remoteEndpoint, cert, OnRequestAsync, OnConnectionComplete, OnConnectionError);
-            }, ex=> logger.Error(ex)), ct);
+            }, ex => logger.Error(ex)), ct);
         }
 
         protected virtual void RegisterConnection(StratumConnection connection)
@@ -171,7 +171,7 @@ namespace Cybercore.Stratum
 
         protected async Task OnRequestAsync(StratumConnection connection, JsonRpcRequest request, CancellationToken ct)
         {
-            if(banManager?.IsBanned(connection.RemoteEndpoint.Address) == true)
+            if (banManager?.IsBanned(connection.RemoteEndpoint.Address) == true)
             {
                 logger.Info(() => $"[{connection.ConnectionId}] Disconnecting banned client @ {connection.RemoteEndpoint.Address}");
                 CloseConnection(connection);
@@ -185,23 +185,23 @@ namespace Cybercore.Stratum
 
         protected virtual void OnConnectionError(StratumConnection connection, Exception ex)
         {
-            if(ex is AggregateException)
+            if (ex is AggregateException)
                 ex = ex.InnerException;
 
-            if(ex is IOException && ex.InnerException != null)
+            if (ex is IOException && ex.InnerException != null)
                 ex = ex.InnerException;
 
-            switch(ex)
+            switch (ex)
             {
                 case SocketException sockEx:
-                    if(!ignoredSocketErrors.Contains(sockEx.ErrorCode))
+                    if (!ignoredSocketErrors.Contains(sockEx.ErrorCode))
                         logger.Error(() => $"[{connection.ConnectionId}] Connection error state: {ex}");
                     break;
 
                 case JsonException jsonEx:
                     logger.Error(() => $"[{connection.ConnectionId}] Connection json error state: {jsonEx.Message}");
 
-                    if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
+                    if (clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Banning client for sending junk");
                         banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
@@ -211,7 +211,7 @@ namespace Cybercore.Stratum
                 case AuthenticationException authEx:
                     logger.Error(() => $"[{connection.ConnectionId}] Connection json error state: {authEx.Message}");
 
-                    if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
+                    if (clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Banning client for failing SSL handshake");
                         banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
@@ -221,9 +221,9 @@ namespace Cybercore.Stratum
                 case IOException ioEx:
                     logger.Error(() => $"[{connection.ConnectionId}] Connection json error state: {ioEx.Message}");
 
-                    if(ioEx.Source == "System.Net.Security")
+                    if (ioEx.Source == "System.Net.Security")
                     {
-                        if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
+                        if (clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                         {
                             logger.Info(() => $"[{connection.ConnectionId}] Banning client for failing SSL handshake");
                             banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
@@ -235,7 +235,7 @@ namespace Cybercore.Stratum
                     break;
 
                 case ArgumentException argEx:
-                    if(argEx.TargetSite != streamWriterCtor || argEx.ParamName != "stream")
+                    if (argEx.TargetSite != streamWriterCtor || argEx.ParamName != "stream")
                         logger.Error(() => $"[{connection.ConnectionId}] Connection error state: {ex}");
                     break;
 
@@ -268,16 +268,16 @@ namespace Cybercore.Stratum
 
         private X509Certificate2 GetTlsCert(StratumEndpoint port)
         {
-            if(!port.PoolEndpoint.Tls)
+            if (!port.PoolEndpoint.Tls)
                 return null;
 
-            if(!certs.TryGetValue(port.PoolEndpoint.TlsPfxFile, out var cert))
+            if (!certs.TryGetValue(port.PoolEndpoint.TlsPfxFile, out var cert))
             {
-                cert = Guard(()=> new X509Certificate2(port.PoolEndpoint.TlsPfxFile), ex =>
-                {
-                    logger.Info(() => $"Failed to load TLS certificate {port.PoolEndpoint.TlsPfxFile}: {ex.Message}");
-                    throw ex;
-                });
+                cert = Guard(() => new X509Certificate2(port.PoolEndpoint.TlsPfxFile), ex =>
+                 {
+                     logger.Info(() => $"Failed to load TLS certificate {port.PoolEndpoint.TlsPfxFile}: {ex.Message}");
+                     throw ex;
+                 });
 
                 certs[port.PoolEndpoint.TlsPfxFile] = cert;
             }
@@ -287,7 +287,7 @@ namespace Cybercore.Stratum
 
         private bool DisconnectIfBanned(Socket socket, IPEndPoint remoteEndpoint)
         {
-            if(remoteEndpoint == null || banManager == null)
+            if (remoteEndpoint == null || banManager == null)
                 return false;
 
             if (banManager.IsBanned(remoteEndpoint.Address))

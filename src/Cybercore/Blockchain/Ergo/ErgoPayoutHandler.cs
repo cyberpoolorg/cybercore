@@ -64,12 +64,12 @@ namespace Cybercore.Blockchain.Ergo
         {
             var error = ex.Message;
 
-            if(ex is ApiException<ApiError> apiException)
+            if (ex is ApiException<ApiError> apiException)
                 error = apiException.Result.Detail ?? apiException.Result.Reason;
 
             logger.Warn(() => $"{action}: {error}");
 
-            if(rethrow)
+            if (rethrow)
                 throw ex;
         }
 
@@ -79,19 +79,19 @@ namespace Cybercore.Blockchain.Ergo
 
             var walletPassword = extraPoolPaymentProcessingConfig.WalletPassword ?? string.Empty;
 
-            await Guard(() => ergoClient.WalletUnlockAsync(new Body4 {Pass = walletPassword}, ct), ex =>
-            {
-                if (ex is ApiException<ApiError> apiException)
-                {
-                    var error = apiException.Result.Detail;
+            await Guard(() => ergoClient.WalletUnlockAsync(new Body4 { Pass = walletPassword }, ct), ex =>
+              {
+                  if (ex is ApiException<ApiError> apiException)
+                  {
+                      var error = apiException.Result.Detail;
 
-                    if (error != null && !error.ToLower().Contains("already unlocked"))
-                        throw new PaymentException($"Failed to unlock wallet: {error}");
-                }
+                      if (error != null && !error.ToLower().Contains("already unlocked"))
+                          throw new PaymentException($"Failed to unlock wallet: {error}");
+                  }
 
-                else
-                    throw ex;
-            });
+                  else
+                      throw ex;
+              });
 
             logger.Info(() => $"[{LogCategory}] Wallet unlocked");
         }
@@ -130,50 +130,50 @@ namespace Cybercore.Blockchain.Ergo
             Contract.RequiresNonNull(poolConfig, nameof(poolConfig));
             Contract.RequiresNonNull(blocks, nameof(blocks));
 
-            if(blocks.Length == 0)
+            if (blocks.Length == 0)
                 return blocks;
 
             var coin = poolConfig.Template.As<ErgoCoinTemplate>();
             var pageSize = 100;
-            var pageCount = (int) Math.Ceiling(blocks.Length / (double) pageSize);
+            var pageCount = (int)Math.Ceiling(blocks.Length / (double)pageSize);
             var result = new List<Block>();
             var minConfirmations = extraPoolPaymentProcessingConfig?.MinimumConfirmations ?? (network == "mainnet" ? 720 : 72);
             var minerRewardsPubKey = await ergoClient.MiningReadMinerRewardPubkeyAsync(ct);
             var minerRewardsAddress = await ergoClient.MiningReadMinerRewardAddressAsync(ct);
 
-            for(var i = 0; i < pageCount; i++)
+            for (var i = 0; i < pageCount; i++)
             {
                 var page = blocks
                     .Skip(i * pageSize)
                     .Take(pageSize)
                     .ToArray();
 
-                var headerBatch = page.Select(block => ergoClient.GetFullBlockAtAsync((int) block.BlockHeight, ct)).ToArray();
+                var headerBatch = page.Select(block => ergoClient.GetFullBlockAtAsync((int)block.BlockHeight, ct)).ToArray();
 
-                await Guard(()=> Task.WhenAll(headerBatch),
-                    ex=> logger.Debug(ex));
+                await Guard(() => Task.WhenAll(headerBatch),
+                    ex => logger.Debug(ex));
 
-                for(var j = 0; j < page.Length; j++)
+                for (var j = 0; j < page.Length; j++)
                 {
                     var block = page[j];
                     var headerTask = headerBatch[j];
 
-                    if(!headerTask.IsCompletedSuccessfully)
+                    if (!headerTask.IsCompletedSuccessfully)
                     {
-                        if(headerTask.IsFaulted)
-                            logger.Warn(()=> $"Failed to fetch block {block.BlockHeight}: {headerTask.Exception?.InnerException?.Message ?? headerTask.Exception?.Message}");
+                        if (headerTask.IsFaulted)
+                            logger.Warn(() => $"Failed to fetch block {block.BlockHeight}: {headerTask.Exception?.InnerException?.Message ?? headerTask.Exception?.Message}");
                         else
-                            logger.Warn(()=> $"Failed to fetch block {block.BlockHeight}: {headerTask.Status.ToString().ToLower()}");
+                            logger.Warn(() => $"Failed to fetch block {block.BlockHeight}: {headerTask.Status.ToString().ToLower()}");
 
                         continue;
                     }
 
                     var headerIds = headerTask.Result;
 
-                    var blockBatch = headerIds.Select(x=> ergoClient.GetFullBlockByIdAsync(x, ct)).ToArray();
+                    var blockBatch = headerIds.Select(x => ergoClient.GetFullBlockByIdAsync(x, ct)).ToArray();
 
-                    await Guard(()=> Task.WhenAll(blockBatch),
-                        ex=> logger.Debug(ex));
+                    await Guard(() => Task.WhenAll(blockBatch),
+                        ex => logger.Debug(ex));
 
                     var blockHandled = false;
                     var pkMismatchCount = 0;
@@ -182,21 +182,21 @@ namespace Cybercore.Blockchain.Ergo
 
                     foreach (var blockTask in blockBatch)
                     {
-                        if(blockHandled)
+                        if (blockHandled)
                             break;
 
-                        if(!blockTask.IsCompletedSuccessfully)
+                        if (!blockTask.IsCompletedSuccessfully)
                             continue;
 
                         var fullBlock = blockTask.Result;
 
-                        if(fullBlock.Header.PowSolutions.Pk != minerRewardsPubKey.RewardPubKey)
+                        if (fullBlock.Header.PowSolutions.Pk != minerRewardsPubKey.RewardPubKey)
                         {
                             pkMismatchCount++;
                             continue;
                         }
 
-                        if(fullBlock.Header.PowSolutions.N != block.TransactionConfirmationData)
+                        if (fullBlock.Header.PowSolutions.N != block.TransactionConfirmationData)
                         {
                             nonceMismatchCount++;
                             continue;
@@ -206,20 +206,20 @@ namespace Cybercore.Blockchain.Ergo
 
                         block.Reward = 0;
 
-                        foreach(var blockTx in fullBlock.BlockTransactions.Transactions)
+                        foreach (var blockTx in fullBlock.BlockTransactions.Transactions)
                         {
-                            var walletTx = await Guard(()=> ergoClient.WalletGetTransactionAsync(blockTx.Id, ct));
+                            var walletTx = await Guard(() => ergoClient.WalletGetTransactionAsync(blockTx.Id, ct));
                             var coinbaseOutput = walletTx?.Outputs?.FirstOrDefault(x => x.Address == minerRewardsAddress.RewardAddress);
 
-                            if(coinbaseOutput != null)
+                            if (coinbaseOutput != null)
                             {
                                 coinbaseWalletTxFound = true;
 
-                                block.ConfirmationProgress = Math.Min(1.0d, (double) walletTx.NumConfirmations / minConfirmations);
+                                block.ConfirmationProgress = Math.Min(1.0d, (double)walletTx.NumConfirmations / minConfirmations);
                                 block.Reward += coinbaseOutput.Value / ErgoConstants.SmallestUnit;
                                 block.Hash = fullBlock.Header.Id;
 
-                                if(walletTx.NumConfirmations >= minConfirmations)
+                                if (walletTx.NumConfirmations >= minConfirmations)
                                 {
                                     block.Status = BlockStatus.Confirmed;
                                     block.ConfirmationProgress = 1;
@@ -229,11 +229,11 @@ namespace Cybercore.Blockchain.Ergo
 
                         blockHandled = coinbaseWalletTxFound;
 
-                        if(blockHandled)
+                        if (blockHandled)
                         {
                             result.Add(block);
 
-                            if(block.Status == BlockStatus.Confirmed)
+                            if (block.Status == BlockStatus.Confirmed)
                             {
                                 logger.Info(() => $"[{LogCategory}] Unlocked block {block.BlockHeight} worth {FormatAmount(block.Reward)}");
 
@@ -248,18 +248,18 @@ namespace Cybercore.Blockchain.Ergo
                             coinbaseNonWalletTxCount++;
                     }
 
-                    if(!blockHandled)
+                    if (!blockHandled)
                     {
                         string orphanReason = null;
 
-                        if(pkMismatchCount == blockBatch.Length)
+                        if (pkMismatchCount == blockBatch.Length)
                             orphanReason = "pk mismatch";
-                        else if(nonceMismatchCount == blockBatch.Length)
+                        else if (nonceMismatchCount == blockBatch.Length)
                             orphanReason = "nonce mismatch";
-                        else if(coinbaseNonWalletTxCount == blockBatch.Length)
+                        else if (coinbaseNonWalletTxCount == blockBatch.Length)
                             orphanReason = "no related coinbase tx found in wallet";
 
-                        if(!string.IsNullOrEmpty(orphanReason))
+                        if (!string.IsNullOrEmpty(orphanReason))
                         {
                             block.Status = BlockStatus.Orphaned;
                             block.Reward = 0;
@@ -296,7 +296,7 @@ namespace Cybercore.Blockchain.Ergo
                 .Where(x => x.Amount > 0)
                 .ToDictionary(x => x.Address, x => Math.Round(x.Amount, 4));
 
-            if(amounts.Count == 0)
+            if (amounts.Count == 0)
                 return;
 
             var balancesTotal = amounts.Sum(x => x.Value);
@@ -307,10 +307,10 @@ namespace Cybercore.Blockchain.Ergo
 
                 var status = await ergoClient.GetWalletStatusAsync(ct);
 
-                if(!status.IsInitialized)
+                if (!status.IsInitialized)
                     throw new PaymentException($"Wallet is not initialized");
 
-                if(!status.IsUnlocked)
+                if (!status.IsUnlocked)
                     await UnlockWallet(ct);
 
                 var walletBalances = await ergoClient.WalletBalancesAsync(ct);
@@ -318,7 +318,7 @@ namespace Cybercore.Blockchain.Ergo
 
                 logger.Info(() => $"[{LogCategory}] Current wallet balance is {FormatAmount(walletTotal)}");
 
-                if(walletTotal < balancesTotal)
+                if (walletTotal < balancesTotal)
                 {
                     logger.Warn(() => $"[{LogCategory}] Wallet balance currently short of {FormatAmount(balancesTotal - walletTotal)}. Will try again.");
                     return;
@@ -326,47 +326,47 @@ namespace Cybercore.Blockchain.Ergo
 
                 logger.Info("Validating addresses ...");
 
-                foreach(var pair in amounts)
+                foreach (var pair in amounts)
                 {
                     var validity = await Guard(() => ergoClient.CheckAddressValidityAsync(pair.Key, ct));
 
-                    if(validity == null || !validity.IsValid)
-                        logger.Warn(()=> $"Address {pair.Key} is not valid!");
+                    if (validity == null || !validity.IsValid)
+                        logger.Warn(() => $"Address {pair.Key} is not valid!");
                 }
 
                 var requests = amounts.Select(x => new PaymentRequest
                 {
                     Address = x.Key,
-                    Value = (long) (x.Value * ErgoConstants.SmallestUnit),
+                    Value = (long)(x.Value * ErgoConstants.SmallestUnit),
                 }).ToArray();
 
-                var txId = await Guard(()=> ergoClient.WalletPaymentTransactionGenerateAndSendAsync(requests, ct), ex =>
-                {
-                    if(ex is ApiException<ApiError> apiException)
-                    {
-                        var error = apiException.Result.Detail ?? apiException.Result.Reason;
+                var txId = await Guard(() => ergoClient.WalletPaymentTransactionGenerateAndSendAsync(requests, ct), ex =>
+                 {
+                     if (ex is ApiException<ApiError> apiException)
+                     {
+                         var error = apiException.Result.Detail ?? apiException.Result.Reason;
 
-                        if(error.Contains("reason:"))
-                            error = error.Substring(error.IndexOf("reason:"));
+                         if (error.Contains("reason:"))
+                             error = error.Substring(error.IndexOf("reason:"));
 
-                        throw new PaymentException($"Payment transaction failed: {error}");
-                    }
+                         throw new PaymentException($"Payment transaction failed: {error}");
+                     }
 
-                    else
-                        throw ex;
-                });
+                     else
+                         throw ex;
+                 });
 
-                if(string.IsNullOrEmpty(txId))
+                if (string.IsNullOrEmpty(txId))
                     throw new PaymentException("Payment transaction failed to return a transaction id");
 
                 logger.Info(() => $"[{LogCategory}] Payment transaction id: {txId}");
 
                 await PersistPaymentsAsync(balances, txId);
 
-                NotifyPayoutSuccess(poolConfig.Id, balances, new[] {txId}, null);
+                NotifyPayoutSuccess(poolConfig.Id, balances, new[] { txId }, null);
             }
 
-            catch(PaymentException ex)
+            catch (PaymentException ex)
             {
                 logger.Error(() => $"[{LogCategory}] {ex.Message}");
 

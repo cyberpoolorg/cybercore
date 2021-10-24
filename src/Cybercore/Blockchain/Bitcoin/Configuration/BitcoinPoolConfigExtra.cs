@@ -6,7 +6,7 @@ namespace Cybercore.Blockchain.Bitcoin.Configuration
     public class BitcoinPoolConfigExtra
     {
         public BitcoinAddressType AddressType { get; set; } = BitcoinAddressType.Legacy;
-        public string BechPrefix {get;set;} = "bc";
+        public string BechPrefix { get; set; } = "bc";
         public int? MaxActiveJobs { get; set; }
         public bool? HasLegacyDaemon { get; set; }
         public string CoinbaseTxComment { get; set; }

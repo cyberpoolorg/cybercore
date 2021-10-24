@@ -53,7 +53,7 @@ namespace Cybercore.Blockchain.Bitcoin
         protected static byte[] sha256Empty = new byte[32];
         protected uint txVersion = 1u;
         protected static uint txInputCount = 1u;
-        protected static uint txInPrevOutIndex = (uint) (Math.Pow(2, 32) - 1);
+        protected static uint txInPrevOutIndex = (uint)(Math.Pow(2, 32) - 1);
         protected static uint txInSequence;
         protected static uint txLockTime;
 
@@ -77,25 +77,25 @@ namespace Cybercore.Blockchain.Bitcoin
             var sigScriptInitial = GenerateScriptSigInitial();
             var sigScriptInitialBytes = sigScriptInitial.ToBytes();
 
-            var sigScriptLength = (uint) (
+            var sigScriptLength = (uint)(
                 sigScriptInitial.Length +
                 extraNoncePlaceHolderLength +
                 scriptSigFinalBytes.Length);
 
             txOut = (coin.HasMasterNodes) ? CreateMasternodeOutputTransaction() : (coin.HasPayee ? CreatePayeeOutputTransaction() : CreateOutputTransaction());
 
-            if(coin.HasCoinbasePayload)
-	    {
+            if (coin.HasCoinbasePayload)
+            {
                 txOut = CreatePayloadOutputTransaction();
             }
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 var bs = new BitcoinStream(stream, true);
 
                 bs.ReadWrite(ref txVersion);
 
-                if(isPoS && poolConfig.UseP2PK)
+                if (isPoS && poolConfig.UseP2PK)
                 {
                     var timestamp = BlockTemplate.CurTime;
                     bs.ReadWrite(ref timestamp);
@@ -111,7 +111,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 coinbaseInitialHex = coinbaseInitial.ToHexString();
             }
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 var bs = new BitcoinStream(stream, true);
 
@@ -129,13 +129,13 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual void AppendCoinbaseFinal(BitcoinStream bs)
         {
-            if(!string.IsNullOrEmpty(txComment))
+            if (!string.IsNullOrEmpty(txComment))
             {
                 var data = Encoding.ASCII.GetBytes(txComment);
                 bs.ReadWriteAsVarString(ref data);
             }
 
-            if(coin.HasMasterNodes && !string.IsNullOrEmpty(masterNodeParameters.CoinbasePayload))
+            if (coin.HasMasterNodes && !string.IsNullOrEmpty(masterNodeParameters.CoinbasePayload))
             {
                 var data = masterNodeParameters.CoinbasePayload.HexToByteArray();
                 bs.ReadWriteAsVarString(ref data);
@@ -146,11 +146,11 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var withDefaultWitnessCommitment = !string.IsNullOrEmpty(BlockTemplate.DefaultWitnessCommitment);
 
-            var outputCount = (uint) tx.Outputs.Count;
-            if(withDefaultWitnessCommitment)
+            var outputCount = (uint)tx.Outputs.Count;
+            if (withDefaultWitnessCommitment)
                 outputCount++;
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 var bs = new BitcoinStream(stream, true);
 
@@ -160,23 +160,23 @@ namespace Cybercore.Blockchain.Bitcoin
                 byte[] raw;
                 uint rawLength;
 
-                if(withDefaultWitnessCommitment)
+                if (withDefaultWitnessCommitment)
                 {
                     amount = 0;
                     raw = BlockTemplate.DefaultWitnessCommitment.HexToByteArray();
-                    rawLength = (uint) raw.Length;
+                    rawLength = (uint)raw.Length;
 
                     bs.ReadWrite(ref amount);
                     bs.ReadWriteAsVarInt(ref rawLength);
                     bs.ReadWrite(ref raw);
                 }
 
-                foreach(var output in tx.Outputs)
+                foreach (var output in tx.Outputs)
                 {
                     amount = output.Value.Satoshi;
                     var outScript = output.ScriptPubKey;
                     raw = outScript.ToBytes(true);
-                    rawLength = (uint) raw.Length;
+                    rawLength = (uint)raw.Length;
 
                     bs.ReadWrite(ref amount);
                     bs.ReadWriteAsVarInt(ref rawLength);
@@ -189,18 +189,18 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual Script GenerateScriptSigInitial()
         {
-            var now = ((DateTimeOffset) clock.Now).ToUnixTimeSeconds();
+            var now = ((DateTimeOffset)clock.Now).ToUnixTimeSeconds();
 
             var ops = new List<Op>();
 
             ops.Add(Op.GetPushOp(BlockTemplate.Height));
 
-            if(!coin.CoinbaseIgnoreAuxFlags && !string.IsNullOrEmpty(BlockTemplate.CoinbaseAux?.Flags))
+            if (!coin.CoinbaseIgnoreAuxFlags && !string.IsNullOrEmpty(BlockTemplate.CoinbaseAux?.Flags))
                 ops.Add(Op.GetPushOp(BlockTemplate.CoinbaseAux.Flags.HexToByteArray()));
 
             ops.Add(Op.GetPushOp(now));
 
-            ops.Add(Op.GetPushOp((uint) 0));
+            ops.Add(Op.GetPushOp((uint)0));
 
             return new Script(ops);
         }
@@ -211,12 +211,12 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var tx = Transaction.Create(network);
 
-            if(coin.HasFounderFee)
+            if (coin.HasFounderFee)
                 rewardToPool = CreateFounderOutputs(tx, rewardToPool);
 
             tx.Outputs.Add(rewardToPool, poolAddressDestination);
 
-            if(coin.HasCoinbaseDevReward)
+            if (coin.HasCoinbaseDevReward)
                 CreateCoinbaseDevRewardOutputs(tx);
 
             return tx;
@@ -228,7 +228,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var tx = Transaction.Create(network);
 
-            if(payeeParameters?.PayeeAmount > 0)
+            if (payeeParameters?.PayeeAmount > 0)
             {
                 var payeeReward = new Money(payeeParameters.PayeeAmount.Value, MoneyUnit.Satoshi);
                 rewardToPool -= payeeReward;
@@ -259,14 +259,14 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var version = BlockTemplate.Version;
 
-            if(versionMask.HasValue && versionBits.HasValue)
+            if (versionMask.HasValue && versionBits.HasValue)
                 version = (version & ~versionMask.Value) | (versionBits.Value & versionMask.Value);
 
 #pragma warning disable 618
             var blockHeader = new BlockHeader
 #pragma warning restore 618
             {
-                Version = unchecked((int) version),
+                Version = unchecked((int)version),
                 Bits = new Target(Encoders.Hex.DecodeData(BlockTemplate.Bits)),
                 HashPrevBlock = uint256.Parse(BlockTemplate.PreviousBlockhash),
                 HashMerkleRoot = new uint256(merkleRoot),
@@ -288,22 +288,22 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var headerBytes = SerializeHeader(coinbaseHash, nTime, nonce, context.VersionRollingMask, versionBits);
             Span<byte> headerHash = stackalloc byte[32];
-            headerHasher.Digest(headerBytes, headerHash, (ulong) nTime, BlockTemplate, coin, networkParams);
+            headerHasher.Digest(headerBytes, headerHash, (ulong)nTime, BlockTemplate, coin, networkParams);
             var headerValue = new uint256(headerHash);
 
-            var shareDiff = (double) new BigRational(BitcoinConstants.Diff1, headerHash.ToBigInteger()) * shareMultiplier;
+            var shareDiff = (double)new BigRational(BitcoinConstants.Diff1, headerHash.ToBigInteger()) * shareMultiplier;
             var stratumDifficulty = context.Difficulty;
             var ratio = shareDiff / stratumDifficulty;
 
             var isBlockCandidate = headerValue <= blockTargetValue;
 
-            if(!isBlockCandidate && ratio < 0.99)
+            if (!isBlockCandidate && ratio < 0.99)
             {
-                if(context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
+                if (context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
                 {
                     ratio = shareDiff / context.PreviousDifficulty.Value;
 
-                    if(ratio < 0.99)
+                    if (ratio < 0.99)
                         throw new StratumException(StratumError.LowDifficultyShare, $"low difficulty share ({shareDiff})");
 
                     stratumDifficulty = context.PreviousDifficulty.Value;
@@ -320,7 +320,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 Difficulty = stratumDifficulty / shareMultiplier,
             };
 
-            if(isBlockCandidate)
+            if (isBlockCandidate)
             {
                 result.IsBlockCandidate = true;
 
@@ -342,7 +342,7 @@ namespace Cybercore.Blockchain.Bitcoin
             var extraNonce1Bytes = extraNonce1.HexToByteArray();
             var extraNonce2Bytes = extraNonce2.HexToByteArray();
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 stream.Write(coinbaseInitial);
                 stream.Write(extraNonce1Bytes);
@@ -355,10 +355,10 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual byte[] SerializeBlock(byte[] header, byte[] coinbase)
         {
-            var transactionCount = (uint) BlockTemplate.Transactions.Length + 1;
+            var transactionCount = (uint)BlockTemplate.Transactions.Length + 1;
             var rawTransactionBuffer = BuildRawTransactionBuffer();
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 var bs = new BitcoinStream(stream, true);
 
@@ -367,8 +367,8 @@ namespace Cybercore.Blockchain.Bitcoin
                 bs.ReadWrite(ref coinbase);
                 bs.ReadWrite(ref rawTransactionBuffer);
 
-                if(isPoS && poolConfig.UseP2PK)
-                    bs.ReadWrite((byte) 0);
+                if (isPoS && poolConfig.UseP2PK)
+                    bs.ReadWrite((byte)0);
 
                 return stream.ToArray();
             }
@@ -376,9 +376,9 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual byte[] BuildRawTransactionBuffer()
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                foreach(var tx in BlockTemplate.Transactions)
+                foreach (var tx in BlockTemplate.Transactions)
                 {
                     var txRaw = tx.Data.HexToByteArray();
                     stream.Write(txRaw);
@@ -392,17 +392,17 @@ namespace Cybercore.Blockchain.Bitcoin
         protected FounderBlockTemplateExtra founderParameters;
         protected virtual Money CreateFounderOutputs(Transaction tx, Money reward)
         {
-            if(founderParameters.Founder != null)
+            if (founderParameters.Founder != null)
             {
                 Founder[] founders;
-                if(founderParameters.Founder.Type == JTokenType.Array)
+                if (founderParameters.Founder.Type == JTokenType.Array)
                     founders = founderParameters.Founder.ToObject<Founder[]>();
                 else
                     founders = new[] { founderParameters.Founder.ToObject<Founder>() };
 
-                foreach(var Founder in founders)
+                foreach (var Founder in founders)
                 {
-                    if(!string.IsNullOrEmpty(Founder.Payee))
+                    if (!string.IsNullOrEmpty(Founder.Payee))
                     {
                         var payeeAddress = BitcoinUtils.AddressToDestination(Founder.Payee, network);
                         var payeeReward = Founder.Amount;
@@ -426,7 +426,7 @@ namespace Cybercore.Blockchain.Bitcoin
             var tx = Transaction.Create(network);
             rewardToPool = CreateMasternodeOutputs(tx, blockReward);
 
-            if(coin.HasFounderFee)
+            if (coin.HasFounderFee)
                 rewardToPool = CreateFounderOutputs(tx, rewardToPool);
 
             tx.Outputs.Insert(0, new TxOut(rewardToPool, poolAddressDestination));
@@ -436,35 +436,35 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual Money CreateMasternodeOutputs(Transaction tx, Money reward)
         {
-            if(masterNodeParameters.Masternode != null)
+            if (masterNodeParameters.Masternode != null)
             {
                 Masternode[] masternodes;
-                if(masterNodeParameters.Masternode.Type == JTokenType.Array)
+                if (masterNodeParameters.Masternode.Type == JTokenType.Array)
                     masternodes = masterNodeParameters.Masternode.ToObject<Masternode[]>();
                 else
                     masternodes = new[] { masterNodeParameters.Masternode.ToObject<Masternode>() };
 
-                foreach(var masterNode in masternodes)
+                foreach (var masterNode in masternodes)
                 {
-                    if(!string.IsNullOrEmpty(masterNode.Payee))
+                    if (!string.IsNullOrEmpty(masterNode.Payee))
                     {
                         var payeeDestination = BitcoinUtils.AddressToDestination(masterNode.Payee, network);
                         var payeeReward = masterNode.Amount;
 
-			if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
-			{
-				reward -= payeeReward;
-				rewardToPool -= payeeReward;
-                    	}
+                        if (!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
+                        {
+                            reward -= payeeReward;
+                            rewardToPool -= payeeReward;
+                        }
 
                         tx.Outputs.Add(payeeReward, payeeDestination);
                     }
                 }
             }
 
-            if(masterNodeParameters.SuperBlocks != null && masterNodeParameters.SuperBlocks.Length > 0)
+            if (masterNodeParameters.SuperBlocks != null && masterNodeParameters.SuperBlocks.Length > 0)
             {
-                foreach(var superBlock in masterNodeParameters.SuperBlocks)
+                foreach (var superBlock in masterNodeParameters.SuperBlocks)
                 {
                     var payeeAddress = BitcoinUtils.AddressToDestination(superBlock.Payee, network);
                     var payeeReward = superBlock.Amount;
@@ -476,16 +476,16 @@ namespace Cybercore.Blockchain.Bitcoin
                 }
             }
 
-            if(!coin.HasPayee && !string.IsNullOrEmpty(masterNodeParameters.Payee))
+            if (!coin.HasPayee && !string.IsNullOrEmpty(masterNodeParameters.Payee))
             {
                 var payeeAddress = BitcoinUtils.AddressToDestination(masterNodeParameters.Payee, network);
                 var payeeReward = masterNodeParameters.PayeeAmount;
 
-                if(!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
-		{
-			reward -= payeeReward;
-                        rewardToPool -= payeeReward;
-		}
+                if (!(poolConfig.Template.Symbol == "IDX" || poolConfig.Template.Symbol == "VGC" || poolConfig.Template.Symbol == "SHRX" || poolConfig.Template.Symbol == "XZC" || poolConfig.Template.Symbol == "RTM"))
+                {
+                    reward -= payeeReward;
+                    rewardToPool -= payeeReward;
+                }
 
                 tx.Outputs.Add(payeeReward, payeeAddress);
             }
@@ -507,19 +507,19 @@ namespace Cybercore.Blockchain.Bitcoin
 
         protected virtual void CreatePayloadOutputs(Transaction tx, Money reward)
         {
-            if(coinbasepayloadParameters.CoinbasePayload != null)
+            if (coinbasepayloadParameters.CoinbasePayload != null)
             {
                 CoinbasePayload[] coinbasepayloads;
-                if(coinbasepayloadParameters.CoinbasePayload.Type == JTokenType.Array)
+                if (coinbasepayloadParameters.CoinbasePayload.Type == JTokenType.Array)
                     coinbasepayloads = coinbasepayloadParameters.CoinbasePayload.ToObject<CoinbasePayload[]>();
                 else
                     coinbasepayloads = new[] { coinbasepayloadParameters.CoinbasePayload.ToObject<CoinbasePayload>() };
 
-                foreach(var CoinbasePayee in coinbasepayloads)
+                foreach (var CoinbasePayee in coinbasepayloads)
                 {
-                    if(!string.IsNullOrEmpty(CoinbasePayee.Payee))
+                    if (!string.IsNullOrEmpty(CoinbasePayee.Payee))
                     {
-                        var payeeAddress = BitcoinUtils.CashAddrToDestination(CoinbasePayee.Payee, network,true);
+                        var payeeAddress = BitcoinUtils.CashAddrToDestination(CoinbasePayee.Payee, network, true);
                         var payeeReward = CoinbasePayee.Amount;
 
                         tx.Outputs.Add(payeeReward, payeeAddress);
@@ -533,14 +533,14 @@ namespace Cybercore.Blockchain.Bitcoin
         protected CoinbaseDevRewardTemplateExtra CoinbaseDevRewardParams;
         protected virtual void CreateCoinbaseDevRewardOutputs(Transaction tx)
         {
-            if(CoinbaseDevRewardParams.CoinbaseDevReward != null)
+            if (CoinbaseDevRewardParams.CoinbaseDevReward != null)
             {
                 CoinbaseDevReward[] CBRewards;
                 CBRewards = new[] { CoinbaseDevRewardParams.CoinbaseDevReward.ToObject<CoinbaseDevReward>() };
 
-                foreach(var CBReward in CBRewards)
+                foreach (var CBReward in CBRewards)
                 {
-                    if(!string.IsNullOrEmpty(CBReward.Payee))
+                    if (!string.IsNullOrEmpty(CBReward.Payee))
                     {
                         var payeeAddress = BitcoinUtils.AddressToDestination(CBReward.Payee, network);
                         var payeeReward = CBReward.Value;
@@ -594,35 +594,35 @@ namespace Cybercore.Blockchain.Bitcoin
             txComment = !string.IsNullOrEmpty(extraPoolConfig?.CoinbaseTxComment) ?
                 extraPoolConfig.CoinbaseTxComment : coin.CoinbaseTxComment;
 
-            if(coin.HasMasterNodes)
+            if (coin.HasMasterNodes)
             {
                 masterNodeParameters = BlockTemplate.Extra.SafeExtensionDataAs<MasterNodeBlockTemplateExtra>();
 
-                if(!string.IsNullOrEmpty(masterNodeParameters.CoinbasePayload))
+                if (!string.IsNullOrEmpty(masterNodeParameters.CoinbasePayload))
                 {
                     txVersion = 3;
                     var txType = 5;
-                    txVersion += ((uint) (txType << 16));
+                    txVersion += ((uint)(txType << 16));
                 }
             }
 
-            if(coin.HasCoinbasePayload)
+            if (coin.HasCoinbasePayload)
                 coinbasepayloadParameters = BlockTemplate.Extra.SafeExtensionDataAs<CoinbasePayloadBlockTemplateExtra>();
 
-            if(coin.HasFounderFee)
+            if (coin.HasFounderFee)
                 founderParameters = BlockTemplate.Extra.SafeExtensionDataAs<FounderBlockTemplateExtra>();
 
-            if(coin.HasCoinbaseDevReward)
+            if (coin.HasCoinbaseDevReward)
                 CoinbaseDevRewardParams = BlockTemplate.Extra.SafeExtensionDataAs<CoinbaseDevRewardTemplateExtra>();
 
-            if(coin.HasPayee)
+            if (coin.HasPayee)
                 payeeParameters = BlockTemplate.Extra.SafeExtensionDataAs<PayeeBlockTemplateExtra>();
 
             this.coinbaseHasher = coinbaseHasher;
             this.headerHasher = headerHasher;
             this.blockHasher = blockHasher;
 
-            if(!string.IsNullOrEmpty(BlockTemplate.Target))
+            if (!string.IsNullOrEmpty(BlockTemplate.Target))
                 blockTargetValue = new uint256(BlockTemplate.Target);
             else
             {
@@ -668,29 +668,29 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var context = worker.ContextAs<BitcoinWorkerContext>();
 
-            if(nTime.Length != 8)
+            if (nTime.Length != 8)
                 throw new StratumException(StratumError.Other, "incorrect size of ntime");
 
             var nTimeInt = uint.Parse(nTime, NumberStyles.HexNumber);
-            if(nTimeInt < BlockTemplate.CurTime || nTimeInt > ((DateTimeOffset) clock.Now).ToUnixTimeSeconds() + 7200)
+            if (nTimeInt < BlockTemplate.CurTime || nTimeInt > ((DateTimeOffset)clock.Now).ToUnixTimeSeconds() + 7200)
                 throw new StratumException(StratumError.Other, "ntime out of range");
 
-            if(nonce.Length != 8)
+            if (nonce.Length != 8)
                 throw new StratumException(StratumError.Other, "incorrect size of nonce");
 
             var nonceInt = uint.Parse(nonce, NumberStyles.HexNumber);
 
             uint versionBitsInt = 0;
 
-            if(context.VersionRollingMask.HasValue && versionBits != null)
+            if (context.VersionRollingMask.HasValue && versionBits != null)
             {
                 versionBitsInt = uint.Parse(versionBits, NumberStyles.HexNumber);
 
-                if((versionBitsInt & ~context.VersionRollingMask.Value) != 0)
+                if ((versionBitsInt & ~context.VersionRollingMask.Value) != 0)
                     throw new StratumException(StratumError.Other, "rolling-version mask violation");
             }
 
-            if(!RegisterSubmit(context.ExtraNonce1, extraNonce2, nTime, nonce))
+            if (!RegisterSubmit(context.ExtraNonce1, extraNonce2, nTime, nonce))
                 throw new StratumException(StratumError.DuplicateShare, "duplicate share");
 
             return ProcessShareInternal(worker, extraNonce2, nTimeInt, nonceInt, versionBitsInt);

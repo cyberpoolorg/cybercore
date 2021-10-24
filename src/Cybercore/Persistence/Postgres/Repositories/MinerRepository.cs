@@ -25,7 +25,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             const string query = "SELECT * FROM miner_settings WHERE poolid = @poolId AND address = @address";
 
-            var entity = await con.QuerySingleOrDefaultAsync<Entities.MinerSettings>(query, new {poolId, address});
+            var entity = await con.QuerySingleOrDefaultAsync<Entities.MinerSettings>(query, new { poolId, address });
 
             return mapper.Map<MinerSettings>(entity);
         }

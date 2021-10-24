@@ -21,12 +21,12 @@ namespace Cybercore.Util
 
         public CircularBuffer(int capacity, T[] items)
         {
-            if(capacity < 1)
+            if (capacity < 1)
                 throw new ArgumentException(
                     "Circular buffer cannot have negative or zero capacity.", nameof(capacity));
-            if(items == null)
+            if (items == null)
                 throw new ArgumentNullException(nameof(items));
-            if(items.Length > capacity)
+            if (items.Length > capacity)
                 throw new ArgumentException(
                     "Too many items to fit circular buffer", nameof(items));
 
@@ -53,10 +53,10 @@ namespace Cybercore.Util
         {
             get
             {
-                if(IsEmpty)
+                if (IsEmpty)
                     throw new IndexOutOfRangeException(
                         string.Format("Cannot access index {0}. Buffer is empty", index));
-                if(index >= size)
+                if (index >= size)
                     throw new IndexOutOfRangeException(
                         string.Format("Cannot access index {0}. Buffer size is {1}", index, size));
                 var actualIndex = InternalIndex(index);
@@ -64,10 +64,10 @@ namespace Cybercore.Util
             }
             set
             {
-                if(IsEmpty)
+                if (IsEmpty)
                     throw new IndexOutOfRangeException(
                         string.Format("Cannot access index {0}. Buffer is empty", index));
-                if(index >= size)
+                if (index >= size)
                     throw new IndexOutOfRangeException(
                         string.Format("Cannot access index {0}. Buffer size is {1}", index, size));
                 var actualIndex = InternalIndex(index);
@@ -80,8 +80,8 @@ namespace Cybercore.Util
         public IEnumerator<T> GetEnumerator()
         {
             var segments = new ArraySegment<T>[2] { ArrayOne(), ArrayTwo() };
-            foreach(var segment in segments)
-                for(var i = 0; i < segment.Count; i++)
+            foreach (var segment in segments)
+                for (var i = 0; i < segment.Count; i++)
                     yield return segment.Array[segment.Offset + i];
         }
 
@@ -110,7 +110,7 @@ namespace Cybercore.Util
 
         public void PushBack(T item)
         {
-            if(IsFull)
+            if (IsFull)
             {
                 buffer[end] = item;
                 Increment(ref end);
@@ -126,7 +126,7 @@ namespace Cybercore.Util
 
         public void PushFront(T item)
         {
-            if(IsFull)
+            if (IsFull)
             {
                 Decrement(ref start);
                 end = start;
@@ -161,7 +161,7 @@ namespace Cybercore.Util
             var newArray = new T[Size];
             var newArrayOffset = 0;
             var segments = new ArraySegment<T>[2] { ArrayOne(), ArrayTwo() };
-            foreach(var segment in segments)
+            foreach (var segment in segments)
             {
                 Array.Copy(segment.Array, segment.Offset, newArray, newArrayOffset, segment.Count);
                 newArrayOffset += segment.Count;
@@ -172,19 +172,19 @@ namespace Cybercore.Util
 
         private void ThrowIfEmpty(string message = "Cannot access an empty buffer.")
         {
-            if(IsEmpty)
+            if (IsEmpty)
                 throw new InvalidOperationException(message);
         }
 
         private void Increment(ref int index)
         {
-            if(++index == Capacity)
+            if (++index == Capacity)
                 index = 0;
         }
 
         private void Decrement(ref int index)
         {
-            if(index == 0)
+            if (index == 0)
                 index = Capacity;
             index--;
         }
@@ -198,14 +198,14 @@ namespace Cybercore.Util
 
         private ArraySegment<T> ArrayOne()
         {
-            if(start < end)
+            if (start < end)
                 return new ArraySegment<T>(buffer, start, end - start);
             return new ArraySegment<T>(buffer, start, buffer.Length - start);
         }
 
         private ArraySegment<T> ArrayTwo()
         {
-            if(start < end)
+            if (start < end)
                 return new ArraySegment<T>(buffer, end, 0);
             return new ArraySegment<T>(buffer, 0, end);
         }

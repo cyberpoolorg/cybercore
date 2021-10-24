@@ -8,8 +8,8 @@ namespace Cybercore
     {
         public CoinFamilyAttribute(IDictionary<string, object> values)
         {
-            if(values.ContainsKey(nameof(SupportedFamilies)))
-                SupportedFamilies = (CoinFamily[]) values[nameof(SupportedFamilies)];
+            if (values.ContainsKey(nameof(SupportedFamilies)))
+                SupportedFamilies = (CoinFamily[])values[nameof(SupportedFamilies)];
         }
 
         public CoinFamilyAttribute(params CoinFamily[] supportedFamilies)

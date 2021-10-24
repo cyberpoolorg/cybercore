@@ -13,7 +13,7 @@ namespace Cybercore.Blockchain.Ergo
         public static Regex RegexChain = new("ergo-([^-]+)-.+", RegexOptions.Compiled);
 
         public static byte[] M = Enumerable.Range(0, 1024)
-            .Select(x => BitConverter.GetBytes((ulong) x).Reverse())
+            .Select(x => BitConverter.GetBytes((ulong)x).Reverse())
             .SelectMany(byteArr => byteArr)
             .ToArray();
     }

@@ -14,7 +14,7 @@ namespace Cybercore.Blockchain.Bitcoin.DaemonResponses
     }
 
     public class CoinbasePayloadBlockTemplateExtra : PayeeBlockTemplateExtra
-    {   
+    {
         [JsonProperty("coinbase_payload")]
         public JToken CoinbasePayload { get; set; }
     }

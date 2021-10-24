@@ -23,37 +23,37 @@ namespace Cybercore.Blockchain.Ergo
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
-    public partial class ErgoClient 
+    public partial class ErgoClient
     {
         private string _baseUrl = "";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-    
+
         public ErgoClient(string baseUrl, System.Net.Http.HttpClient httpClient)
         {
             BaseUrl = baseUrl;
             _httpClient = httpClient;
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
         }
-    
+
         private Newtonsoft.Json.JsonSerializerSettings CreateSerializerSettings()
         {
             var settings = new Newtonsoft.Json.JsonSerializerSettings();
             UpdateJsonSerializerSettings(settings);
             return settings;
         }
-    
+
         public string BaseUrl
         {
             get { return _baseUrl; }
             set { _baseUrl = value; }
         }
-    
+
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-    
+
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
-    
-    
+
+
         /// <summary>Get the Array of header ids</summary>
         /// <param name="limit">The number of items in list to return</param>
         /// <param name="offset">The number of items in list to skip</param>
@@ -63,7 +63,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetHeaderIdsAsync(limit, offset, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the Array of header ids</summary>
         /// <param name="limit">The number of items in list to return</param>
@@ -83,7 +83,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("offset") + "=").Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -92,14 +92,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -110,9 +110,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -146,7 +146,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Send a mined block</summary>
         /// <returns>Block is valid</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -154,7 +154,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return SendMinedBlockAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Send a mined block</summary>
         /// <returns>Block is valid</returns>
@@ -163,10 +163,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -177,14 +177,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -195,9 +195,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -226,7 +226,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the header ids at a given height</summary>
         /// <param name="blockHeight">Height of a wanted block</param>
         /// <returns>Array of header ids</returns>
@@ -235,7 +235,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetFullBlockAtAsync(blockHeight, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the header ids at a given height</summary>
         /// <param name="blockHeight">Height of a wanted block</param>
@@ -245,11 +245,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (blockHeight == null)
                 throw new System.ArgumentNullException("blockHeight");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/at/{blockHeight}");
             urlBuilder_.Replace("{blockHeight}", System.Uri.EscapeDataString(ConvertToString(blockHeight, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -258,14 +258,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -276,9 +276,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -322,7 +322,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get headers in a specified range</summary>
         /// <param name="fromHeight">Min header height</param>
         /// <param name="toHeight">Max header height (best header height by default)</param>
@@ -332,7 +332,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetChainSliceAsync(fromHeight, toHeight, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get headers in a specified range</summary>
         /// <param name="fromHeight">Min header height</param>
@@ -352,7 +352,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("toHeight") + "=").Append(System.Uri.EscapeDataString(ConvertToString(toHeight, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -361,14 +361,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -379,9 +379,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -415,7 +415,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the full block info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block</param>
         /// <returns>Block object</returns>
@@ -424,7 +424,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetFullBlockByIdAsync(headerId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the full block info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block</param>
@@ -434,11 +434,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/{headerId}");
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -447,14 +447,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -465,9 +465,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -511,7 +511,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the block header info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block header</param>
         /// <returns>Block header object</returns>
@@ -520,7 +520,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBlockHeaderByIdAsync(headerId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the block header info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block header</param>
@@ -530,11 +530,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/{headerId}/header");
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -543,14 +543,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -561,9 +561,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -607,7 +607,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the block transactions info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block transactions</param>
         /// <returns>Block transaction object</returns>
@@ -616,7 +616,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBlockTransactionsByIdAsync(headerId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the block transactions info by a given signature</summary>
         /// <param name="headerId">ID of a wanted block transactions</param>
@@ -626,11 +626,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/{headerId}/transactions");
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -639,14 +639,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -657,9 +657,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -703,7 +703,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get Merkle proof for transaction</summary>
         /// <param name="headerId">ID of a wanted block transactions</param>
         /// <param name="txId">ID of a wanted transaction</param>
@@ -713,7 +713,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetProofForTxAsync(headerId, txId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get Merkle proof for transaction</summary>
         /// <param name="headerId">ID of a wanted block transactions</param>
@@ -724,15 +724,15 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             if (txId == null)
                 throw new System.ArgumentNullException("txId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/{headerId}/proofFor/{txId}");
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{txId}", System.Uri.EscapeDataString(ConvertToString(txId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -741,14 +741,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -759,9 +759,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -795,7 +795,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the last headers objects</summary>
         /// <param name="count">count of a wanted block headers</param>
         /// <returns>Array of block headers</returns>
@@ -804,7 +804,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetLastHeadersAsync(count, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the last headers objects</summary>
         /// <param name="count">count of a wanted block headers</param>
@@ -814,11 +814,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (count == null)
                 throw new System.ArgumentNullException("count");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/lastHeaders/{count}");
             urlBuilder_.Replace("{count}", System.Uri.EscapeDataString(ConvertToString(count, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -827,14 +827,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -845,9 +845,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -881,7 +881,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the persistent modifier by its id</summary>
         /// <param name="modifierId">ID of a wanted modifier</param>
         /// <returns>Persistent modifier object</returns>
@@ -890,7 +890,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetModifierByIdAsync(modifierId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the persistent modifier by its id</summary>
         /// <param name="modifierId">ID of a wanted modifier</param>
@@ -900,11 +900,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (modifierId == null)
                 throw new System.ArgumentNullException("modifierId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/blocks/modifier/{modifierId}");
             urlBuilder_.Replace("{modifierId}", System.Uri.EscapeDataString(ConvertToString(modifierId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -912,14 +912,14 @@ namespace Cybercore.Blockchain.Ergo
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -930,9 +930,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -971,7 +971,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Construct PoPow header according to given header id</summary>
         /// <param name="headerId">ID of wanted header</param>
         /// <returns>PoPow header object</returns>
@@ -980,7 +980,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetPopowHeaderByIdAsync(headerId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Construct PoPow header according to given header id</summary>
         /// <param name="headerId">ID of wanted header</param>
@@ -990,11 +990,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/nipopow/popowHeaderById/{headerId}");
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1003,14 +1003,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1021,9 +1021,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1067,7 +1067,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Construct PoPow header for best header at given height</summary>
         /// <param name="height">Height of a wanted header</param>
         /// <returns>PoPow header object</returns>
@@ -1076,7 +1076,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetPopowHeaderByHeightAsync(height, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Construct PoPow header for best header at given height</summary>
         /// <param name="height">Height of a wanted header</param>
@@ -1086,11 +1086,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (height == null)
                 throw new System.ArgumentNullException("height");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/nipopow/popowHeaderByHeight/{height}");
             urlBuilder_.Replace("{height}", System.Uri.EscapeDataString(ConvertToString(height, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1099,14 +1099,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1117,9 +1117,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1163,7 +1163,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Construct PoPoW proof for given min superchain length and suffix length</summary>
         /// <param name="minChainLength">Minimal superchain length</param>
         /// <param name="suffixLength">Suffix length</param>
@@ -1173,7 +1173,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetPopowProofAsync(minChainLength, suffixLength, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Construct PoPoW proof for given min superchain length and suffix length</summary>
         /// <param name="minChainLength">Minimal superchain length</param>
@@ -1184,15 +1184,15 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (minChainLength == null)
                 throw new System.ArgumentNullException("minChainLength");
-    
+
             if (suffixLength == null)
                 throw new System.ArgumentNullException("suffixLength");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/nipopow/proof/{minChainLength}/{suffixLength}");
             urlBuilder_.Replace("{minChainLength}", System.Uri.EscapeDataString(ConvertToString(minChainLength, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{suffixLength}", System.Uri.EscapeDataString(ConvertToString(suffixLength, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1201,14 +1201,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1219,9 +1219,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1255,7 +1255,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Construct PoPoW proof for given min superchain length, suffix length and header ID</summary>
         /// <param name="minChainLength">Minimal superchain length</param>
         /// <param name="suffixLength">Suffix length</param>
@@ -1266,7 +1266,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetPopowProofByHeaderIdAsync(minChainLength, suffixLength, headerId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Construct PoPoW proof for given min superchain length, suffix length and header ID</summary>
         /// <param name="minChainLength">Minimal superchain length</param>
@@ -1278,19 +1278,19 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (minChainLength == null)
                 throw new System.ArgumentNullException("minChainLength");
-    
+
             if (suffixLength == null)
                 throw new System.ArgumentNullException("suffixLength");
-    
+
             if (headerId == null)
                 throw new System.ArgumentNullException("headerId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/nipopow/proof/{minChainLength}/{suffixLength}/{headerId}");
             urlBuilder_.Replace("{minChainLength}", System.Uri.EscapeDataString(ConvertToString(minChainLength, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{suffixLength}", System.Uri.EscapeDataString(ConvertToString(suffixLength, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{headerId}", System.Uri.EscapeDataString(ConvertToString(headerId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1299,14 +1299,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1317,9 +1317,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1353,7 +1353,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get the information about the Node</summary>
         /// <returns>Node info object</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1361,7 +1361,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetNodeInfoAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get the information about the Node</summary>
         /// <returns>Node info object</returns>
@@ -1370,7 +1370,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/info");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1379,14 +1379,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1397,9 +1397,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1433,7 +1433,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Submit an Ergo transaction to unconfirmed pool to send it over the network</summary>
         /// <returns>JSON with ID of the new transaction</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1441,7 +1441,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return SendTransactionAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Submit an Ergo transaction to unconfirmed pool to send it over the network</summary>
         /// <returns>JSON with ID of the new transaction</returns>
@@ -1450,10 +1450,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transactions");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1465,14 +1465,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1483,9 +1483,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1519,7 +1519,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Checks an Ergo transaction without sending it over the network. Checks that transaction is valid and its inputs are in the UTXO set. Returns transaction identifier if the transaction is passing the checks.</summary>
         /// <returns>JSON with ID of the new transaction</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1527,7 +1527,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return CheckTransactionAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Checks an Ergo transaction without sending it over the network. Checks that transaction is valid and its inputs are in the UTXO set. Returns transaction identifier if the transaction is passing the checks.</summary>
         /// <returns>JSON with ID of the new transaction</returns>
@@ -1536,10 +1536,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transactions/check");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1551,14 +1551,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1569,9 +1569,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1605,7 +1605,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get current pool of the unconfirmed transactions pool</summary>
         /// <param name="limit">The number of items in list to return</param>
         /// <param name="offset">The number of items in list to skip</param>
@@ -1615,7 +1615,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetUnconfirmedTransactionsAsync(limit, offset, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get current pool of the unconfirmed transactions pool</summary>
         /// <param name="limit">The number of items in list to return</param>
@@ -1635,7 +1635,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("offset") + "=").Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1644,14 +1644,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1662,9 +1662,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1698,7 +1698,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get histogram (waittime, (n_trans, sum(fee)) for transactions in mempool. It contains "bins"+1 bins, where i-th elements corresponds to transaction with wait time [i*maxtime/bins, (i+1)*maxtime/bins), and last bin corresponds to the transactions with wait time &gt;= maxtime.</summary>
         /// <param name="bins">The number of bins in histogram</param>
         /// <param name="maxtime">Maximal wait time in milliseconds</param>
@@ -1708,7 +1708,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetFeeHistogramAsync(bins, maxtime, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get histogram (waittime, (n_trans, sum(fee)) for transactions in mempool. It contains "bins"+1 bins, where i-th elements corresponds to transaction with wait time [i*maxtime/bins, (i+1)*maxtime/bins), and last bin corresponds to the transactions with wait time &gt;= maxtime.</summary>
         /// <param name="bins">The number of bins in histogram</param>
@@ -1728,7 +1728,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("maxtime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(maxtime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1737,14 +1737,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1755,9 +1755,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1791,7 +1791,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get recommended fee (in nanoErgs) for a transaction with specified size (in bytes) to be proceeded in specified time (in minutes)</summary>
         /// <param name="waitTime">Maximum transaction wait time in minutes</param>
         /// <param name="txSize">Transaction size</param>
@@ -1801,7 +1801,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetRecommendedFeeAsync(waitTime, txSize, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get recommended fee (in nanoErgs) for a transaction with specified size (in bytes) to be proceeded in specified time (in minutes)</summary>
         /// <param name="waitTime">Maximum transaction wait time in minutes</param>
@@ -1812,16 +1812,16 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (waitTime == null)
                 throw new System.ArgumentNullException("waitTime");
-    
+
             if (txSize == null)
                 throw new System.ArgumentNullException("txSize");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transactions/getFee?");
             urlBuilder_.Append(System.Uri.EscapeDataString("waitTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(waitTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Append(System.Uri.EscapeDataString("txSize") + "=").Append(System.Uri.EscapeDataString(ConvertToString(txSize, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1830,14 +1830,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1848,9 +1848,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1884,7 +1884,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get expected wait time for the transaction with specified fee and size</summary>
         /// <param name="fee">Transaction fee (in nanoErgs)</param>
         /// <param name="txSize">Transaction size</param>
@@ -1894,7 +1894,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetExpectedWaitTimeAsync(fee, txSize, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get expected wait time for the transaction with specified fee and size</summary>
         /// <param name="fee">Transaction fee (in nanoErgs)</param>
@@ -1905,16 +1905,16 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (fee == null)
                 throw new System.ArgumentNullException("fee");
-    
+
             if (txSize == null)
                 throw new System.ArgumentNullException("txSize");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transactions/waitTime?");
             urlBuilder_.Append(System.Uri.EscapeDataString("fee") + "=").Append(System.Uri.EscapeDataString(ConvertToString(fee, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Append(System.Uri.EscapeDataString("txSize") + "=").Append(System.Uri.EscapeDataString(ConvertToString(txSize, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -1923,14 +1923,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -1941,9 +1941,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -1977,7 +1977,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get all known peers</summary>
         /// <returns>Array of peer objects</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1985,7 +1985,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetAllPeersAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get all known peers</summary>
         /// <returns>Array of peer objects</returns>
@@ -1994,7 +1994,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/peers/all");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2003,14 +2003,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2021,9 +2021,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2057,7 +2057,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get current connected peers</summary>
         /// <returns>Array of peer objects</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2065,7 +2065,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetConnectedPeersAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get current connected peers</summary>
         /// <returns>Array of peer objects</returns>
@@ -2074,7 +2074,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/peers/connected");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2083,14 +2083,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2101,9 +2101,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2137,7 +2137,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Add address to peers list</summary>
         /// <returns>Attempt to connect to the peer</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2145,7 +2145,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ConnectToPeerAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Add address to peers list</summary>
         /// <returns>Attempt to connect to the peer</returns>
@@ -2154,10 +2154,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/peers/connect");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2168,14 +2168,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2186,9 +2186,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2217,7 +2217,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get blacklisted peers</summary>
         /// <returns>Array of the addresses</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2225,7 +2225,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBlacklistedPeersAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get blacklisted peers</summary>
         /// <returns>Array of the addresses</returns>
@@ -2234,7 +2234,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/peers/blacklisted");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2243,14 +2243,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2261,9 +2261,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2297,7 +2297,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get last incomming message timestamp and current network time</summary>
         /// <returns>Network status</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2305,7 +2305,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetPeersStatusAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get last incomming message timestamp and current network time</summary>
         /// <returns>Network status</returns>
@@ -2314,7 +2314,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/peers/status");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2323,14 +2323,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2341,9 +2341,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2377,7 +2377,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get random seed of 32 bytes</summary>
         /// <returns>Base16-encoded 32 byte seed</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2385,7 +2385,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetRandomSeedAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get random seed of 32 bytes</summary>
         /// <returns>Base16-encoded 32 byte seed</returns>
@@ -2394,7 +2394,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/seed");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2403,14 +2403,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2421,9 +2421,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2457,7 +2457,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Check address validity</summary>
         /// <param name="address">address to check</param>
         /// <returns>Address validity with validation error</returns>
@@ -2466,7 +2466,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return CheckAddressValidityAsync(address, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Check address validity</summary>
         /// <param name="address">address to check</param>
@@ -2476,11 +2476,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (address == null)
                 throw new System.ArgumentNullException("address");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/address/{address}");
             urlBuilder_.Replace("{address}", System.Uri.EscapeDataString(ConvertToString(address, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2489,14 +2489,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2507,9 +2507,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2543,7 +2543,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Convert Pay-To-Public-Key Address to raw representation (hex-encoded serialized curve point)</summary>
         /// <param name="address">address to extract public key from</param>
         /// <returns>hex-encoded public key (serialized secp256k1 element)</returns>
@@ -2552,7 +2552,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return AddressToRawAsync(address, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Convert Pay-To-Public-Key Address to raw representation (hex-encoded serialized curve point)</summary>
         /// <param name="address">address to extract public key from</param>
@@ -2562,11 +2562,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (address == null)
                 throw new System.ArgumentNullException("address");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/addressToRaw/{address}");
             urlBuilder_.Replace("{address}", System.Uri.EscapeDataString(ConvertToString(address, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2575,14 +2575,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2593,9 +2593,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2629,7 +2629,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate Pay-To-Public-Key address from hex-encoded raw pubkey (secp256k1 serialized point)</summary>
         /// <param name="pubkeyHex">public key to get address from</param>
         /// <returns>Pay-to-public-key (P2PK) address</returns>
@@ -2638,7 +2638,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return RawToAddressAsync(pubkeyHex, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate Pay-To-Public-Key address from hex-encoded raw pubkey (secp256k1 serialized point)</summary>
         /// <param name="pubkeyHex">public key to get address from</param>
@@ -2648,11 +2648,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (pubkeyHex == null)
                 throw new System.ArgumentNullException("pubkeyHex");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/rawToAddress/{pubkeyHex}");
             urlBuilder_.Replace("{pubkeyHex}", System.Uri.EscapeDataString(ConvertToString(pubkeyHex, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2661,14 +2661,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2679,9 +2679,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2715,7 +2715,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate Ergo address from hex-encoded ErgoTree</summary>
         /// <param name="ergoTreeHex">ErgoTree to derive an address from</param>
         /// <returns>Ergo address</returns>
@@ -2724,7 +2724,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ErgoTreeToAddressAsync(ergoTreeHex, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate Ergo address from hex-encoded ErgoTree</summary>
         /// <param name="ergoTreeHex">ErgoTree to derive an address from</param>
@@ -2734,11 +2734,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (ergoTreeHex == null)
                 throw new System.ArgumentNullException("ergoTreeHex");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/ergoTreeToAddress/{ergoTreeHex}");
             urlBuilder_.Replace("{ergoTreeHex}", System.Uri.EscapeDataString(ConvertToString(ergoTreeHex, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2747,14 +2747,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2765,9 +2765,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2801,7 +2801,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate random seed of specified length in bytes</summary>
         /// <param name="length">seed length in bytes</param>
         /// <returns>Base16-encoded N byte seed</returns>
@@ -2810,7 +2810,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetRandomSeedWithLengthAsync(length, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate random seed of specified length in bytes</summary>
         /// <param name="length">seed length in bytes</param>
@@ -2820,11 +2820,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (length == null)
                 throw new System.ArgumentNullException("length");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/seed/{length}");
             urlBuilder_.Replace("{length}", System.Uri.EscapeDataString(ConvertToString(length, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2833,14 +2833,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2851,9 +2851,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2887,7 +2887,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Return Blake2b hash of specified message</summary>
         /// <returns>Base16-encoded 32 byte hash</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2895,7 +2895,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return HashBlake2bAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Return Blake2b hash of specified message</summary>
         /// <returns>Base16-encoded 32 byte hash</returns>
@@ -2904,10 +2904,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utils/hash/blake2b");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -2919,14 +2919,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -2937,9 +2937,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -2973,7 +2973,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Initialize new wallet with randomly generated seed</summary>
         /// <returns>New wallet with randomly generated seed created successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2981,7 +2981,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletInitAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Initialize new wallet with randomly generated seed</summary>
         /// <returns>New wallet with randomly generated seed created successfully</returns>
@@ -2990,10 +2990,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/init");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3005,14 +3005,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3023,9 +3023,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3059,7 +3059,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Create new wallet from existing mnemonic seed</summary>
         /// <returns>Wallet restored successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3067,7 +3067,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletRestoreAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Create new wallet from existing mnemonic seed</summary>
         /// <returns>Wallet restored successfully</returns>
@@ -3076,10 +3076,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/restore");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3090,14 +3090,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3108,9 +3108,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3139,7 +3139,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Check whether mnemonic phrase is corresponding to the wallet seed</summary>
         /// <returns>Whether passphrase match wallet</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3147,7 +3147,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return CheckSeedAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Check whether mnemonic phrase is corresponding to the wallet seed</summary>
         /// <returns>Whether passphrase match wallet</returns>
@@ -3156,10 +3156,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/check");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3171,14 +3171,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3189,9 +3189,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3225,7 +3225,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Unlock wallet</summary>
         /// <returns>Wallet unlocked successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3233,7 +3233,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletUnlockAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Unlock wallet</summary>
         /// <returns>Wallet unlocked successfully</returns>
@@ -3242,10 +3242,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/unlock");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3256,14 +3256,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3274,9 +3274,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3305,7 +3305,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Lock wallet</summary>
         /// <returns>Wallet locked successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3313,7 +3313,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletLockAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Lock wallet</summary>
         /// <returns>Wallet locked successfully</returns>
@@ -3322,7 +3322,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/lock");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3330,14 +3330,14 @@ namespace Cybercore.Blockchain.Ergo
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3348,9 +3348,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3379,7 +3379,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Rescan wallet (all the available full blocks)</summary>
         /// <returns>Wallet storage recreated</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3387,7 +3387,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletRescanAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Rescan wallet (all the available full blocks)</summary>
         /// <returns>Wallet storage recreated</returns>
@@ -3396,7 +3396,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/rescan");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3404,14 +3404,14 @@ namespace Cybercore.Blockchain.Ergo
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3422,9 +3422,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3453,7 +3453,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get wallet status</summary>
         /// <returns>Wallet status</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3461,7 +3461,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetWalletStatusAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get wallet status</summary>
         /// <returns>Wallet status</returns>
@@ -3470,7 +3470,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/status");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3479,14 +3479,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3497,9 +3497,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3533,7 +3533,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Update address to be used to send change to</summary>
         /// <returns>Change address updated successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3541,7 +3541,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletUpdateChangeAddressAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Update address to be used to send change to</summary>
         /// <returns>Change address updated successfully</returns>
@@ -3550,10 +3550,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/updateChangeAddress");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3564,14 +3564,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3582,9 +3582,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3613,7 +3613,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Derive new key according to a provided path</summary>
         /// <returns>Resulted address</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3621,7 +3621,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletDeriveKeyAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Derive new key according to a provided path</summary>
         /// <returns>Resulted address</returns>
@@ -3630,10 +3630,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/deriveKey");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3645,14 +3645,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3663,9 +3663,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3699,7 +3699,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Derive next key</summary>
         /// <returns>Resulted secret path and address</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3707,7 +3707,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletDeriveNextKeyAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Derive next key</summary>
         /// <returns>Resulted secret path and address</returns>
@@ -3716,7 +3716,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/deriveNextKey");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3725,14 +3725,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3743,9 +3743,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3779,7 +3779,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get total amount of confirmed Ergo tokens and assets</summary>
         /// <returns>Get total amount of confirmed Ergo tokens and assets</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3787,7 +3787,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletBalancesAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get total amount of confirmed Ergo tokens and assets</summary>
         /// <returns>Get total amount of confirmed Ergo tokens and assets</returns>
@@ -3796,7 +3796,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/balances");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3805,14 +3805,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3823,9 +3823,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3859,7 +3859,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get a list of all wallet-related transactions</summary>
         /// <param name="minInclusionHeight">Minimal tx inclusion height</param>
         /// <param name="maxInclusionHeight">Maximal tx inclusion height</param>
@@ -3871,7 +3871,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletTransactionsAsync(minInclusionHeight, maxInclusionHeight, minConfirmations, maxConfirmations, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get a list of all wallet-related transactions</summary>
         /// <param name="minInclusionHeight">Minimal tx inclusion height</param>
@@ -3901,7 +3901,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("maxConfirmations") + "=").Append(System.Uri.EscapeDataString(ConvertToString(maxConfirmations, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3910,14 +3910,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -3928,9 +3928,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -3964,7 +3964,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get wallet-related transaction by id</summary>
         /// <param name="id">Transaction id</param>
         /// <returns>Wallet-related transaction</returns>
@@ -3973,7 +3973,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletGetTransactionAsync(id, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get wallet-related transaction by id</summary>
         /// <param name="id">Transaction id</param>
@@ -3983,12 +3983,12 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transactionById?");
             urlBuilder_.Append(System.Uri.EscapeDataString("id") + "=").Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -3997,14 +3997,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4015,9 +4015,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4061,7 +4061,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get scan-related transactions by scan id</summary>
         /// <param name="scanId">Scan id</param>
         /// <returns>Scan-related transactions</returns>
@@ -4070,7 +4070,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletTransactionsByScanIdAsync(scanId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get scan-related transactions by scan id</summary>
         /// <param name="scanId">Scan id</param>
@@ -4080,12 +4080,12 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (scanId == null)
                 throw new System.ArgumentNullException("scanId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transactionsByScanId?");
             urlBuilder_.Append(System.Uri.EscapeDataString("scanId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scanId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4094,14 +4094,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4112,9 +4112,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4158,7 +4158,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get a list of all wallet-related boxes, both spent and unspent. Set minConfirmations to -1 to get mempool boxes included.</summary>
         /// <param name="minConfirmations">Minimal number of confirmations</param>
         /// <param name="minInclusionHeight">Minimal box inclusion height</param>
@@ -4168,7 +4168,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletBoxesAsync(minConfirmations, minInclusionHeight, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get a list of all wallet-related boxes, both spent and unspent. Set minConfirmations to -1 to get mempool boxes included.</summary>
         /// <param name="minConfirmations">Minimal number of confirmations</param>
@@ -4188,7 +4188,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("minInclusionHeight") + "=").Append(System.Uri.EscapeDataString(ConvertToString(minInclusionHeight, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4197,14 +4197,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4215,9 +4215,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4251,7 +4251,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get a list of collected boxes.</summary>
         /// <param name="body">This API method recieves balance and assets, according to which, it's collecting result</param>
         /// <returns>A list of all collected boxes</returns>
@@ -4260,7 +4260,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletBoxesCollectAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get a list of collected boxes.</summary>
         /// <param name="body">This API method recieves balance and assets, according to which, it's collecting result</param>
@@ -4270,10 +4270,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/boxes/collect");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4285,14 +4285,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4303,9 +4303,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4339,7 +4339,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get a list of unspent boxes. Set minConfirmations to -1 to have mempool boxes considered.</summary>
         /// <param name="minConfirmations">Minimal number of confirmations</param>
         /// <param name="minInclusionHeight">Minimal box inclusion height</param>
@@ -4349,7 +4349,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletUnspentBoxesAsync(minConfirmations, minInclusionHeight, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get a list of unspent boxes. Set minConfirmations to -1 to have mempool boxes considered.</summary>
         /// <param name="minConfirmations">Minimal number of confirmations</param>
@@ -4369,7 +4369,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("minInclusionHeight") + "=").Append(System.Uri.EscapeDataString(ConvertToString(minInclusionHeight, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4378,14 +4378,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4396,9 +4396,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4432,7 +4432,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get summary amount of confirmed plus unconfirmed Ergo tokens and assets</summary>
         /// <returns>Get summary amount of confirmed plus unconfirmed Ergo tokens and assets</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -4440,7 +4440,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletBalancesUnconfirmedAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get summary amount of confirmed plus unconfirmed Ergo tokens and assets</summary>
         /// <returns>Get summary amount of confirmed plus unconfirmed Ergo tokens and assets</returns>
@@ -4449,7 +4449,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/balances/withUnconfirmed");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4458,14 +4458,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4476,9 +4476,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4512,7 +4512,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get wallet addresses</summary>
         /// <returns>String with encoded wallet addresses</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -4520,7 +4520,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletAddressesAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get wallet addresses</summary>
         /// <returns>String with encoded wallet addresses</returns>
@@ -4529,7 +4529,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/addresses");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4538,14 +4538,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4556,9 +4556,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4592,7 +4592,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate arbitrary transaction from array of requests.</summary>
         /// <param name="body">This API method receives a sequence of requests as an input. Each request will produce an output of the resulting transaction (with fee output created automatically). Currently supported types of requests are payment and asset issuance requests. An example for a transaction with requests of both kinds is provided below. Please note that for the payment request "assets" and "registers" fields are not needed. For asset issuance request, "registers" field is not needed.
         /// You may specify boxes to spend by providing them in "inputsRaw". Please note you need to have strict equality between input and output total amounts of Ergs in this case. If you want wallet to pick up the boxes, leave "inputsRaw" empty.</param>
@@ -4602,7 +4602,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletTransactionGenerateAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate arbitrary transaction from array of requests.</summary>
         /// <param name="body">This API method receives a sequence of requests as an input. Each request will produce an output of the resulting transaction (with fee output created automatically). Currently supported types of requests are payment and asset issuance requests. An example for a transaction with requests of both kinds is provided below. Please note that for the payment request "assets" and "registers" fields are not needed. For asset issuance request, "registers" field is not needed.
@@ -4613,10 +4613,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transaction/generate");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4628,14 +4628,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4646,9 +4646,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4692,7 +4692,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate unsigned transaction from array of requests.</summary>
         /// <param name="body">The same as /wallet/transaction/generate but generates unsigned transaction.</param>
         /// <returns>Generated unsigned Ergo transaction</returns>
@@ -4701,7 +4701,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletUnsignedTransactionGenerateAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate unsigned transaction from array of requests.</summary>
         /// <param name="body">The same as /wallet/transaction/generate but generates unsigned transaction.</param>
@@ -4711,10 +4711,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transaction/generateUnsigned");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4726,14 +4726,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4744,9 +4744,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4790,7 +4790,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Sign arbitrary unsigned transaction with wallet secrets and also secrets provided.</summary>
         /// <param name="body">With this API method an arbitrary unsigned transaction can be signed with secrets provided or stored in the wallet. Both DLOG and Diffie-Hellman tuple secrets are supported.
         /// Please note that the unsigned transaction contains only identifiers of inputs and data inputs. If the node holds UTXO set, it is able to extract boxes needed. Otherwise, input (and data-input) boxes can be provided in "inputsRaw" and "dataInputsRaw" fields.</param>
@@ -4800,7 +4800,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletTransactionSignAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Sign arbitrary unsigned transaction with wallet secrets and also secrets provided.</summary>
         /// <param name="body">With this API method an arbitrary unsigned transaction can be signed with secrets provided or stored in the wallet. Both DLOG and Diffie-Hellman tuple secrets are supported.
@@ -4811,10 +4811,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transaction/sign");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4826,14 +4826,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4844,9 +4844,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4890,7 +4890,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate and send arbitrary transaction</summary>
         /// <param name="body">See description of /wallet/transaction/generate</param>
         /// <returns>Identifier of an Ergo transaction generated</returns>
@@ -4899,7 +4899,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletTransactionGenerateAndSendAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate and send arbitrary transaction</summary>
         /// <param name="body">See description of /wallet/transaction/generate</param>
@@ -4909,10 +4909,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/transaction/send");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -4924,14 +4924,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -4942,9 +4942,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -4988,7 +4988,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate and send payment transaction (default fee of 0.001 Erg is used)</summary>
         /// <returns>Identifier of an Ergo transaction generated</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -4996,7 +4996,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return WalletPaymentTransactionGenerateAndSendAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate and send payment transaction (default fee of 0.001 Erg is used)</summary>
         /// <returns>Identifier of an Ergo transaction generated</returns>
@@ -5005,10 +5005,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/payment/send");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5020,14 +5020,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5038,9 +5038,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5084,7 +5084,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Request block candidate</summary>
         /// <returns>External candidate</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5092,7 +5092,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return MiningRequestBlockCandidateAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Request block candidate</summary>
         /// <returns>External candidate</returns>
@@ -5101,7 +5101,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/mining/candidate");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5110,14 +5110,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5128,9 +5128,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5164,7 +5164,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Request block candidate</summary>
         /// <returns>External candidate</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5172,7 +5172,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return MiningRequestBlockCandidateWithMandatoryTransactionsAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Request block candidate</summary>
         /// <returns>External candidate</returns>
@@ -5181,10 +5181,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/mining/candidateWithTxs");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5196,14 +5196,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5214,9 +5214,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5250,7 +5250,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Read miner reward address</summary>
         /// <returns>Miner Reward Script (in P2S format)</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5258,7 +5258,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return MiningReadMinerRewardAddressAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Read miner reward address</summary>
         /// <returns>Miner Reward Script (in P2S format)</returns>
@@ -5267,7 +5267,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/mining/rewardAddress");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5276,14 +5276,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5294,9 +5294,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5330,7 +5330,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Read public key associated with miner rewards</summary>
         /// <returns>Public key for miner rewards (as hex-encoded secp256k1 point)</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5338,7 +5338,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return MiningReadMinerRewardPubkeyAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Read public key associated with miner rewards</summary>
         /// <returns>Public key for miner rewards (as hex-encoded secp256k1 point)</returns>
@@ -5347,7 +5347,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/mining/rewardPublicKey");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5356,14 +5356,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5374,9 +5374,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5410,7 +5410,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Submit solution for current candidate</summary>
         /// <returns>Solution is valid</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5418,7 +5418,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return MiningSubmitSolutionAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Submit solution for current candidate</summary>
         /// <returns>Solution is valid</returns>
@@ -5427,10 +5427,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/mining/solution");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5441,14 +5441,14 @@ namespace Cybercore.Blockchain.Ergo
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5459,9 +5459,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5500,7 +5500,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get box contents for a box by a unique identifier.</summary>
         /// <param name="boxId">ID of a wanted box</param>
         /// <returns>Box object</returns>
@@ -5509,7 +5509,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBoxByIdAsync(boxId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get box contents for a box by a unique identifier.</summary>
         /// <param name="boxId">ID of a wanted box</param>
@@ -5519,11 +5519,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (boxId == null)
                 throw new System.ArgumentNullException("boxId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utxo/byId/{boxId}");
             urlBuilder_.Replace("{boxId}", System.Uri.EscapeDataString(ConvertToString(boxId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5532,14 +5532,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5550,9 +5550,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5596,7 +5596,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get serialized box from UTXO pool in Base16 encoding by an identifier.</summary>
         /// <param name="boxId">ID of a wanted box</param>
         /// <returns>Json containing box identifier and hex-encoded box bytes</returns>
@@ -5605,7 +5605,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBoxByIdBinaryAsync(boxId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get serialized box from UTXO pool in Base16 encoding by an identifier.</summary>
         /// <param name="boxId">ID of a wanted box</param>
@@ -5615,11 +5615,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (boxId == null)
                 throw new System.ArgumentNullException("boxId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utxo/byIdBinary/{boxId}");
             urlBuilder_.Replace("{boxId}", System.Uri.EscapeDataString(ConvertToString(boxId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5628,14 +5628,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5646,9 +5646,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5692,7 +5692,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get box contents for a box by a unique identifier, from UTXO set and also the mempool.</summary>
         /// <param name="boxId">ID of a box to obtain</param>
         /// <returns>Box object</returns>
@@ -5701,7 +5701,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBoxWithPoolByIdAsync(boxId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get box contents for a box by a unique identifier, from UTXO set and also the mempool.</summary>
         /// <param name="boxId">ID of a box to obtain</param>
@@ -5711,11 +5711,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (boxId == null)
                 throw new System.ArgumentNullException("boxId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utxo/withPool/byId/{boxId}");
             urlBuilder_.Replace("{boxId}", System.Uri.EscapeDataString(ConvertToString(boxId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5724,14 +5724,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5742,9 +5742,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5788,7 +5788,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get serialized box in Base16 encoding by an identifier, considering also the mempool.</summary>
         /// <param name="boxId">ID of a wanted box</param>
         /// <returns>Json containing box identifier and hex-encoded box bytes</returns>
@@ -5797,7 +5797,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GetBoxWithPoolByIdBinaryAsync(boxId, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get serialized box in Base16 encoding by an identifier, considering also the mempool.</summary>
         /// <param name="boxId">ID of a wanted box</param>
@@ -5807,11 +5807,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (boxId == null)
                 throw new System.ArgumentNullException("boxId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utxo/withPool/byIdBinary/{boxId}");
             urlBuilder_.Replace("{boxId}", System.Uri.EscapeDataString(ConvertToString(boxId, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5820,14 +5820,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5838,9 +5838,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5884,7 +5884,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Get genesis boxes (boxes existed before the very first block)</summary>
         /// <returns>A list of all the genesis boxes</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5892,7 +5892,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GenesisBoxesAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Get genesis boxes (boxes existed before the very first block)</summary>
         /// <returns>A list of all the genesis boxes</returns>
@@ -5901,7 +5901,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/utxo/genesis");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -5910,14 +5910,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -5928,9 +5928,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -5974,7 +5974,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Create P2SAddress from Sigma source</summary>
         /// <returns>Ergo address derived from source</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -5982,7 +5982,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ScriptP2SAddressAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Create P2SAddress from Sigma source</summary>
         /// <returns>Ergo address derived from source</returns>
@@ -5991,10 +5991,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/script/p2sAddress");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6006,14 +6006,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6024,9 +6024,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6070,7 +6070,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Create P2SHAddress from Sigma source</summary>
         /// <returns>Ergo address derived from source</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6078,7 +6078,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ScriptP2SHAddressAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Create P2SHAddress from Sigma source</summary>
         /// <returns>Ergo address derived from source</returns>
@@ -6087,10 +6087,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/script/p2shAddress");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6102,14 +6102,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6120,9 +6120,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6166,7 +6166,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Convert an address to hex-encoded serialized ErgoTree (script)</summary>
         /// <param name="address">address to get a script from</param>
         /// <returns>Base16-encoded ErgoTree (script)</returns>
@@ -6175,7 +6175,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return AddressToTreeAsync(address, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Convert an address to hex-encoded serialized ErgoTree (script)</summary>
         /// <param name="address">address to get a script from</param>
@@ -6185,11 +6185,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (address == null)
                 throw new System.ArgumentNullException("address");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/script/addressToTree/{address}");
             urlBuilder_.Replace("{address}", System.Uri.EscapeDataString(ConvertToString(address, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6198,14 +6198,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6216,9 +6216,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6252,7 +6252,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Convert an address to hex-encoded Sigma byte array constant which contains script bytes</summary>
         /// <param name="address">address to get a script from</param>
         /// <returns>Base16-encoded Sigma byte array constant which contains script bytes</returns>
@@ -6261,7 +6261,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return AddressToBytesAsync(address, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Convert an address to hex-encoded Sigma byte array constant which contains script bytes</summary>
         /// <param name="address">address to get a script from</param>
@@ -6271,11 +6271,11 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (address == null)
                 throw new System.ArgumentNullException("address");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/script/addressToBytes/{address}");
             urlBuilder_.Replace("{address}", System.Uri.EscapeDataString(ConvertToString(address, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6284,14 +6284,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6302,9 +6302,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6338,7 +6338,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Execute script with context</summary>
         /// <returns>Result of reduceToCrypto</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6346,7 +6346,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ExecuteWithContextAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Execute script with context</summary>
         /// <returns>Result of reduceToCrypto</returns>
@@ -6355,10 +6355,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/script/executeWithContext");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6370,14 +6370,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6388,9 +6388,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6434,7 +6434,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Register a scan</summary>
         /// <returns>Identifier of a scan generated</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6442,7 +6442,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return RegisterScanAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Register a scan</summary>
         /// <returns>Identifier of a scan generated</returns>
@@ -6451,10 +6451,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/register");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6466,14 +6466,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6484,9 +6484,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6530,7 +6530,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Stop tracking and deregister scan</summary>
         /// <returns>Identifier of a scan removed</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6538,7 +6538,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return DeregisterScanAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Stop tracking and deregister scan</summary>
         /// <returns>Identifier of a scan removed</returns>
@@ -6547,10 +6547,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/deregister");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6562,14 +6562,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6580,9 +6580,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6626,7 +6626,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>List all the registered scans</summary>
         /// <returns>List of scans registered</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6634,7 +6634,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ListAllScansAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>List all the registered scans</summary>
         /// <returns>List of scans registered</returns>
@@ -6643,7 +6643,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/listAll");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6652,14 +6652,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6670,9 +6670,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6706,7 +6706,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>List boxes which are not spent.</summary>
         /// <param name="scanId">identifier of a scan</param>
         /// <param name="minConfirmations">Minimal number of confirmations</param>
@@ -6717,7 +6717,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ListUnspentScansAsync(scanId, minConfirmations, minInclusionHeight, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>List boxes which are not spent.</summary>
         /// <param name="scanId">identifier of a scan</param>
@@ -6729,7 +6729,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (scanId == null)
                 throw new System.ArgumentNullException("scanId");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/unspentBoxes/{scanId}?");
             urlBuilder_.Replace("{scanId}", System.Uri.EscapeDataString(ConvertToString(scanId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -6742,7 +6742,7 @@ namespace Cybercore.Blockchain.Ergo
                 urlBuilder_.Append(System.Uri.EscapeDataString("minInclusionHeight") + "=").Append(System.Uri.EscapeDataString(ConvertToString(minInclusionHeight, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6751,14 +6751,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6769,9 +6769,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6805,7 +6805,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Stop scan-related box tracking</summary>
         /// <returns>The box is not tracked anymore</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6813,7 +6813,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ScanStopTrackingAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Stop scan-related box tracking</summary>
         /// <returns>The box is not tracked anymore</returns>
@@ -6822,10 +6822,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/stopTracking");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6837,14 +6837,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6855,9 +6855,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6891,7 +6891,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Generate signature commitments for inputs of an unsigned transaction</summary>
         /// <returns>Transaction-related hints</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6899,7 +6899,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return GenerateCommitmentsAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Generate signature commitments for inputs of an unsigned transaction</summary>
         /// <returns>Transaction-related hints</returns>
@@ -6908,10 +6908,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/generateCommitments");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -6923,14 +6923,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -6941,9 +6941,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -6987,7 +6987,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Extract hints from a transaction</summary>
         /// <returns>Hints for the transaction</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -6995,7 +6995,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return ExtractHintsAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Extract hints from a transaction</summary>
         /// <returns>Hints for the transaction</returns>
@@ -7004,10 +7004,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/wallet/extractHints");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -7019,14 +7019,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -7037,9 +7037,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -7083,7 +7083,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Adds a box to scans, writes box to database if it is not there. You can use scan number 10 to add a box to the wallet.</summary>
         /// <returns>It the box is added successfully, then its id is returned</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -7091,7 +7091,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return AddBoxAsync(body, System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Adds a box to scans, writes box to database if it is not there. You can use scan number 10 to add a box to the wallet.</summary>
         /// <returns>It the box is added successfully, then its id is returned</returns>
@@ -7100,10 +7100,10 @@ namespace Cybercore.Blockchain.Ergo
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/scan/addBox");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -7115,14 +7115,14 @@ namespace Cybercore.Blockchain.Ergo
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -7133,9 +7133,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -7169,7 +7169,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>Shuts down the node</summary>
         /// <returns>The node will be shut down in 5 seconds</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -7177,7 +7177,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             return NodeShutdownAsync(System.Threading.CancellationToken.None);
         }
-    
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Shuts down the node</summary>
         /// <returns>The node will be shut down in 5 seconds</returns>
@@ -7186,7 +7186,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/node/shutdown");
-    
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -7195,14 +7195,14 @@ namespace Cybercore.Blockchain.Ergo
                 {
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     await PrepareRequestAsync(client_, request_, urlBuilder_).ConfigureAwait(false);
-    
+
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
+
                     await PrepareRequestAsync(client_, request_, url_).ConfigureAwait(false);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     var disposeResponse_ = true;
                     try
@@ -7213,9 +7213,9 @@ namespace Cybercore.Blockchain.Ergo
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         await ProcessResponseAsync(client_, response_, cancellationToken).ConfigureAwait(false);
-    
+
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
@@ -7244,7 +7244,7 @@ namespace Cybercore.Blockchain.Ergo
                     client_.Dispose();
             }
         }
-    
+
         protected struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
@@ -7252,21 +7252,21 @@ namespace Cybercore.Blockchain.Ergo
                 this.Object = responseObject;
                 this.Text = responseText;
             }
-    
+
             public T Object { get; }
-    
+
             public string Text { get; }
         }
-    
+
         public bool ReadResponseAsString { get; set; }
-        
+
         protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
                 return new ObjectResponseResult<T>(default(T)!, string.Empty);
             }
-        
+
             if (ReadResponseAsString)
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -7301,14 +7301,14 @@ namespace Cybercore.Blockchain.Ergo
                 }
             }
         }
-    
+
         private string ConvertToString(object? value, System.Globalization.CultureInfo cultureInfo)
         {
             if (value == null)
             {
                 return "";
             }
-        
+
             if (value is System.Enum)
             {
                 var name = System.Enum.GetName(value.GetType(), value);
@@ -7317,2628 +7317,2628 @@ namespace Cybercore.Blockchain.Ergo
                     var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute))
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
                             return attribute.Value != null ? attribute.Value : name;
                         }
                     }
-        
+
                     var converted = System.Convert.ToString(System.Convert.ChangeType(value, System.Enum.GetUnderlyingType(value.GetType()), cultureInfo));
                     return converted == null ? string.Empty : converted;
                 }
             }
-            else if (value is bool) 
+            else if (value is bool)
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[]) value);
+                return System.Convert.ToBase64String((byte[])value);
             }
             else if (value.GetType().IsArray)
             {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
+                var array = System.Linq.Enumerable.OfType<object>((System.Array)value);
                 return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
             }
-        
+
             var result = System.Convert.ToString(value, cultureInfo);
             return result == null ? "" : result;
         }
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoTransactionInput 
+    public partial class ErgoTransactionInput
     {
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("spendingProof", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public SpendingProof SpendingProof { get; set; } = new SpendingProof();
-    
+
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; }= default!;
-    
+        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoTransactionDataInput 
+    public partial class ErgoTransactionDataInput
     {
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; }= default!;
-    
+        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoTransactionUnsignedInput 
+    public partial class ErgoTransactionUnsignedInput
     {
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; }= default!;
-    
+        public System.Collections.Generic.IDictionary<string, string> Extension { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Spending proof for transaction input</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SpendingProof 
+    public partial class SpendingProof
     {
         [Newtonsoft.Json.JsonProperty("proofBytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ProofBytes { get; set; }= default!;
-    
+        public string ProofBytes { get; set; } = default!;
+
         /// <summary>Variables to be put into context</summary>
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<string, string> Extension { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SerializedBox 
+    public partial class SerializedBox
     {
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("bytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Bytes { get; set; }= default!;
-    
+        public string Bytes { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoTransactionOutput 
+    public partial class ErgoTransactionOutput
     {
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         /// <summary>Amount of Ergo token</summary>
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long Value { get; set; }= default!;
-    
+        public long Value { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("ergoTree", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ErgoTree { get; set; }= default!;
+        public string ErgoTree { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
+        public string Address { get; set; } = default!;
 
         /// <summary>Height the output was created at</summary>
         [Newtonsoft.Json.JsonProperty("creationHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CreationHeight { get; set; }= default!;
-    
+        public int CreationHeight { get; set; } = default!;
+
         /// <summary>Assets list in the transaction</summary>
         [Newtonsoft.Json.JsonProperty("assets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Asset> Assets { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<Asset> Assets { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("additionalRegisters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Registers AdditionalRegisters { get; set; } = new Registers();
-    
+
         [Newtonsoft.Json.JsonProperty("transactionId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string TransactionId { get; set; }= default!;
-    
+        public string TransactionId { get; set; } = default!;
+
         /// <summary>Index in the transaction outputs</summary>
         [Newtonsoft.Json.JsonProperty("index", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Index { get; set; }= default!;
-    
+        public int Index { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class WalletBox 
+    public partial class WalletBox
     {
         [Newtonsoft.Json.JsonProperty("box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public ErgoTransactionOutput Box { get; set; } = new ErgoTransactionOutput();
-    
+
         /// <summary>Number of confirmations, if the box is included into the blockchain</summary>
         [Newtonsoft.Json.JsonProperty("confirmationsNum", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int? ConfirmationsNum { get; set; }= default!;
-    
+        public int? ConfirmationsNum { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         /// <summary>Transaction which created the box</summary>
         [Newtonsoft.Json.JsonProperty("creationTransaction", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string CreationTransaction { get; set; }= default!;
-    
+        public string CreationTransaction { get; set; } = default!;
+
         /// <summary>Transaction which created the box</summary>
         [Newtonsoft.Json.JsonProperty("spendingTransaction", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? SpendingTransaction { get; set; }= default!;
-    
+        public string? SpendingTransaction { get; set; } = default!;
+
         /// <summary>The height the box was spent at</summary>
         [Newtonsoft.Json.JsonProperty("spendingHeight", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int? SpendingHeight { get; set; }= default!;
-    
+        public int? SpendingHeight { get; set; } = default!;
+
         /// <summary>The height the transaction containing the box was included in a block at</summary>
         [Newtonsoft.Json.JsonProperty("inclusionHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int InclusionHeight { get; set; }= default!;
-    
+        public int InclusionHeight { get; set; } = default!;
+
         /// <summary>A flag signalling whether the box is created on main chain</summary>
         [Newtonsoft.Json.JsonProperty("onchain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Onchain { get; set; }= default!;
-    
+        public bool Onchain { get; set; } = default!;
+
         /// <summary>A flag signalling whether the box was spent</summary>
         [Newtonsoft.Json.JsonProperty("spent", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Spent { get; set; }= default!;
-    
+        public bool Spent { get; set; } = default!;
+
         /// <summary>An index of a box in the creating transaction</summary>
         [Newtonsoft.Json.JsonProperty("creationOutIndex", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CreationOutIndex { get; set; }= default!;
-    
+        public int CreationOutIndex { get; set; } = default!;
+
         /// <summary>Scan identifiers the box relates to</summary>
         [Newtonsoft.Json.JsonProperty("scans", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<int> Scans { get; set; } = new System.Collections.ObjectModel.Collection<int>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Unsigned Ergo transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class UnsignedErgoTransaction 
+    public partial class UnsignedErgoTransaction
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         /// <summary>Unsigned inputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("inputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionUnsignedInput> Inputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionUnsignedInput>();
-    
+
         /// <summary>Data inputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("dataInputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionDataInput> DataInputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionDataInput>();
-    
+
         /// <summary>Outputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("outputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> Outputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Ergo transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoTransaction 
+    public partial class ErgoTransaction
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         /// <summary>Inputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("inputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionInput> Inputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionInput>();
-    
+
         /// <summary>Data inputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("dataInputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionDataInput> DataInputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionDataInput>();
-    
+
         /// <summary>Outputs of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("outputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> Outputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Transaction augmented with some useful information</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class WalletTransaction 
+    public partial class WalletTransaction
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         /// <summary>Transaction inputs</summary>
         [Newtonsoft.Json.JsonProperty("inputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionInput> Inputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionInput>();
-    
+
         /// <summary>Transaction data inputs</summary>
         [Newtonsoft.Json.JsonProperty("dataInputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionDataInput> DataInputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionDataInput>();
-    
+
         /// <summary>Transaction outputs</summary>
         [Newtonsoft.Json.JsonProperty("outputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> Outputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         /// <summary>Height of a block the transaction was included in</summary>
         [Newtonsoft.Json.JsonProperty("inclusionHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int InclusionHeight { get; set; }= default!;
-    
+        public int InclusionHeight { get; set; } = default!;
+
         /// <summary>Number of transaction confirmations</summary>
         [Newtonsoft.Json.JsonProperty("numConfirmations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NumConfirmations { get; set; }= default!;
-    
+        public int NumConfirmations { get; set; } = default!;
+
         /// <summary>Scan identifiers the transaction relates to</summary>
         [Newtonsoft.Json.JsonProperty("scans", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<int> Scans { get; set; } = new System.Collections.ObjectModel.Collection<int>();
-    
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Hex-encoded big-endian 256-bits secret exponent "w" along with generators "g", "h", and group elements "u", "v", such as g^w = u, h^w = v</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class DhtSecret 
+    public partial class DhtSecret
     {
         /// <summary>Hex-encoded big-endian 256-bits secret exponent</summary>
         [Newtonsoft.Json.JsonProperty("secret", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Secret { get; set; }= default!;
-    
+        public string Secret { get; set; } = default!;
+
         /// <summary>Hex-encoded "g" generator for the Diffie-Hellman tuple (secp256k1 curve point)</summary>
         [Newtonsoft.Json.JsonProperty("g", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string G { get; set; }= default!;
-    
+        public string G { get; set; } = default!;
+
         /// <summary>Hex-encoded "h" generator for the Diffie-Hellman tuple (secp256k1 curve point)</summary>
         [Newtonsoft.Json.JsonProperty("h", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string H { get; set; }= default!;
-    
+        public string H { get; set; } = default!;
+
         /// <summary>Hex-encoded "u" group element of the Diffie-Hellman tuple (secp256k1 curve point)</summary>
         [Newtonsoft.Json.JsonProperty("u", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string U { get; set; }= default!;
-    
+        public string U { get; set; } = default!;
+
         /// <summary>Hex-encoded "v" group element of the Diffie-Hellman tuple (secp256k1 curve point)</summary>
         [Newtonsoft.Json.JsonProperty("v", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string V { get; set; }= default!;
-    
+        public string V { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>A request to sign a transaction with secrets provided</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class TransactionSigningRequest 
+    public partial class TransactionSigningRequest
     {
         /// <summary>Unsigned transaction to sign</summary>
         [Newtonsoft.Json.JsonProperty("tx", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public UnsignedErgoTransaction Tx { get; set; } = new UnsignedErgoTransaction();
-    
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("inputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; } = default!;
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("dataInputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; } = default!;
+
         /// <summary>Optional list of hints used for signing</summary>
         [Newtonsoft.Json.JsonProperty("hints", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TransactionHintsBag Hints { get; set; }= default!;
-    
+        public TransactionHintsBag Hints { get; set; } = default!;
+
         /// <summary>Secrets used for signing</summary>
         [Newtonsoft.Json.JsonProperty("secrets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Secrets Secrets { get; set; } = new Secrets();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Holds encoded ErgoAddress</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class AddressHolder 
+    public partial class AddressHolder
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Holds request for wallet boxes</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BoxesRequestHolder 
+    public partial class BoxesRequestHolder
     {
         /// <summary>Target assets</summary>
         [Newtonsoft.Json.JsonProperty("targetAssets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<object>> TargetAssets { get; set; } = new List<ICollection<object>>();
-    
+
         /// <summary>Target balance</summary>
         [Newtonsoft.Json.JsonProperty("targetBalance", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long TargetBalance { get; set; }= default!;
-    
+        public long TargetBalance { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Holds many transaction requests and transaction fee</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class RequestsHolder 
+    public partial class RequestsHolder
     {
         /// <summary>Sequence of transaction requests</summary>
         [Newtonsoft.Json.JsonProperty("requests", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<Requests> Requests { get; set; } = new System.Collections.ObjectModel.Collection<Requests>();
-    
+
         /// <summary>Transaction fee</summary>
         [Newtonsoft.Json.JsonProperty("fee", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Fee { get; set; }= default!;
-    
+        public long Fee { get; set; } = default!;
+
         /// <summary>List of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("inputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; } = default!;
+
         /// <summary>List of data inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("dataInputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SourceHolder 
+    public partial class SourceHolder
     {
         /// <summary>Sigma source to be compiled</summary>
         [Newtonsoft.Json.JsonProperty("source", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Source { get; set; }= default!;
-    
+        public string Source { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoLikeTransaction 
+    public partial class ErgoLikeTransaction
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("inputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionInput> Inputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionInput>();
-    
+
         [Newtonsoft.Json.JsonProperty("dataInputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionDataInput> DataInputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionDataInput>();
-    
+
         [Newtonsoft.Json.JsonProperty("outputs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> Outputs { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Block header format used for sigma ErgoLikeContext</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SigmaHeader 
+    public partial class SigmaHeader
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Timestamp { get; set; }= default!;
-    
+        public long Timestamp { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("version", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Version { get; set; }= default!;
-    
+        public int Version { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string AdProofsRoot { get; set; }= default!;
-    
+        public string AdProofsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AdProofsId { get; set; }= default!;
-    
+        public string AdProofsId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("stateRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AvlTreeData StateRoot { get; set; }= default!;
-    
+        public AvlTreeData StateRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string TransactionsRoot { get; set; }= default!;
-    
+        public string TransactionsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string TransactionsId { get; set; }= default!;
-    
+        public string TransactionsId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("nBits", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long NBits { get; set; }= default!;
-    
+        public long NBits { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionHash", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ExtensionHash { get; set; }= default!;
-    
+        public string ExtensionHash { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ExtensionRoot { get; set; }= default!;
-    
+        public string ExtensionRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ExtensionId { get; set; }= default!;
-    
+        public string ExtensionId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("parentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ParentId { get; set; }= default!;
-    
+        public string ParentId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("powSolutions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PowSolutions PowSolutions { get; set; }= default!;
-    
+        public PowSolutions PowSolutions { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("votes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Votes { get; set; }= default!;
-    
+        public string Votes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("minerPk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MinerPk { get; set; }= default!;
-    
+        public string MinerPk { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("powOnetimePk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PowOnetimePk { get; set; }= default!;
-    
+        public string PowOnetimePk { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("powNonce", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PowNonce { get; set; }= default!;
-    
+        public string PowNonce { get; set; } = default!;
+
         /// <summary>sigma.BigInt</summary>
         [Newtonsoft.Json.JsonProperty("powDistance", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PowDistance { get; set; }= default!;
-    
+        public double PowDistance { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class PreHeader 
+    public partial class PreHeader
     {
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Timestamp { get; set; }= default!;
-    
+        public long Timestamp { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("version", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Version { get; set; }= default!;
-    
+        public int Version { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("nBits", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long NBits { get; set; }= default!;
-    
+        public long NBits { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("parentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ParentId { get; set; }= default!;
-    
+        public string ParentId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("votes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Votes { get; set; }= default!;
-    
+        public string Votes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("minerPk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MinerPk { get; set; }= default!;
-    
+        public string MinerPk { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class AvlTreeData 
+    public partial class AvlTreeData
     {
         [Newtonsoft.Json.JsonProperty("digest", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Digest { get; set; }= default!;
-    
+        public string Digest { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("treeFlags", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TreeFlags { get; set; }= default!;
-    
+        public int TreeFlags { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("keyLength", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int KeyLength { get; set; }= default!;
-    
+        public int KeyLength { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("valueLength", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? ValueLength { get; set; }= default!;
-    
+        public int? ValueLength { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ErgoLikeContext 
+    public partial class ErgoLikeContext
     {
         /// <summary>state root before current block application</summary>
         [Newtonsoft.Json.JsonProperty("lastBlockUtxoRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AvlTreeData LastBlockUtxoRoot { get; set; }= default!;
-    
+        public AvlTreeData LastBlockUtxoRoot { get; set; } = default!;
+
         /// <summary>fixed number of last block headers in descending order (first header is the newest one)</summary>
         [Newtonsoft.Json.JsonProperty("headers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<SigmaHeader> Headers { get; set; } = new System.Collections.ObjectModel.Collection<SigmaHeader>();
-    
+
         /// <summary>fields of block header with the current `spendingTransaction`, that can be predicted by a miner before its formation</summary>
         [Newtonsoft.Json.JsonProperty("preHeader", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public PreHeader PreHeader { get; set; } = new PreHeader();
-    
+
         /// <summary>boxes, that corresponds to id's of `spendingTransaction.dataInputs`</summary>
         [Newtonsoft.Json.JsonProperty("dataBoxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> DataBoxes { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         /// <summary>boxes, that corresponds to id's of `spendingTransaction.inputs`</summary>
         [Newtonsoft.Json.JsonProperty("boxesToSpend", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<ErgoTransactionOutput> BoxesToSpend { get; set; } = new System.Collections.ObjectModel.Collection<ErgoTransactionOutput>();
-    
+
         /// <summary>transaction that contains `self` box</summary>
         [Newtonsoft.Json.JsonProperty("spendingTransaction", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public ErgoLikeTransaction SpendingTransaction { get; set; } = new ErgoLikeTransaction();
-    
+
         /// <summary>index of the box in `boxesToSpend` that contains the script we're evaluating</summary>
         [Newtonsoft.Json.JsonProperty("selfIndex", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long SelfIndex { get; set; }= default!;
-    
+        public long SelfIndex { get; set; } = default!;
+
         /// <summary>prover-defined key-value pairs, that may be used inside a script</summary>
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public object Extension { get; set; } = new object();
-    
+
         /// <summary>validation parameters passed to Interpreter.verify to detect soft-fork conditions</summary>
         [Newtonsoft.Json.JsonProperty("validationSettings", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ValidationSettings { get; set; }= default!;
-    
+        public string ValidationSettings { get; set; } = default!;
+
         /// <summary>hard limit on accumulated execution cost, if exceeded lead to CostLimitException to be thrown</summary>
         [Newtonsoft.Json.JsonProperty("costLimit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long CostLimit { get; set; }= default!;
-    
+        public long CostLimit { get; set; } = default!;
+
         /// <summary>initial value of execution cost already accumulated before Interpreter.verify is called</summary>
         [Newtonsoft.Json.JsonProperty("initCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long InitCost { get; set; }= default!;
-    
+        public long InitCost { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ExecuteScript 
+    public partial class ExecuteScript
     {
         /// <summary>Sigma script to be executed</summary>
         [Newtonsoft.Json.JsonProperty("script", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Script { get; set; }= default!;
-    
+        public string Script { get; set; } = default!;
+
         /// <summary>Environment for compiler</summary>
         [Newtonsoft.Json.JsonProperty("namedConstants", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? NamedConstants { get; set; }= default!;
-    
+        public object? NamedConstants { get; set; } = default!;
+
         /// <summary>Interpreter context</summary>
         [Newtonsoft.Json.JsonProperty("context", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ErgoLikeContext? Context { get; set; }= default!;
-    
+        public ErgoLikeContext? Context { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Algebraic data type of sigma proposition expressions</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SigmaBoolean 
+    public partial class SigmaBoolean
     {
         /// <summary>Sigma opCode</summary>
         [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Op { get; set; }= default!;
-    
+        public int Op { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("h", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string H { get; set; }= default!;
-    
+        public string H { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("g", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string G { get; set; }= default!;
-    
+        public string G { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("u", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string U { get; set; }= default!;
-    
+        public string U { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("v", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string V { get; set; }= default!;
-    
+        public string V { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Condition { get; set; }= default!;
-    
+        public bool Condition { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class SigmaBooleanAndPredicate : SigmaBoolean
     {
         [Newtonsoft.Json.JsonProperty("args", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class SigmaBooleanOrPredicate : SigmaBoolean
     {
         [Newtonsoft.Json.JsonProperty("args", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class SigmaBooleanThresholdPredicate : SigmaBoolean
     {
         [Newtonsoft.Json.JsonProperty("args", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<SigmaBoolean> Args { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Result of executeWithContext request (reduceToCrypto)</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class CryptoResult 
+    public partial class CryptoResult
     {
         /// <summary>value of SigmaProp type which represents a statement verifiable via sigma protocol</summary>
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public SigmaBoolean Value { get; set; }= default!;
-    
+        public SigmaBoolean Value { get; set; } = default!;
+
         /// <summary>Estimated cost of contract execution</summary>
         [Newtonsoft.Json.JsonProperty("cost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Cost { get; set; }= default!;
-    
+        public long Cost { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ScanningPredicate 
+    public partial class ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("predicate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Predicate { get; set; }= default!;
-    
+        public string Predicate { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class ContainsPredicate : ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("register", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Register { get; set; }= default!;
-    
+        public string Register { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("bytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Bytes { get; set; }= default!;
-    
+        public string Bytes { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class EqualsPredicate : ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("register", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Register { get; set; }= default!;
-    
+        public string Register { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("bytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Bytes { get; set; }= default!;
-    
+        public string Bytes { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class ContainsAssetPredicate : ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("assetId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AssetId { get; set; }= default!;
-    
+        public string AssetId { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class AndPredicate : ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("args", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<ScanningPredicate> Args { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<ScanningPredicate> Args { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class OrPredicate : ScanningPredicate
     {
         [Newtonsoft.Json.JsonProperty("args", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<ScanningPredicate> Args { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<ScanningPredicate> Args { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ScanRequest 
+    public partial class ScanRequest
     {
         [Newtonsoft.Json.JsonProperty("scanName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ScanName { get; set; }= default!;
-    
+        public string ScanName { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("trackingRule", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ScanningPredicate TrackingRule { get; set; }= default!;
-    
+        public ScanningPredicate TrackingRule { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Scan 
+    public partial class Scan
     {
         [Newtonsoft.Json.JsonProperty("scanName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ScanName { get; set; }= default!;
-    
+        public string ScanName { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("scanId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ScanId { get; set; }= default!;
-    
+        public int ScanId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("trackingRule", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ScanningPredicate TrackingRule { get; set; }= default!;
-    
+        public ScanningPredicate TrackingRule { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ScanId 
+    public partial class ScanId
     {
         [Newtonsoft.Json.JsonProperty("scanId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ScanId1 { get; set; }= default!;
-    
+        public int ScanId1 { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ScanIdBoxId 
+    public partial class ScanIdBoxId
     {
         [Newtonsoft.Json.JsonProperty("scanId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ScanId { get; set; }= default!;
-    
+        public int ScanId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("boxId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BoxId { get; set; }= default!;
-    
+        public string BoxId { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Ergo box with associated scans (their respective identifiers)</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ScanIdsBox 
+    public partial class ScanIdsBox
     {
         [Newtonsoft.Json.JsonProperty("scanIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<int> ScanIds { get; set; } = new System.Collections.ObjectModel.Collection<int>();
-    
+
         [Newtonsoft.Json.JsonProperty("box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public ErgoTransactionOutput Box { get; set; } = new ErgoTransactionOutput();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Randomness and commitment for the first step of the Schnorr protocol</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class DlogCommitment 
+    public partial class DlogCommitment
     {
         /// <summary>Hex-encoded big-endian 256-bits secret exponent</summary>
         [Newtonsoft.Json.JsonProperty("r", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string R { get; set; }= default!;
-    
+        public string R { get; set; } = default!;
+
         /// <summary>Hex-encoded "g" generator for the Diffie-Hellman tuple (secp256k1 curve point)</summary>
         [Newtonsoft.Json.JsonProperty("a", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string A { get; set; }= default!;
-    
+        public string A { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>request to extract prover hints from a transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class HintExtractionRequest 
+    public partial class HintExtractionRequest
     {
         /// <summary>Transaction to extract prover hints from</summary>
         [Newtonsoft.Json.JsonProperty("tx", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public ErgoTransaction Tx { get; set; } = new ErgoTransaction();
-    
+
         /// <summary>Real signers of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("real", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<SigmaBoolean> Real { get; set; } = new System.Collections.ObjectModel.Collection<SigmaBoolean>();
-    
+
         /// <summary>Simulated signers of the transaction</summary>
         [Newtonsoft.Json.JsonProperty("simulated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<SigmaBoolean> Simulated { get; set; } = new System.Collections.ObjectModel.Collection<SigmaBoolean>();
-    
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("inputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; } = default!;
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("dataInputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>basic trait for prover commitments</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Commitment 
+    public partial class Commitment
     {
         [Newtonsoft.Json.JsonProperty("hint", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public CommitmentHint Hint { get; set; }= default!;
-    
+        public CommitmentHint Hint { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("pubkey", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public SigmaBoolean Pubkey { get; set; }= default!;
-    
+        public SigmaBoolean Pubkey { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("position", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Position { get; set; }= default!;
-    
+        public string Position { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public CommitmentType Type { get; set; }= default!;
-    
+        public CommitmentType Type { get; set; } = default!;
+
         /// <summary>a group element of the commitment</summary>
         [Newtonsoft.Json.JsonProperty("a", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string A { get; set; }= default!;
-    
+        public string A { get; set; } = default!;
+
         /// <summary>b group element of the commitment (needed for DHT protocol only)</summary>
         [Newtonsoft.Json.JsonProperty("b", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string B { get; set; }= default!;
-    
+        public string B { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class SecretProven 
+    public partial class SecretProven
     {
         [Newtonsoft.Json.JsonProperty("hint", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SecretProvenHint Hint { get; set; }= default!;
-    
+        public SecretProvenHint Hint { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("challenge", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Challenge { get; set; }= default!;
-    
+        public string Challenge { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("pubkey", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public SigmaBoolean Pubkey { get; set; }= default!;
-    
+        public SigmaBoolean Pubkey { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("proof", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Proof { get; set; }= default!;
-    
+        public string Proof { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("position", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Position { get; set; }= default!;
-    
+        public string Position { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>hints for inputs, key is input index, values is a set of hints for the input</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class InputHints : System.Collections.Generic.Dictionary<string, System.Collections.ObjectModel.Collection<Commitment>>
     {
-    
+
     }
-    
+
     /// <summary>prover hints extracted from a transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class TransactionHintsBag 
+    public partial class TransactionHintsBag
     {
         /// <summary>Hints which contain secrets, do not share them!</summary>
         [Newtonsoft.Json.JsonProperty("secretHints", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<InputHints> SecretHints { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<InputHints> SecretHints { get; set; } = default!;
+
         /// <summary>Hints which contain public data only, share them freely!</summary>
         [Newtonsoft.Json.JsonProperty("publicHints", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<InputHints> PublicHints { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<InputHints> PublicHints { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>request to generate commitments to sign a transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class GenerateCommitmentsRequest 
+    public partial class GenerateCommitmentsRequest
     {
         /// <summary>Unsigned transaction to sign</summary>
         [Newtonsoft.Json.JsonProperty("tx", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public UnsignedErgoTransaction Tx { get; set; } = new UnsignedErgoTransaction();
-    
+
         /// <summary>Optionally, external secrets used for signing</summary>
         [Newtonsoft.Json.JsonProperty("secrets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Secrets2 Secrets { get; set; }= default!;
-    
+        public Secrets2 Secrets { get; set; } = default!;
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("inputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> InputsRaw { get; set; } = default!;
+
         /// <summary>Optional list of inputs to be used in serialized form</summary>
         [Newtonsoft.Json.JsonProperty("dataInputsRaw", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> DataInputsRaw { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Request for generation of payment transaction to a given address</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class PaymentRequest 
+    public partial class PaymentRequest
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         /// <summary>Payment amount</summary>
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Value { get; set; }= default!;
-    
+        public long Value { get; set; } = default!;
+
         /// <summary>Assets list in the transaction</summary>
         [Newtonsoft.Json.JsonProperty("assets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Asset> Assets { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<Asset> Assets { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("registers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Registers Registers { get; set; }= default!;
-    
+        public Registers Registers { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Request for generation of asset issue transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class AssetIssueRequest 
+    public partial class AssetIssueRequest
     {
         /// <summary>Optional, first address in the wallet will be used if not defined</summary>
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         /// <summary>Optional, amount of ergs to be put into box with issued assets</summary>
         [Newtonsoft.Json.JsonProperty("ergValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ErgValue { get; set; }= default!;
-    
+        public int ErgValue { get; set; } = default!;
+
         /// <summary>Supply amount</summary>
         [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Amount { get; set; }= default!;
-    
+        public long Amount { get; set; } = default!;
+
         /// <summary>Assets name</summary>
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }= default!;
-    
+        public string Name { get; set; } = default!;
+
         /// <summary>Assets description</summary>
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Description { get; set; }= default!;
-    
+        public string Description { get; set; } = default!;
+
         /// <summary>Number of decimal places</summary>
         [Newtonsoft.Json.JsonProperty("decimals", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Decimals { get; set; }= default!;
-    
+        public int Decimals { get; set; } = default!;
+
         /// <summary>Optional, possible values for registers R7...R9</summary>
         [Newtonsoft.Json.JsonProperty("registers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Registers Registers { get; set; }= default!;
-    
+        public Registers Registers { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Block with header and transactions</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class FullBlock 
+    public partial class FullBlock
     {
         [Newtonsoft.Json.JsonProperty("header", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public BlockHeader Header { get; set; } = new BlockHeader();
-    
+
         [Newtonsoft.Json.JsonProperty("blockTransactions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public BlockTransactions BlockTransactions { get; set; } = new BlockTransactions();
-    
+
         [Newtonsoft.Json.JsonProperty("adProofs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public BlockADProofs AdProofs { get; set; } = new BlockADProofs();
-    
+
         [Newtonsoft.Json.JsonProperty("extension", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Extension Extension { get; set; } = new Extension();
-    
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>An object containing all components of pow solution</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class PowSolutions 
+    public partial class PowSolutions
     {
         /// <summary>Base16-encoded public key</summary>
         [Newtonsoft.Json.JsonProperty("pk", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Pk { get; set; }= default!;
-    
+        public string Pk { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("w", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string W { get; set; }= default!;
-    
+        public string W { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("n", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string N { get; set; }= default!;
-    
+        public string N { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("d", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int D { get; set; }= default!;
-    
+        public int D { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BlockHeaderWithoutPow 
+    public partial class BlockHeaderWithoutPow
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Timestamp { get; set; }= default!;
-    
+        public long Timestamp { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("version", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Version { get; set; }= default!;
-    
+        public int Version { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string AdProofsRoot { get; set; }= default!;
-    
+        public string AdProofsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("stateRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string StateRoot { get; set; }= default!;
-    
+        public string StateRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string TransactionsRoot { get; set; }= default!;
-    
+        public string TransactionsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("nBits", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long NBits { get; set; }= default!;
-    
+        public long NBits { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionHash", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ExtensionHash { get; set; }= default!;
-    
+        public string ExtensionHash { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("difficulty", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Difficulty { get; set; }= default!;
-    
+        public int Difficulty { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("parentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ParentId { get; set; }= default!;
-    
+        public string ParentId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("votes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Votes { get; set; }= default!;
-    
+        public string Votes { get; set; } = default!;
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ExtensionId { get; set; }= default!;
-    
+        public string ExtensionId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string TransactionsId { get; set; }= default!;
-    
+        public string TransactionsId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AdProofsId { get; set; }= default!;
-    
+        public string AdProofsId { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class PopowHeader 
+    public partial class PopowHeader
     {
         [Newtonsoft.Json.JsonProperty("header", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public BlockHeader Header { get; set; } = new BlockHeader();
-    
+
         /// <summary>Array of header interlinks</summary>
         [Newtonsoft.Json.JsonProperty("interlinks", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<string> Interlinks { get; set; } = new System.Collections.ObjectModel.Collection<string>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class NipopowProof 
+    public partial class NipopowProof
     {
         /// <summary>security parameter (min μ-level superchain length)</summary>
         [Newtonsoft.Json.JsonProperty("m", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double M { get; set; }= default!;
-    
+        public double M { get; set; } = default!;
+
         /// <summary>security parameter (min suffix length, &gt;= 1)</summary>
         [Newtonsoft.Json.JsonProperty("k", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double K { get; set; }= default!;
-    
+        public double K { get; set; } = default!;
+
         /// <summary>proof prefix headers</summary>
         [Newtonsoft.Json.JsonProperty("prefix", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<PopowHeader> Prefix { get; set; } = new System.Collections.ObjectModel.Collection<PopowHeader>();
-    
+
         [Newtonsoft.Json.JsonProperty("suffixHead", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public PopowHeader SuffixHead { get; set; } = new PopowHeader();
-    
+
         /// <summary>tail of the proof suffix headers</summary>
         [Newtonsoft.Json.JsonProperty("suffixTail", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<BlockHeader> SuffixTail { get; set; } = new System.Collections.ObjectModel.Collection<BlockHeader>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BlockHeader 
+    public partial class BlockHeader
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Id { get; set; }= default!;
-    
+        public string Id { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Timestamp { get; set; }= default!;
-    
+        public long Timestamp { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("version", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Version { get; set; }= default!;
-    
+        public int Version { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string AdProofsRoot { get; set; }= default!;
-    
+        public string AdProofsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("stateRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string StateRoot { get; set; }= default!;
-    
+        public string StateRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string TransactionsRoot { get; set; }= default!;
-    
+        public string TransactionsRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("nBits", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long NBits { get; set; }= default!;
-    
+        public long NBits { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionHash", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ExtensionHash { get; set; }= default!;
-    
+        public string ExtensionHash { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("powSolutions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public PowSolutions PowSolutions { get; set; } = new PowSolutions();
-    
+
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("difficulty", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public string Difficulty { get; set; }= default!;
-    
+        public string Difficulty { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("parentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ParentId { get; set; }= default!;
-    
+        public string ParentId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("votes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Votes { get; set; }= default!;
-    
+        public string Votes { get; set; } = default!;
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ExtensionId { get; set; }= default!;
-    
+        public string ExtensionId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string TransactionsId { get; set; }= default!;
-    
+        public string TransactionsId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofsId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AdProofsId { get; set; }= default!;
-    
+        public string AdProofsId { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BlockTransactions 
+    public partial class BlockTransactions
     {
         [Newtonsoft.Json.JsonProperty("headerId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string HeaderId { get; set; }= default!;
-    
+        public string HeaderId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Transactions Transactions { get; set; } = new Transactions();
-    
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BlockADProofs 
+    public partial class BlockADProofs
     {
         [Newtonsoft.Json.JsonProperty("headerId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string HeaderId { get; set; }= default!;
-    
+        public string HeaderId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("proofBytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ProofBytes { get; set; }= default!;
-    
+        public string ProofBytes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("digest", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Digest { get; set; }= default!;
-    
+        public string Digest { get; set; } = default!;
+
         /// <summary>Size in bytes</summary>
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Size { get; set; }= default!;
-    
+        public int Size { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Extension 
+    public partial class Extension
     {
         [Newtonsoft.Json.JsonProperty("headerId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string HeaderId { get; set; }= default!;
-    
+        public string HeaderId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("digest", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Digest { get; set; }= default!;
-    
+        public string Digest { get; set; } = default!;
+
         /// <summary>List of key-value records</summary>
         [Newtonsoft.Json.JsonProperty("fields", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<KeyValueItem>? Fields { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<KeyValueItem>? Fields { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class KeyValueItem : System.Collections.ObjectModel.Collection<string>
     {
-    
+
     }
-    
+
     /// <summary>Can be null if node is not mining or candidate block is not ready</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class CandidateBlock 
+    public partial class CandidateBlock
     {
         [Newtonsoft.Json.JsonProperty("version", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Version { get; set; }= default!;
-    
+        public int Version { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("extensionHash", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ExtensionHash { get; set; }= default!;
-    
+        public string ExtensionHash { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Timestamp { get; set; }= default!;
-    
+        public long Timestamp { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("stateRoot", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string StateRoot { get; set; }= default!;
-    
+        public string StateRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("nBits", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long NBits { get; set; }= default!;
-    
+        public long NBits { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("adProofBytes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AdProofBytes { get; set; }= default!;
-    
+        public string AdProofBytes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("parentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ParentId { get; set; }= default!;
-    
+        public string ParentId { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactionsNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TransactionsNumber { get; set; }= default!;
-    
+        public int TransactionsNumber { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("transactions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Transactions Transactions { get; set; }= default!;
-    
+        public Transactions Transactions { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("votes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Votes { get; set; }= default!;
-    
+        public string Votes { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Merkle proof for a leaf, which is an array of bytes (e.g. a transaction identifier)</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class MerkleProof 
+    public partial class MerkleProof
     {
         /// <summary>Base16-encoded Merkle tree leaf bytes</summary>
         [Newtonsoft.Json.JsonProperty("leaf", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Leaf { get; set; }= default!;
-    
+        public string Leaf { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("levels", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<object>> Levels { get; set; } = new List<ICollection<object>>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Proof that a block corresponding to given header without PoW contains some transactions</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ProofOfUpcomingTransactions 
+    public partial class ProofOfUpcomingTransactions
     {
         /// <summary>Base16-encoded serialized header without Proof-of-Work</summary>
         [Newtonsoft.Json.JsonProperty("msgPreimage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string MsgPreimage { get; set; }= default!;
-    
+        public string MsgPreimage { get; set; } = default!;
+
         /// <summary>Merkle proofs of transactions included into blocks (not necessarily all the block transactions)</summary>
         [Newtonsoft.Json.JsonProperty("txProofs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<MerkleProof> TxProofs { get; set; } = new System.Collections.ObjectModel.Collection<MerkleProof>();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Block candidate related data for external miner to perform work</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class WorkMessage 
+    public partial class WorkMessage
     {
         /// <summary>Base16-encoded block header bytes without PoW solution</summary>
         [Newtonsoft.Json.JsonProperty("msg", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Msg { get; set; }= default!;
-    
+        public string Msg { get; set; } = default!;
+
         /// <summary>Work target value</summary>
         [Newtonsoft.Json.JsonProperty("b", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public BigInteger B { get; set; }= default!;
-        
+        public BigInteger B { get; set; } = default!;
+
         /// <summary>Block height</summary>
         [Newtonsoft.Json.JsonProperty("h", Required = Newtonsoft.Json.Required.Always)]
-        public uint Height { get; set; }= default!;
+        public uint Height { get; set; } = default!;
 
         /// <summary>Base16-encoded miner public key</summary>
         [Newtonsoft.Json.JsonProperty("pk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Pk { get; set; }= default!;
-    
+        public string Pk { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("proof", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ProofOfUpcomingTransactions Proof { get; set; }= default!;
-    
+        public ProofOfUpcomingTransactions Proof { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Peer 
+    public partial class Peer
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Name { get; set; }= default!;
-    
+        public string? Name { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("lastSeen", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LastSeen { get; set; }= default!;
-    
+        public int LastSeen { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("connectionType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public PeerConnectionType? ConnectionType { get; set; }= default!;
-    
+        public PeerConnectionType? ConnectionType { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class PeersStatus 
+    public partial class PeersStatus
     {
         [Newtonsoft.Json.JsonProperty("lastIncomingMessage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LastIncomingMessage { get; set; }= default!;
-    
+        public int LastIncomingMessage { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("currentNetworkTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CurrentNetworkTime { get; set; }= default!;
-    
+        public int CurrentNetworkTime { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class NodeInfo 
+    public partial class NodeInfo
     {
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }= default!;
-    
+        public string Name { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("appVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string AppVersion { get; set; }= default!;
-    
+        public string AppVersion { get; set; } = default!;
+
         /// <summary>Can be 'null' if state is empty (no full block is applied since node launch)</summary>
         [Newtonsoft.Json.JsonProperty("fullHeight", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int? FullHeight { get; set; }= default!;
-    
+        public int? FullHeight { get; set; } = default!;
+
         /// <summary>Can be 'null' if state is empty (no header applied since node launch)</summary>
         [Newtonsoft.Json.JsonProperty("headersHeight", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int? HeadersHeight { get; set; }= default!;
-    
+        public int? HeadersHeight { get; set; } = default!;
+
         /// <summary>Can be 'null' if no full block is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("bestFullHeaderId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? BestFullHeaderId { get; set; }= default!;
-    
+        public string? BestFullHeaderId { get; set; } = default!;
+
         /// <summary>Can be 'null' if no full block is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("previousFullHeaderId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? PreviousFullHeaderId { get; set; }= default!;
-    
+        public string? PreviousFullHeaderId { get; set; } = default!;
+
         /// <summary>Can be 'null' if no header applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("bestHeaderId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? BestHeaderId { get; set; }= default!;
-    
+        public string? BestHeaderId { get; set; } = default!;
+
         /// <summary>Can be 'null' if state is empty (no full block is applied since node launch)</summary>
         [Newtonsoft.Json.JsonProperty("stateRoot", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? StateRoot { get; set; }= default!;
-    
+        public string? StateRoot { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("stateType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public NodeInfoStateType StateType { get; set; }= default!;
-    
+        public NodeInfoStateType StateType { get; set; } = default!;
+
         /// <summary>Can be 'null' if no full block is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("stateVersion", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? StateVersion { get; set; }= default!;
-    
+        public string? StateVersion { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("isMining", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IsMining { get; set; }= default!;
-    
+        public bool IsMining { get; set; } = default!;
+
         /// <summary>Number of connected peers</summary>
         [Newtonsoft.Json.JsonProperty("peersCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int PeersCount { get; set; }= default!;
-    
+        public int PeersCount { get; set; } = default!;
+
         /// <summary>Current unconfirmed transactions count</summary>
         [Newtonsoft.Json.JsonProperty("unconfirmedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, 10000)]
-        public int UnconfirmedCount { get; set; }= default!;
-    
+        public int UnconfirmedCount { get; set; } = default!;
+
         /// <summary>Difficulty on current bestFullHeaderId. Can be 'null' if no full block is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("difficulty", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public JToken Difficulty { get; set; }= default!;
-    
+        public JToken Difficulty { get; set; } = default!;
+
         /// <summary>Current internal node time</summary>
         [Newtonsoft.Json.JsonProperty("currentTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long CurrentTime { get; set; }= default!;
-    
+        public long CurrentTime { get; set; } = default!;
+
         /// <summary>Time when the node was started</summary>
         [Newtonsoft.Json.JsonProperty("launchTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long LaunchTime { get; set; }= default!;
-    
+        public long LaunchTime { get; set; } = default!;
+
         /// <summary>Can be 'null' if no headers is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("headersScore", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string HeadersScore { get; set; }= default!;
-    
+        public string HeadersScore { get; set; } = default!;
+
         /// <summary>Can be 'null' if no full block is applied since node launch</summary>
         [Newtonsoft.Json.JsonProperty("fullBlocksScore", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string FullBlocksScore { get; set; }= default!;
-    
+        public string FullBlocksScore { get; set; } = default!;
+
         /// <summary>Can be 'null' if genesis blocks is not produced yet</summary>
         [Newtonsoft.Json.JsonProperty("genesisBlockId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? GenesisBlockId { get; set; }= default!;
+        public string? GenesisBlockId { get; set; } = default!;
 
         /// <summary>Number of current blockreward</summary>
         [Newtonsoft.Json.JsonProperty("minerReward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long MinerReward { get; set; }= default!;
-    
+        public long MinerReward { get; set; } = default!;
+
         /// <summary>current parameters</summary>
         [Newtonsoft.Json.JsonProperty("parameters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Parameters Parameters { get; set; } = new Parameters();
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Parameters 
+    public partial class Parameters
     {
         /// <summary>Height when current parameters were considered(not actual height). Can be '0' if state is empty</summary>
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         /// <summary>Storage fee coefficient (per byte per storage period ~4 years)</summary>
         [Newtonsoft.Json.JsonProperty("storageFeeFactor", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int StorageFeeFactor { get; set; }= default!;
-    
+        public int StorageFeeFactor { get; set; } = default!;
+
         /// <summary>Minimum value per byte of an output</summary>
         [Newtonsoft.Json.JsonProperty("minValuePerByte", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int MinValuePerByte { get; set; }= default!;
-    
+        public int MinValuePerByte { get; set; } = default!;
+
         /// <summary>Maximum block size (in bytes)</summary>
         [Newtonsoft.Json.JsonProperty("maxBlockSize", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int MaxBlockSize { get; set; }= default!;
-    
+        public int MaxBlockSize { get; set; } = default!;
+
         /// <summary>Maximum cumulative computational cost of input scripts in block transactions</summary>
         [Newtonsoft.Json.JsonProperty("maxBlockCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int MaxBlockCost { get; set; }= default!;
-    
+        public int MaxBlockCost { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("blockVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int BlockVersion { get; set; }= default!;
-    
+        public int BlockVersion { get; set; } = default!;
+
         /// <summary>Validation cost of a single token</summary>
         [Newtonsoft.Json.JsonProperty("tokenAccessCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int TokenAccessCost { get; set; }= default!;
-    
+        public int TokenAccessCost { get; set; } = default!;
+
         /// <summary>Validation cost per one transaction input</summary>
         [Newtonsoft.Json.JsonProperty("inputCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int InputCost { get; set; }= default!;
-    
+        public int InputCost { get; set; } = default!;
+
         /// <summary>Validation cost per one data input</summary>
         [Newtonsoft.Json.JsonProperty("dataInputCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int DataInputCost { get; set; }= default!;
-    
+        public int DataInputCost { get; set; } = default!;
+
         /// <summary>Validation cost per one transaction output</summary>
         [Newtonsoft.Json.JsonProperty("outputCost", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public int OutputCost { get; set; }= default!;
-    
+        public int OutputCost { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Ergo transaction objects</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Transactions : System.Collections.ObjectModel.Collection<ErgoTransaction>
     {
-    
+
     }
-    
+
     /// <summary>Fee histogram bin</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class FeeHistogramBin 
+    public partial class FeeHistogramBin
     {
         [Newtonsoft.Json.JsonProperty("nTxns", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NTxns { get; set; }= default!;
-    
+        public int NTxns { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("totalFee", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long TotalFee { get; set; }= default!;
-    
+        public long TotalFee { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Fee histogram for transactions in mempool</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class FeeHistogram : System.Collections.ObjectModel.Collection<FeeHistogramBin>
     {
-    
+
     }
-    
+
     /// <summary>Token detail in the transaction</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Asset 
+    public partial class Asset
     {
         [Newtonsoft.Json.JsonProperty("tokenId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string TokenId { get; set; }= default!;
-    
+        public string TokenId { get; set; } = default!;
+
         /// <summary>Amount of the token</summary>
         [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Amount { get; set; }= default!;
-    
+        public long Amount { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Ergo box registers</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Registers : System.Collections.Generic.Dictionary<string, string>
     {
-    
+
     }
-    
+
     /// <summary>Emission info for height</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class EmissionInfo 
+    public partial class EmissionInfo
     {
         [Newtonsoft.Json.JsonProperty("minerReward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long MinerReward { get; set; }= default!;
-    
+        public long MinerReward { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("totalCoinsIssued", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long TotalCoinsIssued { get; set; }= default!;
-    
+        public long TotalCoinsIssued { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("totalRemainCoins", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long TotalRemainCoins { get; set; }= default!;
-    
+        public long TotalRemainCoins { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Amount of Ergo tokens and assets</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class BalancesSnapshot 
+    public partial class BalancesSnapshot
     {
         [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Height { get; set; }= default!;
-    
+        public int Height { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("balance", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Balance { get; set; }= default!;
+        public long Balance { get; set; } = default!;
 
         // The node returns an object for this rather than an array, causing deserialize to crash
         //[Newtonsoft.Json.JsonProperty("assets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         //public System.Collections.Generic.ICollection<Asset> Assets { get; set; }= default!;
-    
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     /// <summary>Validity status of Ergo address</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class AddressValidity 
+    public partial class AddressValidity
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("isValid", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IsValid { get; set; }= default!;
-    
+        public bool IsValid { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("error", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Error { get; set; }= default!;
-    
+        public string Error { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ApiError 
+    public partial class ApiError
     {
         /// <summary>Error code</summary>
         [Newtonsoft.Json.JsonProperty("error", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Error { get; set; }= default!;
-    
+        public int Error { get; set; } = default!;
+
         /// <summary>String error code</summary>
         [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Reason { get; set; }= default!;
-    
+        public string Reason { get; set; } = default!;
+
         /// <summary>Detailed error description</summary>
         [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Detail { get; set; }= default!;
-    
+        public string? Detail { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body 
+    public partial class Body
     {
         /// <summary>Password to encrypt wallet file with</summary>
         [Newtonsoft.Json.JsonProperty("pass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Pass { get; set; }= default!;
-    
+        public string Pass { get; set; } = default!;
+
         /// <summary>Optional pass to password-protect mnemonic seed</summary>
         [Newtonsoft.Json.JsonProperty("mnemonicPass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MnemonicPass { get; set; }= default!;
-    
+        public string MnemonicPass { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body2 
+    public partial class Body2
     {
         /// <summary>Password to encrypt wallet file with</summary>
         [Newtonsoft.Json.JsonProperty("pass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Pass { get; set; }= default!;
-    
+        public string Pass { get; set; } = default!;
+
         /// <summary>Mnemonic seed</summary>
         [Newtonsoft.Json.JsonProperty("mnemonic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Mnemonic { get; set; }= default!;
-    
+        public string Mnemonic { get; set; } = default!;
+
         /// <summary>Optional pass to password-protect mnemonic seed</summary>
         [Newtonsoft.Json.JsonProperty("mnemonicPass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MnemonicPass { get; set; }= default!;
-    
+        public string MnemonicPass { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body3 
+    public partial class Body3
     {
         /// <summary>Mnemonic seed (optional)</summary>
         [Newtonsoft.Json.JsonProperty("mnemonic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Mnemonic { get; set; }= default!;
-    
+        public string Mnemonic { get; set; } = default!;
+
         /// <summary>Optional pass to password-protect mnemonic seed</summary>
         [Newtonsoft.Json.JsonProperty("mnemonicPass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MnemonicPass { get; set; }= default!;
-    
+        public string MnemonicPass { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body4 
+    public partial class Body4
     {
         /// <summary>Password to decrypt wallet file with</summary>
         [Newtonsoft.Json.JsonProperty("pass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Pass { get; set; }= default!;
-    
+        public string Pass { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body5 
+    public partial class Body5
     {
         /// <summary>Pay2PubKey address</summary>
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Body6 
+    public partial class Body6
     {
         /// <summary>Derivation path for a new secret to derive</summary>
         [Newtonsoft.Json.JsonProperty("derivationPath", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string DerivationPath { get; set; }= default!;
-    
+        public string DerivationPath { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response 
+    public partial class Response
     {
         /// <summary>Mnemonic seed phrase</summary>
         [Newtonsoft.Json.JsonProperty("mnemonic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Mnemonic { get; set; }= default!;
-    
+        public string Mnemonic { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response2 
+    public partial class Response2
     {
         /// <summary>true if passphrase matches wallet, false otherwise</summary>
         [Newtonsoft.Json.JsonProperty("matched", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Matched { get; set; }= default!;
-    
+        public bool Matched { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response3 
+    public partial class Response3
     {
         /// <summary>true if wallet is initialized, false otherwise</summary>
         [Newtonsoft.Json.JsonProperty("isInitialized", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IsInitialized { get; set; }= default!;
-    
+        public bool IsInitialized { get; set; } = default!;
+
         /// <summary>true if wallet is unlocked, false otherwise</summary>
         [Newtonsoft.Json.JsonProperty("isUnlocked", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IsUnlocked { get; set; }= default!;
-    
+        public bool IsUnlocked { get; set; } = default!;
+
         /// <summary>address to send change to. Empty when wallet is not initialized or locked. By default change address correponds to root key address, could be set via /wallet/updateChangeAddress method.</summary>
         [Newtonsoft.Json.JsonProperty("changeAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string ChangeAddress { get; set; }= default!;
-    
+        public string ChangeAddress { get; set; } = default!;
+
         /// <summary>last scanned height for the wallet (and external scans)</summary>
         [Newtonsoft.Json.JsonProperty("walletHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int WalletHeight { get; set; }= default!;
-    
+        public int WalletHeight { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response4 
+    public partial class Response4
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response5 
+    public partial class Response5
     {
         /// <summary>Derivation path of the resulted secret</summary>
         [Newtonsoft.Json.JsonProperty("derivationPath", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string DerivationPath { get; set; }= default!;
-    
+        public string DerivationPath { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
-    
+        public string Address { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response6 
+    public partial class Response6
     {
         [Newtonsoft.Json.JsonProperty("rewardAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string RewardAddress { get; set; }= default!;
+        public string RewardAddress { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -9946,16 +9946,16 @@ namespace Cybercore.Blockchain.Ergo
             set { _additionalProperties = value; }
         }
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response7 
+    public partial class Response7
     {
         [Newtonsoft.Json.JsonProperty("rewardPubKey", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string RewardPubKey { get; set; }= default!;
+        public string RewardPubKey { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -9963,173 +9963,173 @@ namespace Cybercore.Blockchain.Ergo
             set { _additionalProperties = value; }
         }
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response8 
+    public partial class Response8
     {
         /// <summary>serialized Ergo tree</summary>
         [Newtonsoft.Json.JsonProperty("tree", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Tree { get; set; }= default!;
-    
+        public string Tree { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Response9 
+    public partial class Response9
     {
         /// <summary>Base16-encoded bytes</summary>
         [Newtonsoft.Json.JsonProperty("tree", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Tree { get; set; }= default!;
-    
+        public string Tree { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Secrets 
+    public partial class Secrets
     {
         /// <summary>Sequence of secret exponents (DLOG secrets)</summary>
         [Newtonsoft.Json.JsonProperty("dlog", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Dlog { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> Dlog { get; set; } = default!;
+
         /// <summary>Sequence of secret Diffie-Hellman tuple exponents (DHT secrets)</summary>
         [Newtonsoft.Json.JsonProperty("dht", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<DhtSecret> Dht { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<DhtSecret> Dht { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Requests 
+    public partial class Requests
     {
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Address { get; set; }= default!;
+        public string Address { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public long Value { get; set; }= default!;
+        public long Value { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("assets", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Asset> Assets { get; set; }= default!;
+        public System.Collections.Generic.ICollection<Asset> Assets { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum CommitmentHint
     {
         [System.Runtime.Serialization.EnumMember(Value = @"cmtWithSecret")]
         CmtWithSecret = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"cmtReal")]
         CmtReal = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"cmtSimulated")]
         CmtSimulated = 2,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum CommitmentType
     {
         [System.Runtime.Serialization.EnumMember(Value = @"dlog")]
         Dlog = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"dht")]
         Dht = 1,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum SecretProvenHint
     {
         [System.Runtime.Serialization.EnumMember(Value = @"proofReal")]
         ProofReal = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"proofSimulated")]
         ProofSimulated = 1,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Secrets2 
+    public partial class Secrets2
     {
         /// <summary>Sequence of secret exponents (DLOG secrets)</summary>
         [Newtonsoft.Json.JsonProperty("dlog", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Dlog { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<string> Dlog { get; set; } = default!;
+
         /// <summary>Sequence of secret Diffie-Hellman tuple exponents (DHT secrets)</summary>
         [Newtonsoft.Json.JsonProperty("dht", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<DhtSecret> Dht { get; set; }= default!;
-    
+        public System.Collections.Generic.ICollection<DhtSecret> Dht { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
+
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum PeerConnectionType
     {
         [System.Runtime.Serialization.EnumMember(Value = @"Incoming")]
         Incoming = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"Outgoing")]
         Outgoing = 1,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum NodeInfoStateType
     {
         [System.Runtime.Serialization.EnumMember(Value = @"digest")]
         Digest = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"utxo")]
         Utxo = 1,
-    
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]

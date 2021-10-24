@@ -45,15 +45,15 @@ namespace Cybercore.Mining
         {
             var subSocket = new ZSocket(ZSocketType.SUB);
 
-            if(!string.IsNullOrEmpty(relay.SharedEncryptionKey))
+            if (!string.IsNullOrEmpty(relay.SharedEncryptionKey))
                 subSocket.SetupCurveTlsClient(relay.SharedEncryptionKey, logger);
 
             subSocket.Connect(relay.Url);
             subSocket.SubscribeAll();
 
-            if(!silent)
+            if (!silent)
             {
-                if(subSocket.CurveServerKey != null && subSocket.CurveServerKey.Any(x => x != 0))
+                if (subSocket.CurveServerKey != null && subSocket.CurveServerKey.Any(x => x != 0))
                     logger.Info($"Monitoring Bt-Stream source {relay.Url} using Curve public-key {subSocket.CurveServerKey.ToHexString()}");
                 else
                     logger.Info($"Monitoring Bt-Stream source {relay.Url}");
@@ -69,16 +69,16 @@ namespace Cybercore.Mining
             var data = msg[2].Read();
             var sent = DateTimeOffset.FromUnixTimeMilliseconds(msg[3].ReadInt64()).DateTime;
 
-            if(flags != 0 && ((flags & 1) == 0))
+            if (flags != 0 && ((flags & 1) == 0))
                 flags = BitConverter.ToUInt32(BitConverter.GetBytes(flags).ToNewReverseArray());
 
-            if((flags & 1) == 1)
+            if ((flags & 1) == 1)
             {
-                using(var stm = new MemoryStream(data))
+                using (var stm = new MemoryStream(data))
                 {
-                    using(var stmOut = new MemoryStream())
+                    using (var stmOut = new MemoryStream())
                     {
-                        using(var ds = new DeflateStream(stm, CompressionMode.Decompress))
+                        using (var ds = new DeflateStream(stm, CompressionMode.Decompress))
                         {
                             ds.CopyTo(stmOut);
                         }
@@ -102,7 +102,7 @@ namespace Cybercore.Mining
                 .DistinctBy(x => $"{x.Url}:{x.SharedEncryptionKey}")
                 .ToArray();
 
-            if(!endpoints.Any())
+            if (!endpoints.Any())
                 return;
 
             await Task.Run(() =>
@@ -116,37 +116,37 @@ namespace Cybercore.Mining
 
                 logger.Info(() => "Online");
 
-                while(!ct.IsCancellationRequested)
+                while (!ct.IsCancellationRequested)
                 {
                     var lastMessageReceived = relays.Select(_ => clock.Now).ToArray();
 
                     try
                     {
-                        var sockets = relays.Select(x=> SetupSubSocket(x)).ToArray();
+                        var sockets = relays.Select(x => SetupSubSocket(x)).ToArray();
 
-                        using(new CompositeDisposable(sockets))
+                        using (new CompositeDisposable(sockets))
                         {
                             var pollItems = sockets.Select(_ => ZPollItem.CreateReceiver()).ToArray();
 
-                            while(!ct.IsCancellationRequested)
+                            while (!ct.IsCancellationRequested)
                             {
-                                if(sockets.PollIn(pollItems, out var messages, out var error, timeout))
+                                if (sockets.PollIn(pollItems, out var messages, out var error, timeout))
                                 {
-                                    for(var i = 0; i < messages.Length; i++)
+                                    for (var i = 0; i < messages.Length; i++)
                                     {
                                         var msg = messages[i];
 
-                                        if(msg != null)
+                                        if (msg != null)
                                         {
                                             lastMessageReceived[i] = clock.Now;
 
-                                            using(msg)
+                                            using (msg)
                                             {
                                                 ProcessMessage(msg);
                                             }
                                         }
 
-                                        else if(clock.Now - lastMessageReceived[i] > reconnectTimeout)
+                                        else if (clock.Now - lastMessageReceived[i] > reconnectTimeout)
                                         {
                                             sockets[i].Dispose();
                                             sockets[i] = SetupSubSocket(relays[i], true);
@@ -157,15 +157,15 @@ namespace Cybercore.Mining
                                         }
                                     }
 
-                                    if(error != null)
+                                    if (error != null)
                                         logger.Error(() => $"{nameof(ShareReceiver)}: {error.Name} [{error.Name}] during receive");
                                 }
 
                                 else
                                 {
-                                    for(var i = 0; i < messages.Length; i++)
+                                    for (var i = 0; i < messages.Length; i++)
                                     {
-                                        if(clock.Now - lastMessageReceived[i] > reconnectTimeout)
+                                        if (clock.Now - lastMessageReceived[i] > reconnectTimeout)
                                         {
                                             sockets[i].Dispose();
                                             sockets[i] = SetupSubSocket(relays[i], true);
@@ -180,11 +180,11 @@ namespace Cybercore.Mining
                         }
                     }
 
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(() => $"{nameof(ShareReceiver)}: {ex}");
 
-                        if(!ct.IsCancellationRequested)
+                        if (!ct.IsCancellationRequested)
                             Thread.Sleep(1000);
                     }
                 }

@@ -69,8 +69,8 @@ namespace Cybercore.Util
 
         private const int DoubleMaxScale = 308;
         private static readonly BigInteger s_bnDoublePrecision = BigInteger.Pow(10, DoubleMaxScale);
-        private static readonly BigInteger s_bnDoubleMaxValue = (BigInteger) double.MaxValue;
-        private static readonly BigInteger s_bnDoubleMinValue = (BigInteger) double.MinValue;
+        private static readonly BigInteger s_bnDoubleMaxValue = (BigInteger)double.MaxValue;
+        private static readonly BigInteger s_bnDoubleMinValue = (BigInteger)double.MinValue;
 
         [StructLayout(LayoutKind.Explicit)]
         internal struct DecimalUInt32
@@ -81,11 +81,11 @@ namespace Cybercore.Util
         }
 
         private const int DecimalScaleMask = 0x00FF0000;
-        private const int DecimalSignMask = unchecked((int) 0x80000000);
+        private const int DecimalSignMask = unchecked((int)0x80000000);
         private const int DecimalMaxScale = 28;
         private static readonly BigInteger s_bnDecimalPrecision = BigInteger.Pow(10, DecimalMaxScale);
-        private static readonly BigInteger s_bnDecimalMaxValue = (BigInteger) decimal.MaxValue;
-        private static readonly BigInteger s_bnDecimalMinValue = (BigInteger) decimal.MinValue;
+        private static readonly BigInteger s_bnDecimalMaxValue = (BigInteger)decimal.MaxValue;
+        private static readonly BigInteger s_bnDecimalMinValue = (BigInteger)decimal.MinValue;
 
         private const string c_solidus = @"/";
 
@@ -146,11 +146,11 @@ namespace Cybercore.Util
         // IComparable
         int IComparable.CompareTo(object obj)
         {
-            if(obj == null)
+            if (obj == null)
                 return 1;
-            if(obj is not BigRational)
+            if (obj is not BigRational)
                 throw new ArgumentException("Argument must be of type BigRational", "obj");
-            return Compare(this, (BigRational) obj);
+            return Compare(this, (BigRational)obj);
         }
 
         // IComparable<BigRational>
@@ -173,7 +173,7 @@ namespace Cybercore.Util
         // a/b = c/d, iff ad = bc
         public bool Equals(BigRational other)
         {
-            if(Denominator == other.Denominator)
+            if (Denominator == other.Denominator)
                 return m_numerator == other.m_numerator;
             return m_numerator * other.Denominator == Denominator * other.m_numerator;
         }
@@ -193,14 +193,14 @@ namespace Cybercore.Util
         // BigRational(Double)
         public BigRational(double value)
         {
-            if(double.IsNaN(value))
+            if (double.IsNaN(value))
                 throw new ArgumentException("Argument is not a number", nameof(value));
-            if(double.IsInfinity(value))
+            if (double.IsInfinity(value))
                 throw new ArgumentException("Argument is infinity", nameof(value));
 
             SplitDoubleIntoParts(value, out var sign, out var exponent, out var significand, out _);
 
-            if(significand == 0)
+            if (significand == 0)
             {
                 this = Zero;
                 return;
@@ -209,11 +209,11 @@ namespace Cybercore.Util
             m_numerator = significand;
             Denominator = 1 << 52;
 
-            if(exponent > 0)
+            if (exponent > 0)
                 m_numerator = BigInteger.Pow(m_numerator, exponent);
-            else if(exponent < 0)
+            else if (exponent < 0)
                 Denominator = BigInteger.Pow(Denominator, -exponent);
-            if(sign < 0)
+            if (sign < 0)
                 m_numerator = BigInteger.Negate(m_numerator);
             Simplify();
         }
@@ -226,22 +226,22 @@ namespace Cybercore.Util
         public BigRational(decimal value)
         {
             var bits = decimal.GetBits(value);
-            if(bits == null || bits.Length != 4 || (bits[3] & ~(DecimalSignMask | DecimalScaleMask)) != 0 ||
+            if (bits == null || bits.Length != 4 || (bits[3] & ~(DecimalSignMask | DecimalScaleMask)) != 0 ||
                 (bits[3] & DecimalScaleMask) > 28 << 16)
                 throw new ArgumentException("invalid Decimal", nameof(value));
 
-            if(value == decimal.Zero)
+            if (value == decimal.Zero)
             {
                 this = Zero;
                 return;
             }
 
             // build up the numerator
-            var ul = ((ulong) (uint) bits[2] << 32) | (uint) bits[1]; // (hi    << 32) | (mid)
-            m_numerator = (new BigInteger(ul) << 32) | (uint) bits[0]; // (hiMid << 32) | (low)
+            var ul = ((ulong)(uint)bits[2] << 32) | (uint)bits[1]; // (hi    << 32) | (mid)
+            m_numerator = (new BigInteger(ul) << 32) | (uint)bits[0]; // (hiMid << 32) | (low)
 
             var isNegative = (bits[3] & DecimalSignMask) != 0;
-            if(isNegative)
+            if (isNegative)
                 m_numerator = BigInteger.Negate(m_numerator);
 
             // build up the denominator
@@ -253,15 +253,15 @@ namespace Cybercore.Util
 
         public BigRational(BigInteger numerator, BigInteger denominator)
         {
-            if(denominator.Sign == 0)
+            if (denominator.Sign == 0)
                 throw new DivideByZeroException();
-            if(numerator.Sign == 0)
+            if (numerator.Sign == 0)
             {
                 // 0/m -> 0/1
                 m_numerator = BigInteger.Zero;
                 Denominator = BigInteger.One;
             }
-            else if(denominator.Sign < 0)
+            else if (denominator.Sign < 0)
             {
                 m_numerator = BigInteger.Negate(numerator);
                 Denominator = BigInteger.Negate(denominator);
@@ -277,14 +277,14 @@ namespace Cybercore.Util
 
         public BigRational(BigInteger whole, BigInteger numerator, BigInteger denominator)
         {
-            if(denominator.Sign == 0)
+            if (denominator.Sign == 0)
                 throw new DivideByZeroException();
-            if(numerator.Sign == 0 && whole.Sign == 0)
+            if (numerator.Sign == 0 && whole.Sign == 0)
             {
                 m_numerator = BigInteger.Zero;
                 Denominator = BigInteger.One;
             }
-            else if(denominator.Sign < 0)
+            else if (denominator.Sign < 0)
             {
                 Denominator = BigInteger.Negate(denominator);
                 m_numerator = BigInteger.Negate(whole) * Denominator + BigInteger.Negate(numerator);
@@ -360,11 +360,11 @@ namespace Cybercore.Util
 
         public static BigRational Pow(BigRational baseValue, BigInteger exponent)
         {
-            if(exponent.Sign == 0)
+            if (exponent.Sign == 0)
                 return One;
-            if(exponent.Sign < 0)
+            if (exponent.Sign < 0)
             {
-                if(baseValue == Zero)
+                if (baseValue == Zero)
                     throw new ArgumentException("cannot raise zero to a negative power", nameof(baseValue));
                 // n^(-e) -> (1/n)^e
                 baseValue = Invert(baseValue);
@@ -372,7 +372,7 @@ namespace Cybercore.Util
             }
 
             var result = baseValue;
-            while(exponent > BigInteger.One)
+            while (exponent > BigInteger.One)
             {
                 result *= baseValue;
                 exponent--;
@@ -500,45 +500,45 @@ namespace Cybercore.Util
         [CLSCompliant(false)]
         public static explicit operator sbyte(BigRational value)
         {
-            return (sbyte) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (sbyte)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         [CLSCompliant(false)]
         public static explicit operator ushort(BigRational value)
         {
-            return (ushort) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (ushort)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         [CLSCompliant(false)]
         public static explicit operator uint(BigRational value)
         {
-            return (uint) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (uint)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         [CLSCompliant(false)]
         public static explicit operator ulong(BigRational value)
         {
-            return (ulong) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (ulong)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         public static explicit operator byte(BigRational value)
         {
-            return (byte) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (byte)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         public static explicit operator short(BigRational value)
         {
-            return (short) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (short)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         public static explicit operator int(BigRational value)
         {
-            return (int) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (int)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         public static explicit operator long(BigRational value)
         {
-            return (long) BigInteger.Divide(value.m_numerator, value.Denominator);
+            return (long)BigInteger.Divide(value.m_numerator, value.Denominator);
         }
 
         public static explicit operator BigInteger(BigRational value)
@@ -551,7 +551,7 @@ namespace Cybercore.Util
             // The Single value type represents a single-precision 32-bit number with
             // values ranging from negative 3.402823e38 to positive 3.402823e38
             // values that do not fit into this range are returned as Infinity
-            return (float) (double) value;
+            return (float)(double)value;
         }
 
         public static explicit operator double(BigRational value)
@@ -559,26 +559,26 @@ namespace Cybercore.Util
             // The Double value type represents a double-precision 64-bit number with
             // values ranging from -1.79769313486232e308 to +1.79769313486232e308
             // values that do not fit into this range are returned as +/-Infinity
-            if(SafeCastToDouble(value.m_numerator) && SafeCastToDouble(value.Denominator))
-                return (double) value.m_numerator / (double) value.Denominator;
+            if (SafeCastToDouble(value.m_numerator) && SafeCastToDouble(value.Denominator))
+                return (double)value.m_numerator / (double)value.Denominator;
 
             // scale the numerator to preseve the fraction part through the integer division
             var denormalized = value.m_numerator * s_bnDoublePrecision / value.Denominator;
-            if(denormalized.IsZero)
+            if (denormalized.IsZero)
                 return value.Sign < 0
-                    ? BitConverter.Int64BitsToDouble(unchecked((long) 0x8000000000000000))
+                    ? BitConverter.Int64BitsToDouble(unchecked((long)0x8000000000000000))
                     : 0d; // underflow to -+0
 
             double result = 0;
             var isDouble = false;
             var scale = DoubleMaxScale;
 
-            while(scale > 0)
+            while (scale > 0)
             {
-                if(!isDouble)
-                    if(SafeCastToDouble(denormalized))
+                if (!isDouble)
+                    if (SafeCastToDouble(denormalized))
                     {
-                        result = (double) denormalized;
+                        result = (double)denormalized;
                         isDouble = true;
                     }
                     else
@@ -590,7 +590,7 @@ namespace Cybercore.Util
                 scale--;
             }
 
-            if(!isDouble)
+            if (!isDouble)
                 return value.Sign < 0 ? double.NegativeInfinity : double.PositiveInfinity;
             return result;
         }
@@ -600,22 +600,22 @@ namespace Cybercore.Util
             // The Decimal value type represents decimal numbers ranging
             // from +79,228,162,514,264,337,593,543,950,335 to -79,228,162,514,264,337,593,543,950,335
             // the binary representation of a Decimal value is of the form, ((-2^96 to 2^96) / 10^(0 to 28))
-            if(SafeCastToDecimal(value.m_numerator) && SafeCastToDecimal(value.Denominator))
-                return (decimal) value.m_numerator / (decimal) value.Denominator;
+            if (SafeCastToDecimal(value.m_numerator) && SafeCastToDecimal(value.Denominator))
+                return (decimal)value.m_numerator / (decimal)value.Denominator;
 
             // scale the numerator to preseve the fraction part through the integer division
             var denormalized = value.m_numerator * s_bnDecimalPrecision / value.Denominator;
-            if(denormalized.IsZero)
+            if (denormalized.IsZero)
                 return decimal.Zero; // underflow - fraction is too small to fit in a decimal
-            for(var scale = DecimalMaxScale; scale >= 0; scale--)
-                if(!SafeCastToDecimal(denormalized))
+            for (var scale = DecimalMaxScale; scale >= 0; scale--)
+                if (!SafeCastToDecimal(denormalized))
                 {
                     denormalized /= 10;
                 }
                 else
                 {
                     var dec = new DecimalUInt32();
-                    dec.dec = (decimal) denormalized;
+                    dec.dec = (decimal)denormalized;
                     dec.flags = (dec.flags & ~DecimalScaleMask) | (scale << 16);
                     return dec.dec;
                 }
@@ -632,45 +632,45 @@ namespace Cybercore.Util
         [CLSCompliant(false)]
         public static implicit operator BigRational(sbyte value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         [CLSCompliant(false)]
         public static implicit operator BigRational(ushort value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         [CLSCompliant(false)]
         public static implicit operator BigRational(uint value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         [CLSCompliant(false)]
         public static implicit operator BigRational(ulong value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         public static implicit operator BigRational(byte value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         public static implicit operator BigRational(short value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         public static implicit operator BigRational(int value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         public static implicit operator BigRational(long value)
         {
-            return new((BigInteger) value);
+            return new((BigInteger)value);
         }
 
         public static implicit operator BigRational(BigInteger value)
@@ -704,14 +704,14 @@ namespace Cybercore.Util
             try
             {
                 // verify that the deserialized number is well formed
-                if(Denominator.Sign == 0 || m_numerator.Sign == 0)
+                if (Denominator.Sign == 0 || m_numerator.Sign == 0)
                 {
                     // n/0 -> 0/1
                     // 0/m -> 0/1
                     m_numerator = BigInteger.Zero;
                     Denominator = BigInteger.One;
                 }
-                else if(Denominator.Sign < 0)
+                else if (Denominator.Sign < 0)
                 {
                     m_numerator = BigInteger.Negate(m_numerator);
                     Denominator = BigInteger.Negate(Denominator);
@@ -719,7 +719,7 @@ namespace Cybercore.Util
 
                 Simplify();
             }
-            catch(ArgumentException e)
+            catch (ArgumentException e)
             {
                 throw new SerializationException("invalid serialization data", e);
             }
@@ -727,7 +727,7 @@ namespace Cybercore.Util
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if(info == null)
+            if (info == null)
                 throw new ArgumentNullException(nameof(info));
 
             info.AddValue("Numerator", m_numerator);
@@ -736,11 +736,11 @@ namespace Cybercore.Util
 
         private BigRational(SerializationInfo info, StreamingContext context)
         {
-            if(info == null)
+            if (info == null)
                 throw new ArgumentNullException(nameof(info));
 
-            m_numerator = (BigInteger) info.GetValue("Numerator", typeof(BigInteger));
-            Denominator = (BigInteger) info.GetValue("Denominator", typeof(BigInteger));
+            m_numerator = (BigInteger)info.GetValue("Numerator", typeof(BigInteger));
+            Denominator = (BigInteger)info.GetValue("Denominator", typeof(BigInteger));
         }
 
         #endregion serialization
@@ -753,11 +753,11 @@ namespace Cybercore.Util
         {
             // * if the numerator is {0, +1, -1} then the fraction is already reduced
             // * if the denominator is {+1} then the fraction is already reduced
-            if(m_numerator == BigInteger.Zero)
+            if (m_numerator == BigInteger.Zero)
                 Denominator = BigInteger.One;
 
             var gcd = BigInteger.GreatestCommonDivisor(m_numerator, Denominator);
-            if(gcd > BigInteger.One)
+            if (gcd > BigInteger.One)
             {
                 m_numerator /= gcd;
                 Denominator /= gcd;
@@ -787,17 +787,17 @@ namespace Cybercore.Util
             du.uu = 0;
             du.dbl = dbl;
 
-            sign = 1 - ((int) (du.uu >> 62) & 2);
+            sign = 1 - ((int)(du.uu >> 62) & 2);
             man = du.uu & 0x000FFFFFFFFFFFFF;
-            exp = (int) (du.uu >> 52) & 0x7FF;
-            if(exp == 0)
+            exp = (int)(du.uu >> 52) & 0x7FF;
+            if (exp == 0)
             {
                 // Denormalized number.
                 isFinite = true;
-                if(man != 0)
+                if (man != 0)
                     exp = -1074;
             }
-            else if(exp == 0x7FF)
+            else if (exp == 0x7FF)
             {
                 // NaN or Infinite.
                 isFinite = false;
@@ -816,7 +816,7 @@ namespace Cybercore.Util
             DoubleUlong du;
             du.dbl = 0;
 
-            if(man == 0)
+            if (man == 0)
             {
                 du.uu = 0;
             }
@@ -824,7 +824,7 @@ namespace Cybercore.Util
             {
                 // Normalize so that 0x0010 0000 0000 0000 is the highest bit set
                 var cbitShift = CbitHighZero(man) - 11;
-                if(cbitShift < 0)
+                if (cbitShift < 0)
                     man >>= -cbitShift;
                 else
                     man <<= cbitShift;
@@ -833,16 +833,16 @@ namespace Cybercore.Util
                 // (52 bits) and skew the exponent (by 0x3FF == 1023)
                 exp += 1075;
 
-                if(exp >= 0x7FF)
+                if (exp >= 0x7FF)
                 {
                     // Infinity
                     du.uu = 0x7FF0000000000000;
                 }
-                else if(exp <= 0)
+                else if (exp <= 0)
                 {
                     // Denormalized
                     exp--;
-                    if(exp < -52)
+                    if (exp < -52)
                         du.uu = 0;
                     else
                         du.uu = man >> -exp;
@@ -850,11 +850,11 @@ namespace Cybercore.Util
                 else
                 {
                     // Mask off the implicit high bit
-                    du.uu = (man & 0x000FFFFFFFFFFFFF) | ((ulong) exp << 52);
+                    du.uu = (man & 0x000FFFFFFFFFFFFF) | ((ulong)exp << 52);
                 }
             }
 
-            if(sign < 0)
+            if (sign < 0)
                 du.uu |= 0x8000000000000000;
 
             return du.dbl;
@@ -862,42 +862,42 @@ namespace Cybercore.Util
 
         private static int CbitHighZero(ulong uu)
         {
-            if((uu & 0xFFFFFFFF00000000) == 0)
-                return 32 + CbitHighZero((uint) uu);
-            return CbitHighZero((uint) (uu >> 32));
+            if ((uu & 0xFFFFFFFF00000000) == 0)
+                return 32 + CbitHighZero((uint)uu);
+            return CbitHighZero((uint)(uu >> 32));
         }
 
         private static int CbitHighZero(uint u)
         {
-            if(u == 0)
+            if (u == 0)
                 return 32;
 
             var cbit = 0;
-            if((u & 0xFFFF0000) == 0)
+            if ((u & 0xFFFF0000) == 0)
             {
                 cbit += 16;
                 u <<= 16;
             }
 
-            if((u & 0xFF000000) == 0)
+            if ((u & 0xFF000000) == 0)
             {
                 cbit += 8;
                 u <<= 8;
             }
 
-            if((u & 0xF0000000) == 0)
+            if ((u & 0xF0000000) == 0)
             {
                 cbit += 4;
                 u <<= 4;
             }
 
-            if((u & 0xC0000000) == 0)
+            if ((u & 0xC0000000) == 0)
             {
                 cbit += 2;
                 u <<= 2;
             }
 
-            if((u & 0x80000000) == 0)
+            if ((u & 0x80000000) == 0)
                 cbit += 1;
             return cbit;
         }

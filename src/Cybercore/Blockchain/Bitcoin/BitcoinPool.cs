@@ -45,13 +45,13 @@ namespace Cybercore.Blockchain.Bitcoin
         protected object currentJobParams;
         protected BitcoinJobManager manager;
         private BitcoinTemplate coin;
-	public int submitcount = 0;
+        public int submitcount = 0;
 
         protected virtual async Task OnSubscribeAsync(StratumConnection connection, Timestamped<JsonRpcRequest> tsRequest)
         {
             var request = tsRequest.Value;
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var context = connection.ContextAs<BitcoinWorkerContext>();
@@ -81,7 +81,7 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var request = tsRequest.Value;
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var context = connection.ContextAs<BitcoinWorkerContext>();
@@ -97,7 +97,7 @@ namespace Cybercore.Blockchain.Bitcoin
             context.Miner = minerName;
             context.Worker = workerName;
 
-            if(context.IsAuthorized)
+            if (context.IsAuthorized)
             {
                 await connection.RespondAsync(context.IsAuthorized, request.Id);
 
@@ -107,9 +107,9 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 var nicehashDiff = await GetNicehashStaticMinDiff(connection, context.UserAgent, coin.Name, coin.GetAlgorithmName());
 
-                if(nicehashDiff.HasValue)
+                if (nicehashDiff.HasValue)
                 {
-                    if(!staticDiff.HasValue || nicehashDiff > staticDiff)
+                    if (!staticDiff.HasValue || nicehashDiff > staticDiff)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using API supplied difficulty of {nicehashDiff.Value}");
 
@@ -120,7 +120,7 @@ namespace Cybercore.Blockchain.Bitcoin
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using miner supplied difficulty of {staticDiff.Value}");
                 }
 
-                if(staticDiff.HasValue &&
+                if (staticDiff.HasValue &&
                    (context.VarDiff != null && staticDiff.Value >= context.VarDiff.Config.MinDiff ||
                     context.VarDiff == null && staticDiff.Value > context.Difficulty))
                 {
@@ -152,12 +152,12 @@ namespace Cybercore.Blockchain.Bitcoin
 
             try
             {
-                if(request.Id == null)
+                if (request.Id == null)
                     throw new StratumException(StratumError.MinusOne, "missing request id");
 
                 var requestAge = clock.Now - tsRequest.Timestamp.UtcDateTime;
 
-                if(requestAge > maxShareAge)
+                if (requestAge > maxShareAge)
                 {
                     logger.Warn(() => $"[{connection.ConnectionId}] Dropping stale share submission request (server overloaded?)");
                     return;
@@ -165,9 +165,9 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 context.LastActivity = clock.Now;
 
-                if(!context.IsAuthorized)
+                if (!context.IsAuthorized)
                     throw new StratumException(StratumError.UnauthorizedWorker, "unauthorized worker");
-                else if(!context.IsSubscribed)
+                else if (!context.IsSubscribed)
                     throw new StratumException(StratumError.NotSubscribed, "not subscribed");
 
                 var requestParams = request.ParamsAs<string[]>();
@@ -182,18 +182,18 @@ namespace Cybercore.Blockchain.Bitcoin
 
                 PublishTelemetry(TelemetryCategory.Share, clock.Now - tsRequest.Timestamp.UtcDateTime, true);
 
-                submitcount+=1;
+                submitcount += 1;
 
-		logger.Info(() => $"[{connection.ConnectionId}] Total Shares:{submitcount} Share accepted: D={Math.Round(share.Difficulty * coin.ShareMultiplier, 8)}");
+                logger.Info(() => $"[{connection.ConnectionId}] Total Shares:{submitcount} Share accepted: D={Math.Round(share.Difficulty * coin.ShareMultiplier, 8)}");
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                     poolStats.LastPoolBlockTime = clock.Now;
 
                 context.Stats.ValidShares++;
                 await UpdateVarDiffAsync(connection);
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 PublishTelemetry(TelemetryCategory.Share, clock.Now - tsRequest.Timestamp.UtcDateTime, false);
 
@@ -215,11 +215,11 @@ namespace Cybercore.Blockchain.Bitcoin
 
             try
             {
-                var requestedDiff = (double) Convert.ChangeType(request.Params, TypeCode.Double);
+                var requestedDiff = (double)Convert.ChangeType(request.Params, TypeCode.Double);
 
                 var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
 
-                if(requestedDiff > poolEndpoint.Difficulty)
+                if (requestedDiff > poolEndpoint.Difficulty)
                 {
                     context.SetDifficulty(requestedDiff);
                     await connection.NotifyAsync(BitcoinStratumMethods.SetDifficulty, new object[] { context.Difficulty });
@@ -228,7 +228,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 }
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, () => $"Unable to convert suggested difficulty {request.Params}");
             }
@@ -244,9 +244,9 @@ namespace Cybercore.Blockchain.Bitcoin
             var extensionParams = requestParams[1].ToObject<Dictionary<string, JToken>>();
             var result = new Dictionary<string, object>();
 
-            foreach(var extension in extensions)
+            foreach (var extension in extensions)
             {
-                switch(extension)
+                switch (extension)
                 {
                     case BitcoinStratumExtensions.VersionRolling:
                         ConfigureVersionRolling(connection, context, extensionParams, result);
@@ -266,7 +266,7 @@ namespace Cybercore.Blockchain.Bitcoin
         {
             var requestedMask = BitcoinConstants.VersionRollingPoolMask;
 
-            if(extensionParams.TryGetValue(BitcoinStratumExtensions.VersionRollingMask, out var requestedMaskValue))
+            if (extensionParams.TryGetValue(BitcoinStratumExtensions.VersionRollingMask, out var requestedMaskValue))
                 requestedMask = uint.Parse(requestedMaskValue.Value<string>(), NumberStyles.HexNumber);
 
             context.VersionRollingMask = BitcoinConstants.VersionRollingPoolMask & requestedMask;
@@ -284,7 +284,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
 
-            if(requestedDiff > poolEndpoint.Difficulty)
+            if (requestedDiff > poolEndpoint.Difficulty)
             {
                 context.VarDiff = null;
                 context.SetDifficulty(requestedDiff);
@@ -301,21 +301,21 @@ namespace Cybercore.Blockchain.Bitcoin
 
             logger.Info(() => "Broadcasting job");
 
-            return Guard(()=> Task.WhenAll(ForEachConnection(async connection =>
-            {
-                if(!connection.IsAlive)
-                    return;
+            return Guard(() => Task.WhenAll(ForEachConnection(async connection =>
+             {
+                 if (!connection.IsAlive)
+                     return;
 
-                var context = connection.ContextAs<BitcoinWorkerContext>();
+                 var context = connection.ContextAs<BitcoinWorkerContext>();
 
-                if(!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
-                    return;
+                 if (!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
+                     return;
 
-                if(context.ApplyPendingDifficulty())
-                    await connection.NotifyAsync(BitcoinStratumMethods.SetDifficulty, new object[] { context.Difficulty });
+                 if (context.ApplyPendingDifficulty())
+                     await connection.NotifyAsync(BitcoinStratumMethods.SetDifficulty, new object[] { context.Difficulty });
 
-                await connection.NotifyAsync(BitcoinStratumMethods.MiningNotify, currentJobParams);
-            })), ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
+                 await connection.NotifyAsync(BitcoinStratumMethods.MiningNotify, currentJobParams);
+             })), ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
         }
 
         public override double HashrateFromShares(double shares, double interval)
@@ -346,12 +346,12 @@ namespace Cybercore.Blockchain.Bitcoin
 
             await manager.StartAsync(ct);
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 disposables.Add(manager.Jobs
                     .Select(job => Observable.FromAsync(() =>
-                        Guard(()=> OnNewJobAsync(job),
-                            ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
+                        Guard(() => OnNewJobAsync(job),
+                            ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
                     .Concat()
                     .Subscribe(_ => { }, ex =>
                     {
@@ -386,7 +386,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             try
             {
-                switch(request.Method)
+                switch (request.Method)
                 {
                     case BitcoinStratumMethods.Subscribe:
                         await OnSubscribeAsync(connection, tsRequest);
@@ -426,7 +426,7 @@ namespace Cybercore.Blockchain.Bitcoin
                 }
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 await connection.RespondErrorAsync(ex.Code, ex.Message, request.Id, false);
             }
@@ -438,7 +438,7 @@ namespace Cybercore.Blockchain.Bitcoin
 
             context.EnqueueNewDifficulty(newDiff);
 
-            if(context.HasPendingDifficulty)
+            if (context.HasPendingDifficulty)
             {
                 context.ApplyPendingDifficulty();
 

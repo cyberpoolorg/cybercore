@@ -18,7 +18,7 @@ namespace Cybercore.Extensions
 
         public static T SafeExtensionDataAs<T>(this IDictionary<string, object> extra, string outerWrapper = null)
         {
-            if(extra != null)
+            if (extra != null)
             {
                 try
                 {

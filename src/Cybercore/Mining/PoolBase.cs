@@ -81,17 +81,17 @@ namespace Cybercore.Mining
 
         protected double? GetStaticDiffFromPassparts(string[] parts)
         {
-            if(parts == null || parts.Length == 0)
+            if (parts == null || parts.Length == 0)
                 return null;
 
-            foreach(var part in parts)
+            foreach (var part in parts)
             {
                 var m = regexStaticDiff.Match(part);
 
-                if(m.Success)
+                if (m.Success)
                 {
                     var str = m.Groups[1].Value.Trim();
-                    if(double.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out var diff) &&
+                    if (double.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out var diff) &&
                         !double.IsNaN(diff) && !double.IsInfinity(diff))
                         return diff;
                 }
@@ -107,9 +107,9 @@ namespace Cybercore.Mining
             context.Init(poolConfig, poolEndpoint.Difficulty, poolConfig.EnableInternalStratum == true ? poolEndpoint.VarDiff : null, clock);
             connection.SetContext(context);
 
-            if(context.VarDiff != null)
+            if (context.VarDiff != null)
             {
-                lock(context.VarDiff)
+                lock (context.VarDiff)
                 {
                     StartVarDiffIdleUpdate(connection, poolEndpoint);
                 }
@@ -127,7 +127,7 @@ namespace Cybercore.Mining
                 {
                     try
                     {
-                        if(connection.LastReceive == null)
+                        if (connection.LastReceive == null)
                         {
                             logger.Info(() => $"[{connection.ConnectionId}] Booting zombie-worker (post-connect silence)");
 
@@ -135,7 +135,7 @@ namespace Cybercore.Mining
                         }
                     }
 
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(ex);
                     }
@@ -151,16 +151,16 @@ namespace Cybercore.Mining
         {
             var context = connection.ContextAs<WorkerContextBase>();
 
-            if(context.VarDiff != null)
+            if (context.VarDiff != null)
             {
                 logger.Debug(() => $"[{connection.ConnectionId}] Updating VarDiff" + (isIdleUpdate ? " [idle]" : string.Empty));
 
                 VarDiffManager varDiffManager;
                 var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
 
-                lock(varDiffManagers)
+                lock (varDiffManagers)
                 {
-                    if(!varDiffManagers.TryGetValue(poolEndpoint, out varDiffManager))
+                    if (!varDiffManagers.TryGetValue(poolEndpoint, out varDiffManager))
                     {
                         varDiffManager = new VarDiffManager(poolEndpoint.VarDiff, clock);
                         varDiffManagers[poolEndpoint] = varDiffManager;
@@ -169,14 +169,14 @@ namespace Cybercore.Mining
 
                 double? newDiff = null;
 
-                lock(context.VarDiff)
+                lock (context.VarDiff)
                 {
                     StartVarDiffIdleUpdate(connection, poolEndpoint);
 
                     newDiff = varDiffManager.Update(context.VarDiff, context.Difficulty, isIdleUpdate);
                 }
 
-                if(newDiff != null)
+                if (newDiff != null)
                 {
                     logger.Info(() => $"[{connection.ConnectionId}] VarDiff update to {Math.Round(newDiff.Value, 8)}");
 
@@ -219,7 +219,7 @@ namespace Cybercore.Mining
         {
             var lastActivityAgo = clock.Now - context.LastActivity;
 
-            if(poolConfig.ClientConnectionTimeout > 0 &&
+            if (poolConfig.ClientConnectionTimeout > 0 &&
                lastActivityAgo.TotalSeconds > poolConfig.ClientConnectionTimeout)
             {
                 logger.Info(() => $"[[{connection.ConnectionId}] Booting zombie-worker (idle-timeout exceeded)");
@@ -233,7 +233,7 @@ namespace Cybercore.Mining
 
         protected void SetupBanning(ClusterConfig clusterConfig)
         {
-            if(poolConfig.Banning?.Enabled == true)
+            if (poolConfig.Banning?.Enabled == true)
             {
                 var managerType = clusterConfig.Banning?.Manager ?? BanManagerKind.Integrated;
                 banManager = ctx.ResolveKeyed<IBanManager>(managerType);
@@ -242,7 +242,7 @@ namespace Cybercore.Mining
 
         protected virtual async Task InitStatsAsync()
         {
-            if(clusterConfig.ShareRelay == null)
+            if (clusterConfig.ShareRelay == null)
                 await LoadStatsAsync();
         }
 
@@ -254,14 +254,14 @@ namespace Cybercore.Mining
 
                 var stats = await cf.Run(con => statsRepo.GetLastPoolStatsAsync(con, poolConfig.Id));
 
-                if(stats != null)
+                if (stats != null)
                 {
                     poolStats = mapper.Map<PoolStats>(stats);
                     blockchainStats = mapper.Map<BlockchainStats>(stats);
                 }
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Warn(ex, () => "Unable to load pool stats");
             }
@@ -271,11 +271,11 @@ namespace Cybercore.Mining
         {
             var totalShares = context.Stats.ValidShares + context.Stats.InvalidShares;
 
-            if(totalShares > config.CheckThreshold)
+            if (totalShares > config.CheckThreshold)
             {
-                var ratioBad = (double) context.Stats.InvalidShares / totalShares;
+                var ratioBad = (double)context.Stats.InvalidShares / totalShares;
 
-                if(ratioBad < config.InvalidPercent / 100.0)
+                if (ratioBad < config.InvalidPercent / 100.0)
                 {
                     context.Stats.ValidShares = 0;
                     context.Stats.InvalidShares = 0;
@@ -283,7 +283,7 @@ namespace Cybercore.Mining
 
                 else
                 {
-                    if(poolConfig.Banning?.Enabled == true &&
+                    if (poolConfig.Banning?.Enabled == true &&
                         (clusterConfig.Banning?.BanOnInvalidShares.HasValue == false ||
                             clusterConfig.Banning?.BanOnInvalidShares == true))
                     {
@@ -299,7 +299,7 @@ namespace Cybercore.Mining
 
         protected virtual async Task<double?> GetNicehashStaticMinDiff(StratumConnection connection, string userAgent, string coinName, string algoName)
         {
-            if(userAgent.Contains(NicehashConstants.NicehashUA, StringComparison.OrdinalIgnoreCase) &&
+            if (userAgent.Contains(NicehashConstants.NicehashUA, StringComparison.OrdinalIgnoreCase) &&
                clusterConfig.Nicehash?.EnableAutoDiff == true)
             {
                 return await nicehashService.GetStaticDiff(coinName, algoName, CancellationToken.None);
@@ -311,7 +311,7 @@ namespace Cybercore.Mining
         private StratumEndpoint PoolEndpoint2IPEndpoint(int port, PoolEndpoint pep)
         {
             var listenAddress = IPAddress.Parse("127.0.0.1");
-            if(!string.IsNullOrEmpty(pep.ListenAddress))
+            if (!string.IsNullOrEmpty(pep.ListenAddress))
                 listenAddress = pep.ListenAddress != "*" ? IPAddress.Parse(pep.ListenAddress) : IPAddress.Any;
 
             return new StratumEndpoint(new IPEndPoint(listenAddress, port), pep);
@@ -372,7 +372,7 @@ Pool Fee:               {(poolConfig.RewardRecipients?.Any() == true ? poolConfi
 
                 messageBus.NotifyPoolStatus(this, PoolStatus.Online);
 
-                if(poolConfig.EnableInternalStratum == true)
+                if (poolConfig.EnableInternalStratum == true)
                 {
                     var ipEndpoints = poolConfig.Ports.Keys
                         .Select(port => PoolEndpoint2IPEndpoint(port, poolConfig.Ports[port]))
@@ -382,17 +382,17 @@ Pool Fee:               {(poolConfig.RewardRecipients?.Any() == true ? poolConfi
                 }
             }
 
-            catch(PoolStartupAbortException)
+            catch (PoolStartupAbortException)
             {
                 throw;
             }
 
-            catch(TaskCanceledException)
+            catch (TaskCanceledException)
             {
                 throw;
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex);
                 throw;

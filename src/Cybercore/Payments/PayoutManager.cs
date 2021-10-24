@@ -65,11 +65,11 @@ namespace Cybercore.Payments
         private readonly ClusterConfig clusterConfig;
         private readonly CompositeDisposable disposables = new();
 
-        #if !DEBUG
+#if !DEBUG
         private static readonly TimeSpan initialRunDelay = TimeSpan.FromMinutes(1);
-        #else
+#else
         private static readonly TimeSpan initialRunDelay = TimeSpan.FromSeconds(15);
-        #endif
+#endif
 
         private void AttachPool(IMiningPool pool)
         {
@@ -78,13 +78,13 @@ namespace Cybercore.Payments
 
         private void OnPoolStatusNotification(PoolStatusNotification notification)
         {
-            if(notification.Status == PoolStatus.Online)
+            if (notification.Status == PoolStatus.Online)
                 AttachPool(notification.Pool);
         }
 
         private async Task ProcessPoolsAsync(CancellationToken ct)
         {
-            foreach(var pool in pools.Values.ToArray().Where(x => x.Config.Enabled && x.Config.PaymentProcessing.Enabled))
+            foreach (var pool in pools.Values.ToArray().Where(x => x.Config.Enabled && x.Config.PaymentProcessing.Enabled))
             {
                 var config = pool.Config;
 
@@ -106,14 +106,14 @@ namespace Cybercore.Payments
                     await PayoutPoolBalancesAsync(pool, config, handler, ct);
                 }
 
-                catch(InvalidOperationException ex)
+                catch (InvalidOperationException ex)
                 {
                     logger.Error(ex.InnerException ?? ex, () => $"[{config.Id}] Payment processing failed");
                 }
 
-                catch(AggregateException ex)
+                catch (AggregateException ex)
                 {
-                    switch(ex.InnerException)
+                    switch (ex.InnerException)
                     {
                         case HttpRequestException httpEx:
                             logger.Error(() => $"[{config.Id}] Payment processing failed: {httpEx.Message}");
@@ -125,7 +125,7 @@ namespace Cybercore.Payments
                     }
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex, () => $"[{config.Id}] Payment processing failed");
                 }
@@ -134,12 +134,12 @@ namespace Cybercore.Payments
 
         private static CoinFamily HandleFamilyOverride(CoinFamily family, PoolConfig pool)
         {
-            switch(family)
+            switch (family)
             {
                 case CoinFamily.Equihash:
                     var equihashTemplate = pool.Template.As<EquihashCoinTemplate>();
 
-                    if(equihashTemplate.UseBitcoinPayoutHandler)
+                    if (equihashTemplate.UseBitcoinPayoutHandler)
                         return CoinFamily.Bitcoin;
 
                     break;
@@ -153,18 +153,18 @@ namespace Cybercore.Payments
             var pendingBlocks = await cf.Run(con => blockRepo.GetPendingBlocksForPoolAsync(con, config.Id));
             var updatedBlocks = await handler.ClassifyBlocksAsync(pool, pendingBlocks, ct);
 
-            if(updatedBlocks.Any())
+            if (updatedBlocks.Any())
             {
-                foreach(var block in updatedBlocks.OrderBy(x => x.Created))
+                foreach (var block in updatedBlocks.OrderBy(x => x.Created))
                 {
                     logger.Info(() => $"Processing payments for pool {config.Id}, block {block.BlockHeight}");
 
                     await cf.RunTx(async (con, tx) =>
                     {
-                        if(!block.Effort.HasValue)
+                        if (!block.Effort.HasValue)
                             await CalculateBlockEffortAsync(pool, config, block, handler, ct);
 
-                        switch(block.Status)
+                        switch (block.Status)
                         {
                             case BlockStatus.Confirmed:
                                 var blockReward = await handler.UpdateBlockRewardBalancesAsync(con, tx, pool, block, ct);
@@ -191,14 +191,14 @@ namespace Cybercore.Payments
             var poolBalancesOverMinimum = await cf.Run(con =>
                 balanceRepo.GetPoolBalancesOverThresholdAsync(con, config.Id, config.PaymentProcessing.MinimumPayment));
 
-            if(poolBalancesOverMinimum.Length > 0)
+            if (poolBalancesOverMinimum.Length > 0)
             {
                 try
                 {
                     await handler.PayoutAsync(pool, poolBalancesOverMinimum, ct);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await NotifyPayoutFailureAsync(poolBalancesOverMinimum, config, ex);
                     throw;
@@ -228,13 +228,13 @@ namespace Cybercore.Payments
                 BlockStatus.Pending,
             }, block.Created));
 
-            if(lastBlock != null)
+            if (lastBlock != null)
                 from = lastBlock.Created;
 
             var accumulatedShareDiffForBlock = await cf.Run(con =>
                 shareRepo.GetAccumulatedShareDifficultyBetweenCreatedAsync(con, config.Id, from, to));
 
-            if(accumulatedShareDiffForBlock.HasValue)
+            if (accumulatedShareDiffForBlock.HasValue)
                 await handler.CalculateBlockEffortAsync(pool, block, accumulatedShareDiffForBlock.Value, ct);
         }
 
@@ -250,14 +250,14 @@ namespace Cybercore.Payments
 
                 await Task.Delay(initialRunDelay, ct);
 
-                while(!ct.IsCancellationRequested)
+                while (!ct.IsCancellationRequested)
                 {
                     try
                     {
                         await ProcessPoolsAsync(ct);
                     }
 
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(ex);
                     }

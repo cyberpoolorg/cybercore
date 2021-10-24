@@ -33,12 +33,12 @@ namespace Cybercore.Crypto.Hashing.Ethash
 
             fixed (byte* data = chars)
             {
-                if(LibEthash.ethash_get_default_dirname(data, chars.Length))
+                if (LibEthash.ethash_get_default_dirname(data, chars.Length))
                 {
                     int length;
-                    for(length = 0; length < chars.Length; length++)
+                    for (length = 0; length < chars.Length; length++)
                     {
-                        if(data[length] == 0)
+                        if (data[length] == 0)
                             break;
                     }
 
@@ -50,7 +50,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
 
         public void Dispose()
         {
-            if(handle != IntPtr.Zero)
+            if (handle != IntPtr.Zero)
             {
                 LibEthash.ethash_full_delete(handle);
                 handle = IntPtr.Zero;
@@ -61,7 +61,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
         {
             Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(dagDir), $"{nameof(dagDir)} must not be empty");
 
-            if(handle == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 await Task.Run(() =>
                 {
@@ -69,7 +69,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                     {
                         sem.WaitOne();
 
-                        if(handle != IntPtr.Zero)
+                        if (handle != IntPtr.Zero)
                             return;
 
                         logger.Info(() => $"Generating DAG for epoch {Epoch}");
@@ -86,7 +86,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                                 return !ct.IsCancellationRequested ? 0 : 1;
                             });
 
-                            if(handle == IntPtr.Zero)
+                            if (handle == IntPtr.Zero)
                                 throw new OutOfMemoryException("ethash_full_new IO or memory error");
 
                             logger.Info(() => $"Done generating DAG for epoch {Epoch} after {DateTime.Now - started}");
@@ -94,7 +94,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
 
                         finally
                         {
-                            if(light != IntPtr.Zero)
+                            if (light != IntPtr.Zero)
                                 LibEthash.ethash_light_delete(light);
                         }
                     }
@@ -121,7 +121,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                 LibEthash.ethash_full_compute(handle, input, nonce, ref value);
             }
 
-            if(value.success)
+            if (value.success)
             {
                 mixDigest = value.mix_hash.value;
                 result = value.result.value;

@@ -15,7 +15,7 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             validJobs.Insert(0, job);
 
-            while(validJobs.Count > 4)
+            while (validJobs.Count > 4)
                 validJobs.RemoveAt(validJobs.Count - 1);
         }
 

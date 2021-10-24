@@ -16,11 +16,11 @@ namespace Cybercore.Crypto
         {
             var hash = definition["hash"]?.Value<string>().ToLower();
 
-            if(string.IsNullOrEmpty(hash))
+            if (string.IsNullOrEmpty(hash))
                 throw new NotSupportedException("$Invalid or empty hash value {hash}");
 
             var args = definition["args"]?
-                .Select(token => token.Type == JTokenType.Object ? GetHash(ctx, (JObject) token) : token.Value<object>())
+                .Select(token => token.Type == JTokenType.Object ? GetHash(ctx, (JObject)token) : token.Value<object>())
                 .ToArray();
 
             return InstantiateHash(ctx, hash, args);
@@ -28,21 +28,21 @@ namespace Cybercore.Crypto
 
         private static IHashAlgorithm InstantiateHash(IComponentContext ctx, string name, object[] args)
         {
-            if(name == "reverse")
+            if (name == "reverse")
                 name = nameof(DigestReverser);
 
             var hasArgs = args != null && args.Length > 0;
-            if(!hasArgs && cache.TryGetValue(name, out var result))
+            if (!hasArgs && cache.TryGetValue(name, out var result))
                 return result;
 
             var hashClass = (typeof(Sha256D).Namespace + "." + name).ToLower();
             var hashType = typeof(Sha256D).Assembly.GetType(hashClass, true, true);
 
-            if(hasArgs)
-                result = (IHashAlgorithm) ctx.Resolve(hashType, args.Select((x, i) => new PositionalParameter(i, x)));
+            if (hasArgs)
+                result = (IHashAlgorithm)ctx.Resolve(hashType, args.Select((x, i) => new PositionalParameter(i, x)));
             else
             {
-                result = (IHashAlgorithm) ctx.Resolve(hashType);
+                result = (IHashAlgorithm)ctx.Resolve(hashType);
                 cache.TryAdd(name, result);
             }
 

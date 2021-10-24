@@ -27,7 +27,7 @@ namespace Cybercore.Blockchain.Ergo
         private static readonly IHashAlgorithm hasher = new Blake2b();
         private int extraNonceSize;
 
-        private static readonly uint nBase = (uint) Math.Pow(2, 26);
+        private static readonly uint nBase = (uint)Math.Pow(2, 26);
         private const uint IncreaseStart = 600 * 1024;
         private const uint IncreasePeriodForN = 50 * 1024;
         private const uint NIncreasementHeightMax = 9216000;
@@ -47,7 +47,7 @@ namespace Cybercore.Blockchain.Ergo
             var step = nBase;
             var iterationsNumber = (height - IncreaseStart) / IncreasePeriodForN + 1;
 
-            for(var i = 0; i < iterationsNumber; i++)
+            for (var i = 0; i < iterationsNumber; i++)
                 step = step / 100 * 105;
 
             return step;
@@ -65,7 +65,7 @@ namespace Cybercore.Blockchain.Ergo
 
         protected virtual byte[] SerializeCoinbase(string msg, string nonce)
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 stream.Write(msg.HexToByteArray());
                 stream.Write(nonce.HexToByteArray());
@@ -85,7 +85,7 @@ namespace Cybercore.Blockchain.Ergo
 
             var result = new BigInteger[32];
 
-            for(var i = 0; i < 32; i++)
+            for (var i = 0; i < 32; i++)
             {
                 var x = BitConverter.ToUInt32(extendedHash.Slice(i, 4)).ToBigEndian();
                 result[i] = x % n;
@@ -135,13 +135,13 @@ namespace Cybercore.Blockchain.Ergo
 
             var isBlockCandidate = fh < BlockTemplate.B;
 
-            if(!isBlockCandidate && ratio < 0.99)
+            if (!isBlockCandidate && ratio < 0.99)
             {
-                if(context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
+                if (context.VarDiff?.LastUpdate != null && context.PreviousDifficulty.HasValue)
                 {
                     ratio = fhTarget.Difficulty / context.PreviousDifficulty.Value;
 
-                    if(ratio < 0.99)
+                    if (ratio < 0.99)
                         throw new StratumException(StratumError.LowDifficultyShare, $"low difficulty share ({fhTarget.Difficulty})");
 
                     stratumDifficulty = context.PreviousDifficulty.Value;
@@ -158,7 +158,7 @@ namespace Cybercore.Blockchain.Ergo
                 Difficulty = stratumDifficulty / ErgoConstants.ShareMultiplier
             };
 
-            if(isBlockCandidate)
+            if (isBlockCandidate)
             {
                 result.IsBlockCandidate = true;
             }
@@ -181,16 +181,16 @@ namespace Cybercore.Blockchain.Ergo
 
             var context = worker.ContextAs<ErgoWorkerContext>();
 
-            if(nonce.Length != context.ExtraNonce1.Length + extraNonceSize * 2)
+            if (nonce.Length != context.ExtraNonce1.Length + extraNonceSize * 2)
                 throw new StratumException(StratumError.Other, "incorrect size of nonce");
 
-            if(!nonce.StartsWith(context.ExtraNonce1))
+            if (!nonce.StartsWith(context.ExtraNonce1))
                 throw new StratumException(StratumError.Other, $"incorrect extraNonce2 in nonce (expected {context.ExtraNonce1}, got {nonce.Substring(0, Math.Min(nonce.Length, context.ExtraNonce1.Length))})");
 
-            if(nTime == "undefined")
+            if (nTime == "undefined")
                 nTime = string.Empty;
 
-            if(!RegisterSubmit(nTime, nonce))
+            if (!RegisterSubmit(nTime, nonce))
                 throw new StratumException(StratumError.DuplicateShare, $"duplicate share");
 
             return ProcessShareInternal(worker, nonce);

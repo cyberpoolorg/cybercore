@@ -77,7 +77,7 @@ namespace Cybercore.Mining
 
         private void OnPoolStatusNotification(PoolStatusNotification notification)
         {
-            if(notification.Status == PoolStatus.Online)
+            if (notification.Status == PoolStatus.Online)
                 AttachPool(notification.Pool);
         }
 
@@ -93,34 +93,34 @@ namespace Cybercore.Mining
                     .DistinctBy(x => $"{x.Url}:{x.SharedEncryptionKey}")
                     .ToArray();
 
-                while(!ct.IsCancellationRequested)
+                while (!ct.IsCancellationRequested)
                 {
                     var lastMessageReceived = relays.Select(_ => clock.Now).ToArray();
 
                     try
                     {
-                        var sockets = relays.Select(x=> SetupSubSocket(x)).ToArray();
+                        var sockets = relays.Select(x => SetupSubSocket(x)).ToArray();
 
-                        using(new CompositeDisposable(sockets))
+                        using (new CompositeDisposable(sockets))
                         {
                             var pollItems = sockets.Select(_ => ZPollItem.CreateReceiver()).ToArray();
 
-                            while(!ct.IsCancellationRequested)
+                            while (!ct.IsCancellationRequested)
                             {
-                                if(sockets.PollIn(pollItems, out var messages, out var error, timeout))
+                                if (sockets.PollIn(pollItems, out var messages, out var error, timeout))
                                 {
-                                    for(var i = 0; i < messages.Length; i++)
+                                    for (var i = 0; i < messages.Length; i++)
                                     {
                                         var msg = messages[i];
 
-                                        if(msg != null)
+                                        if (msg != null)
                                         {
                                             lastMessageReceived[i] = clock.Now;
 
                                             queue.Post((relays[i].Url, msg));
                                         }
 
-                                        else if(clock.Now - lastMessageReceived[i] > reconnectTimeout)
+                                        else if (clock.Now - lastMessageReceived[i] > reconnectTimeout)
                                         {
                                             sockets[i].Dispose();
                                             sockets[i] = SetupSubSocket(relays[i], true);
@@ -131,15 +131,15 @@ namespace Cybercore.Mining
                                         }
                                     }
 
-                                    if(error != null)
+                                    if (error != null)
                                         logger.Error(() => $"{nameof(ShareReceiver)}: {error.Name} [{error.Name}] during receive");
                                 }
 
                                 else
                                 {
-                                    for(var i = 0; i < messages.Length; i++)
+                                    for (var i = 0; i < messages.Length; i++)
                                     {
-                                        if(clock.Now - lastMessageReceived[i] > reconnectTimeout)
+                                        if (clock.Now - lastMessageReceived[i] > reconnectTimeout)
                                         {
                                             sockets[i].Dispose();
                                             sockets[i] = SetupSubSocket(relays[i], true);
@@ -154,11 +154,11 @@ namespace Cybercore.Mining
                         }
                     }
 
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(() => $"{nameof(ShareReceiver)}: {ex}");
 
-                        if(!ct.IsCancellationRequested)
+                        if (!ct.IsCancellationRequested)
                             Thread.Sleep(5000);
                     }
                 }
@@ -172,9 +172,9 @@ namespace Cybercore.Mining
             subSocket.Connect(relay.Url);
             subSocket.SubscribeAll();
 
-            if(!silent)
+            if (!silent)
             {
-                if(subSocket.CurveServerKey != null)
+                if (subSocket.CurveServerKey != null)
                     logger.Info($"Monitoring external stratum {relay.Url} using Curve public-key {subSocket.CurveServerKey.ToHexString()}");
                 else
                     logger.Info($"Monitoring external stratum {relay.Url}");
@@ -192,19 +192,19 @@ namespace Cybercore.Mining
 
         private async Task ProcessMessages(CancellationToken ct)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
                     var (url, msg) = await queue.ReceiveAsync(ct);
 
-                    using(msg)
+                    using (msg)
                     {
                         ProcessMessage(url, msg);
                     }
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
                 }
@@ -217,33 +217,33 @@ namespace Cybercore.Mining
             var flags = msg[1].ReadUInt32();
             var data = msg[2].Read();
 
-            if(string.IsNullOrEmpty(topic) || !pools.TryGetValue(topic, out var poolContext))
+            if (string.IsNullOrEmpty(topic) || !pools.TryGetValue(topic, out var poolContext))
             {
                 logger.Warn(() => $"Received share for pool '{topic}' which is not known locally. Ignoring ...");
                 return;
             }
 
-            if(data?.Length == 0)
+            if (data?.Length == 0)
             {
                 logger.Warn(() => $"Received empty data from {url}/{topic}. Ignoring ...");
                 return;
             }
 
-            if((flags & ShareRelay.WireFormatMask) == 0)
+            if ((flags & ShareRelay.WireFormatMask) == 0)
                 flags = BitConverter.ToUInt32(BitConverter.GetBytes(flags).ToNewReverseArray());
 
-            var wireFormat = (ShareRelay.WireFormat) (flags & ShareRelay.WireFormatMask);
+            var wireFormat = (ShareRelay.WireFormat)(flags & ShareRelay.WireFormatMask);
 
             Share share = null;
 
-            switch(wireFormat)
+            switch (wireFormat)
             {
                 case ShareRelay.WireFormat.Json:
-                    using(var stream = new MemoryStream(data))
+                    using (var stream = new MemoryStream(data))
                     {
-                        using(var reader = new StreamReader(stream, Encoding.UTF8))
+                        using (var reader = new StreamReader(stream, Encoding.UTF8))
                         {
-                            using(var jreader = new JsonTextReader(reader))
+                            using (var jreader = new JsonTextReader(reader))
                             {
                                 share = serializer.Deserialize<Share>(jreader);
                             }
@@ -253,10 +253,10 @@ namespace Cybercore.Mining
                     break;
 
                 case ShareRelay.WireFormat.ProtocolBuffers:
-                    using(var stream = new MemoryStream(data))
+                    using (var stream = new MemoryStream(data))
                     {
                         share = Serializer.Deserialize<Share>(stream);
-                        share.BlockReward = (decimal) share.BlockRewardDouble;
+                        share.BlockReward = (decimal)share.BlockRewardDouble;
                     }
 
                     break;
@@ -266,7 +266,7 @@ namespace Cybercore.Mining
                     break;
             }
 
-            if(share == null)
+            if (share == null)
             {
                 logger.Error(() => $"Unable to deserialize share received from {url}/{topic}");
                 return;
@@ -276,19 +276,19 @@ namespace Cybercore.Mining
             share.Created = clock.Now;
             messageBus.SendMessage(new StratumShare(null, share));
 
-            if(poolContext != null)
+            if (poolContext != null)
             {
                 var pool = poolContext.Pool;
                 var shareMultiplier = poolContext.Pool.ShareMultiplier;
 
                 poolContext.Logger.Info(() => $"External {(!string.IsNullOrEmpty(share.Source) ? $"[{share.Source.ToUpper()}] " : string.Empty)}share accepted: D={Math.Round(share.Difficulty * shareMultiplier, 4)}");
 
-                if(pool.NetworkStats != null)
+                if (pool.NetworkStats != null)
                 {
-                    pool.NetworkStats.BlockHeight = (ulong) share.BlockHeight;
+                    pool.NetworkStats.BlockHeight = (ulong)share.BlockHeight;
                     pool.NetworkStats.NetworkDifficulty = share.NetworkDifficulty;
 
-                    if(poolContext.BlockHeight != share.BlockHeight)
+                    if (poolContext.BlockHeight != share.BlockHeight)
                     {
                         pool.NetworkStats.LastNetworkBlockTime = clock.Now;
                         poolContext.BlockHeight = share.BlockHeight;
@@ -306,7 +306,7 @@ namespace Cybercore.Mining
 
         protected override async Task ExecuteAsync(CancellationToken ct)
         {
-            if(clusterConfig.ShareRelays != null)
+            if (clusterConfig.ShareRelays != null)
             {
                 try
                 {

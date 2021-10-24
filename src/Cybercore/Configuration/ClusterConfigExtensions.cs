@@ -14,7 +14,7 @@ namespace Cybercore.Configuration
     {
         public T As<T>() where T : CoinTemplate
         {
-            return (T) this;
+            return (T)this;
         }
 
         public abstract string GetAlgorithmName();
@@ -29,7 +29,7 @@ namespace Cybercore.Configuration
         {
             coinbaseHasherValue = new Lazy<IHashAlgorithm>(() =>
             {
-                if(CoinbaseHasher == null)
+                if (CoinbaseHasher == null)
                     return null;
 
                 return HashAlgorithmFactory.GetHash(ComponentContext, CoinbaseHasher);
@@ -37,7 +37,7 @@ namespace Cybercore.Configuration
 
             headerHasherValue = new Lazy<IHashAlgorithm>(() =>
             {
-                if(HeaderHasher == null)
+                if (HeaderHasher == null)
                     return null;
 
                 return HashAlgorithmFactory.GetHash(ComponentContext, HeaderHasher);
@@ -45,7 +45,7 @@ namespace Cybercore.Configuration
 
             blockHasherValue = new Lazy<IHashAlgorithm>(() =>
             {
-                if(BlockHasher == null)
+                if (BlockHasher == null)
                     return null;
 
                 return HashAlgorithmFactory.GetHash(ComponentContext, BlockHasher);
@@ -53,7 +53,7 @@ namespace Cybercore.Configuration
 
             posBlockHasherValue = new Lazy<IHashAlgorithm>(() =>
             {
-                if(PoSBlockHasher == null)
+                if (PoSBlockHasher == null)
                     return null;
 
                 return HashAlgorithmFactory.GetHash(ComponentContext, PoSBlockHasher);
@@ -74,14 +74,14 @@ namespace Cybercore.Configuration
 
         public BitcoinNetworkParams GetNetwork(ChainName chain)
         {
-            if(Networks == null || Networks.Count == 0)
+            if (Networks == null || Networks.Count == 0)
                 return null;
 
-            if(chain == ChainName.Mainnet)
+            if (chain == ChainName.Mainnet)
                 return Networks["main"];
-            else if(chain == ChainName.Testnet)
+            else if (chain == ChainName.Testnet)
                 return Networks["test"];
-            else if(chain == ChainName.Regtest)
+            else if (chain == ChainName.Regtest)
                 return Networks["regtest"];
 
             throw new NotSupportedException("unsupported network type");
@@ -93,8 +93,8 @@ namespace Cybercore.Configuration
         {
             var hash = HeaderHasherValue;
 
-            if(hash.GetType() == typeof(DigestReverser))
-                return ((DigestReverser) hash).Upstream.GetType().Name;
+            if (hash.GetType() == typeof(DigestReverser))
+                return ((DigestReverser)hash).Upstream.GetType().Name;
 
             return hash.GetType().Name;
         }
@@ -110,7 +110,7 @@ namespace Cybercore.Configuration
             {
                 diff1Value = new Lazy<NBitcoin.BouncyCastle.Math.BigInteger>(() =>
                 {
-                    if(string.IsNullOrEmpty(Diff1))
+                    if (string.IsNullOrEmpty(Diff1))
                         throw new InvalidOperationException("Diff1 has not yet been initialized");
 
                     return new NBitcoin.BouncyCastle.Math.BigInteger(Diff1, 16);
@@ -118,7 +118,7 @@ namespace Cybercore.Configuration
 
                 diff1BValue = new Lazy<BigInteger>(() =>
                 {
-                    if(string.IsNullOrEmpty(Diff1))
+                    if (string.IsNullOrEmpty(Diff1))
                         throw new InvalidOperationException("Diff1 has not yet been initialized");
 
                     return BigInteger.Parse(Diff1, NumberStyles.HexNumber);
@@ -143,11 +143,11 @@ namespace Cybercore.Configuration
 
         public EquihashNetworkParams GetNetwork(ChainName chain)
         {
-            if(chain == ChainName.Mainnet)
+            if (chain == ChainName.Mainnet)
                 return Networks["main"];
-            else if(chain == ChainName.Testnet)
+            else if (chain == ChainName.Testnet)
                 return Networks["test"];
-            else if(chain == ChainName.Regtest)
+            else if (chain == ChainName.Regtest)
                 return Networks["regtest"];
 
             throw new NotSupportedException("unsupported network type");
@@ -169,7 +169,7 @@ namespace Cybercore.Configuration
 
         public override string GetAlgorithmName()
         {
-            switch(Hash)
+            switch (Hash)
             {
                 case CryptonightHashType.RandomX:
                     return "RandomX";

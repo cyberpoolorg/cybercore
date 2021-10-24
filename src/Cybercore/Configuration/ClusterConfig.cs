@@ -57,11 +57,11 @@ namespace Cybercore.Configuration
         [JsonIgnore]
         public static readonly Dictionary<CoinFamily, Type> Families = new()
         {
-            {CoinFamily.Bitcoin, typeof(BitcoinTemplate)},
-            {CoinFamily.Equihash, typeof(EquihashCoinTemplate)},
-            {CoinFamily.Cryptonote, typeof(CryptonoteCoinTemplate)},
-            {CoinFamily.Ethereum, typeof(EthereumCoinTemplate)},
-            {CoinFamily.Ergo, typeof(ErgoCoinTemplate)},
+            { CoinFamily.Bitcoin, typeof(BitcoinTemplate) },
+            { CoinFamily.Equihash, typeof(EquihashCoinTemplate) },
+            { CoinFamily.Cryptonote, typeof(CryptonoteCoinTemplate) },
+            { CoinFamily.Ethereum, typeof(EthereumCoinTemplate) },
+            { CoinFamily.Ergo, typeof(ErgoCoinTemplate) },
         };
     }
 
@@ -372,7 +372,7 @@ namespace Cybercore.Configuration
     {
         public bool Enabled { get; set; }
         public int Interval { get; set; }
-        public string CoinbaseString  { get; set; }
+        public string CoinbaseString { get; set; }
     }
 
     public partial class PersistenceConfig

@@ -19,7 +19,7 @@ namespace Cybercore.Blockchain.Ergo
             var epConfig = poolConfig.Daemons.First();
             var extra = epConfig.Extra.SafeExtensionDataAs<ErgoDaemonEndpointConfigExtra>();
 
-            if(logger != null && clusterConfig.PaymentProcessing?.Enabled == true &&
+            if (logger != null && clusterConfig.PaymentProcessing?.Enabled == true &&
                 poolConfig.PaymentProcessing?.Enabled == true && string.IsNullOrEmpty(extra?.ApiKey))
                 logger.ThrowLogPoolStartupException("Ergo daemon apiKey not provided");
 
@@ -33,10 +33,10 @@ namespace Cybercore.Blockchain.Ergo
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
             }));
 
-            if(!string.IsNullOrEmpty(extra.ApiKey))
+            if (!string.IsNullOrEmpty(extra.ApiKey))
                 result.RequestHeaders["api_key"] = extra.ApiKey;
 
-            if(!string.IsNullOrEmpty(epConfig.User))
+            if (!string.IsNullOrEmpty(epConfig.User))
             {
                 var auth = $"{epConfig.User}:{epConfig.Password}";
                 var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(auth));

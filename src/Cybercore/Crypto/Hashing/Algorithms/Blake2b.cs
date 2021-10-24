@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibMultihash.blake2b(input, output, (uint) data.Length, result.Length);
+                    LibMultihash.blake2b(input, output, (uint)data.Length, result.Length);
                 }
             }
         }

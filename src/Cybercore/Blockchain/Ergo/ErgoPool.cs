@@ -51,7 +51,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var request = tsRequest.Value;
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var context = connection.ContextAs<ErgoWorkerContext>();
@@ -78,7 +78,7 @@ namespace Cybercore.Blockchain.Ergo
         {
             var request = tsRequest.Value;
 
-            if(request.Id == null)
+            if (request.Id == null)
                 throw new StratumException(StratumError.MinusOne, "missing request id");
 
             var context = connection.ContextAs<ErgoWorkerContext>();
@@ -94,7 +94,7 @@ namespace Cybercore.Blockchain.Ergo
             context.Miner = minerName;
             context.Worker = workerName;
 
-            if(context.IsAuthorized)
+            if (context.IsAuthorized)
             {
                 await connection.RespondAsync(context.IsAuthorized, request.Id);
 
@@ -104,9 +104,9 @@ namespace Cybercore.Blockchain.Ergo
 
                 var nicehashDiff = await GetNicehashStaticMinDiff(connection, context.UserAgent, coin.Name, coin.GetAlgorithmName());
 
-                if(nicehashDiff.HasValue)
+                if (nicehashDiff.HasValue)
                 {
-                    if(!staticDiff.HasValue || nicehashDiff > staticDiff)
+                    if (!staticDiff.HasValue || nicehashDiff > staticDiff)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using API supplied difficulty of {nicehashDiff.Value}");
 
@@ -117,7 +117,7 @@ namespace Cybercore.Blockchain.Ergo
                         logger.Info(() => $"[{connection.ConnectionId}] Nicehash detected. Using miner supplied difficulty of {staticDiff.Value}");
                 }
 
-                if(staticDiff.HasValue &&
+                if (staticDiff.HasValue &&
                    (context.VarDiff != null && staticDiff.Value >= context.VarDiff.Config.MinDiff ||
                     context.VarDiff == null && staticDiff.Value > context.Difficulty))
                 {
@@ -149,12 +149,12 @@ namespace Cybercore.Blockchain.Ergo
 
             try
             {
-                if(request.Id == null)
+                if (request.Id == null)
                     throw new StratumException(StratumError.MinusOne, "missing request id");
 
                 var requestAge = clock.Now - tsRequest.Timestamp.UtcDateTime;
 
-                if(requestAge > maxShareAge)
+                if (requestAge > maxShareAge)
                 {
                     logger.Warn(() => $"[{connection.ConnectionId}] Dropping stale share submission request (server overloaded?)");
                     return;
@@ -162,9 +162,9 @@ namespace Cybercore.Blockchain.Ergo
 
                 context.LastActivity = clock.Now;
 
-                if(!context.IsAuthorized)
+                if (!context.IsAuthorized)
                     throw new StratumException(StratumError.UnauthorizedWorker, "unauthorized worker");
-                else if(!context.IsSubscribed)
+                else if (!context.IsSubscribed)
                     throw new StratumException(StratumError.NotSubscribed, "not subscribed");
 
                 var requestParams = request.ParamsAs<string[]>();
@@ -180,14 +180,14 @@ namespace Cybercore.Blockchain.Ergo
 
                 logger.Info(() => $"[{connection.ConnectionId}] Share accepted: D={Math.Round(share.Difficulty * ErgoConstants.ShareMultiplier, 3)}");
 
-                if(share.IsBlockCandidate)
+                if (share.IsBlockCandidate)
                     poolStats.LastPoolBlockTime = clock.Now;
 
                 context.Stats.ValidShares++;
                 await UpdateVarDiffAsync(connection);
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 PublishTelemetry(TelemetryCategory.Share, clock.Now - tsRequest.Timestamp.UtcDateTime, false);
 
@@ -206,29 +206,29 @@ namespace Cybercore.Blockchain.Ergo
 
             logger.Info(() => "Broadcasting job");
 
-            return Guard(()=> Task.WhenAll(ForEachConnection(async connection =>
-            {
-                if(!connection.IsAlive)
-                    return;
+            return Guard(() => Task.WhenAll(ForEachConnection(async connection =>
+             {
+                 if (!connection.IsAlive)
+                     return;
 
-                var context = connection.ContextAs<ErgoWorkerContext>();
+                 var context = connection.ContextAs<ErgoWorkerContext>();
 
-                if(!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
-                    return;
+                 if (!context.IsSubscribed || !context.IsAuthorized || CloseIfDead(connection, context))
+                     return;
 
-                await SendJob(connection, context, currentJobParams);
+                 await SendJob(connection, context, currentJobParams);
 
-            })), ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
+             })), ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"));
         }
 
         private async Task SendJob(StratumConnection connection, ErgoWorkerContext context, object[] jobParams)
         {
             var jobParamsActual = new object[jobParams.Length];
 
-            for(var i = 0; i < jobParamsActual.Length; i++)
+            for (var i = 0; i < jobParamsActual.Length; i++)
                 jobParamsActual[i] = jobParams[i];
 
-            var target = new BigRational(BitcoinConstants.Diff1 * (BigInteger) (1 / context.Difficulty * 0x10000), 0x10000).GetWholePart();
+            var target = new BigRational(BitcoinConstants.Diff1 * (BigInteger)(1 / context.Difficulty * 0x10000), 0x10000).GetWholePart();
             jobParamsActual[6] = target.ToString();
 
             await connection.NotifyAsync(BitcoinStratumMethods.SetDifficulty, new object[] { 1 });
@@ -269,12 +269,12 @@ namespace Cybercore.Blockchain.Ergo
 
             await manager.StartAsync(ct);
 
-            if(poolConfig.EnableInternalStratum == true)
+            if (poolConfig.EnableInternalStratum == true)
             {
                 disposables.Add(manager.Jobs
                     .Select(job => Observable.FromAsync(() =>
-                        Guard(()=> OnNewJobAsync(job),
-                            ex=> logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
+                        Guard(() => OnNewJobAsync(job),
+                            ex => logger.Debug(() => $"{nameof(OnNewJobAsync)}: {ex.Message}"))))
                     .Concat()
                     .Subscribe(_ => { }, ex =>
                     {
@@ -309,7 +309,7 @@ namespace Cybercore.Blockchain.Ergo
 
             try
             {
-                switch(request.Method)
+                switch (request.Method)
                 {
                     case BitcoinStratumMethods.Subscribe:
                         await OnSubscribeAsync(connection, tsRequest);
@@ -331,7 +331,7 @@ namespace Cybercore.Blockchain.Ergo
                 }
             }
 
-            catch(StratumException ex)
+            catch (StratumException ex)
             {
                 await connection.RespondErrorAsync(ex.Code, ex.Message, request.Id, false);
             }
@@ -339,9 +339,9 @@ namespace Cybercore.Blockchain.Ergo
 
         protected override async Task<double?> GetNicehashStaticMinDiff(StratumConnection connection, string userAgent, string coinName, string algoName)
         {
-            var result= await base.GetNicehashStaticMinDiff(connection, userAgent, coinName, algoName);
+            var result = await base.GetNicehashStaticMinDiff(connection, userAgent, coinName, algoName);
 
-            if(result.HasValue)
+            if (result.HasValue)
                 result = result.Value / uint.MaxValue;
 
             return result;
@@ -353,7 +353,7 @@ namespace Cybercore.Blockchain.Ergo
 
             context.EnqueueNewDifficulty(newDiff);
 
-            if(context.HasPendingDifficulty)
+            if (context.HasPendingDifficulty)
             {
                 context.ApplyPendingDifficulty();
 

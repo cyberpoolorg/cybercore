@@ -92,55 +92,55 @@ namespace Cybercore.Blockchain.Ethereum
 
             var coin = poolConfig.Template.As<EthereumCoinTemplate>();
             var pageSize = 100;
-            var pageCount = (int) Math.Ceiling(blocks.Length / (double) pageSize);
+            var pageCount = (int)Math.Ceiling(blocks.Length / (double)pageSize);
             var blockCache = new Dictionary<long, DaemonResponses.Block>();
             var result = new List<Block>();
 
-            for(var i = 0; i < pageCount; i++)
+            for (var i = 0; i < pageCount; i++)
             {
                 var page = blocks
                     .Skip(i * pageSize)
                     .Take(pageSize)
                     .ToArray();
 
-                var latestBlockResponses = await daemon.ExecuteCmdAllAsync<DaemonResponses.Block>(logger, EC.GetBlockByNumber, ct, new[] { (object) "latest", true });
+                var latestBlockResponses = await daemon.ExecuteCmdAllAsync<DaemonResponses.Block>(logger, EC.GetBlockByNumber, ct, new[] { (object)"latest", true });
                 var latestBlockHeight = latestBlockResponses.First(x => x.Error == null && x.Response?.Height != null).Response.Height.Value;
-                var blockInfos = await FetchBlocks(blockCache, ct, page.Select(block => (long) block.BlockHeight).ToArray());
+                var blockInfos = await FetchBlocks(blockCache, ct, page.Select(block => (long)block.BlockHeight).ToArray());
 
-                for(var j = 0; j < blockInfos.Length; j++)
+                for (var j = 0; j < blockInfos.Length; j++)
                 {
                     var blockInfo = blockInfos[j];
                     var block = page[j];
 
-                    block.ConfirmationProgress = Math.Min(1.0d, (double) (latestBlockHeight - block.BlockHeight) / EthereumConstants.MinConfimations);
+                    block.ConfirmationProgress = Math.Min(1.0d, (double)(latestBlockHeight - block.BlockHeight) / EthereumConstants.MinConfimations);
                     result.Add(block);
 
                     messageBus.NotifyBlockConfirmationProgress(poolConfig.Id, block, coin);
 
-                    if(string.Equals(blockInfo.Miner, poolConfig.Address, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(blockInfo.Miner, poolConfig.Address, StringComparison.OrdinalIgnoreCase))
                     {
-                        if(latestBlockHeight - block.BlockHeight >= EthereumConstants.MinConfimations)
+                        if (latestBlockHeight - block.BlockHeight >= EthereumConstants.MinConfimations)
                         {
-                            var blockHashResponses = await daemon.ExecuteCmdAllAsync<DaemonResponses.Block>(logger, EC.GetBlockByNumber, ct, new[] { (object) block.BlockHeight.ToStringHexWithPrefix(), true });
+                            var blockHashResponses = await daemon.ExecuteCmdAllAsync<DaemonResponses.Block>(logger, EC.GetBlockByNumber, ct, new[] { (object)block.BlockHeight.ToStringHexWithPrefix(), true });
                             var blockHash = blockHashResponses.First(x => x.Error == null && x.Response?.Hash != null).Response.Hash;
                             var baseGas = blockHashResponses.First(x => x.Error == null && x.Response?.BaseFeePerGas != null).Response.BaseFeePerGas;
                             var gasUsed = blockHashResponses.First(x => x.Error == null && x.Response?.GasUsed != null).Response.GasUsed;
-                            var burnedFee = (decimal) 0;
+                            var burnedFee = (decimal)0;
 
-                            if(extraPoolConfig?.ChainTypeOverride == "Ethereum")
+                            if (extraPoolConfig?.ChainTypeOverride == "Ethereum")
                                 burnedFee = (baseGas * gasUsed / EthereumConstants.Wei);
 
                             block.Hash = blockHash;
                             block.Status = BlockStatus.Confirmed;
                             block.ConfirmationProgress = 1;
-                            block.BlockHeight = (ulong) blockInfo.Height;
+                            block.BlockHeight = (ulong)blockInfo.Height;
                             block.Reward = GetBaseBlockReward(chainType, block.BlockHeight);
                             block.Type = "block";
 
-                            if(extraConfig?.KeepUncles == false)
+                            if (extraConfig?.KeepUncles == false)
                                 block.Reward += blockInfo.Uncles.Length * (block.Reward / 32);
 
-                            if(extraConfig?.KeepTransactionFees == false && blockInfo.Transactions?.Length > 0)
+                            if (extraConfig?.KeepTransactionFees == false && blockInfo.Transactions?.Length > 0)
                                 block.Reward += await GetTxRewardAsync(blockInfo, ct) - burnedFee;
 
                             logger.Info(() => $"[{LogCategory}] Unlocked block {block.BlockHeight} worth {FormatAmount(block.Reward)}");
@@ -155,14 +155,14 @@ namespace Cybercore.Blockchain.Ethereum
                     var heightMax = Math.Min(block.BlockHeight + BlockSearchOffset, latestBlockHeight);
                     var range = new List<long>();
 
-                    for(var k = heightMin; k < heightMax; k++)
-                        range.Add((long) k);
+                    for (var k = heightMin; k < heightMax; k++)
+                        range.Add((long)k);
 
                     var blockInfo2s = await FetchBlocks(blockCache, ct, range.ToArray());
 
-                    foreach(var blockInfo2 in blockInfo2s)
+                    foreach (var blockInfo2 in blockInfo2s)
                     {
-                        if(blockInfo2.Uncles.Length > 0)
+                        if (blockInfo2.Uncles.Length > 0)
                         {
                             var uncleBatch = blockInfo2.Uncles.Select((x, index) => new DaemonCmd(EC.GetUncleByBlockNumberAndIndex,
                                     new[] { blockInfo2.Height.Value.ToStringHexWithPrefix(), index.ToStringHexWithPrefix() }))
@@ -178,12 +178,12 @@ namespace Cybercore.Blockchain.Ethereum
                                 .Select(x => x.Response.ToObject<DaemonResponses.Block>())
                                 .FirstOrDefault(x => string.Equals(x.Miner, poolConfig.Address, StringComparison.OrdinalIgnoreCase));
 
-                            if(uncle != null)
+                            if (uncle != null)
                             {
-                                if(latestBlockHeight - uncle.Height.Value >= EthereumConstants.MinConfimations)
+                                if (latestBlockHeight - uncle.Height.Value >= EthereumConstants.MinConfimations)
                                 {
                                     var blockHashUncleResponses = await daemon.ExecuteCmdAllAsync<DaemonResponses.Block>(logger, EC.GetBlockByNumber, ct,
-                                        new[] { (object) uncle.Height.Value.ToStringHexWithPrefix(), true });
+                                        new[] { (object)uncle.Height.Value.ToStringHexWithPrefix(), true });
                                     var blockHashUncle = blockHashUncleResponses.First(x => x.Error == null && x.Response?.Hash != null).Response.Hash;
 
                                     block.Hash = blockHashUncle;
@@ -206,7 +206,7 @@ namespace Cybercore.Blockchain.Ethereum
                         }
                     }
 
-                    if(block.Status == BlockStatus.Pending && block.ConfirmationProgress > 0.75)
+                    if (block.Status == BlockStatus.Pending && block.ConfirmationProgress > 0.75)
                     {
                         block.Hash = "0x0";
                         block.Status = BlockStatus.Orphaned;
@@ -240,7 +240,7 @@ namespace Cybercore.Blockchain.Ethereum
         {
             var infoResponse = await daemon.ExecuteCmdSingleAsync<string>(logger, EC.GetPeerCount, ct);
 
-            if(networkType == EthereumNetworkType.Mainnet &&
+            if (networkType == EthereumNetworkType.Mainnet &&
                 (infoResponse.Error != null || string.IsNullOrEmpty(infoResponse.Response) ||
                     infoResponse.Response.IntegralFromHex<int>() < EthereumConstants.MinPayoutPeerCount))
             {
@@ -250,7 +250,7 @@ namespace Cybercore.Blockchain.Ethereum
 
             var txHashes = new List<string>();
 
-            foreach(var balance in balances)
+            foreach (var balance in balances)
             {
                 try
                 {
@@ -258,7 +258,7 @@ namespace Cybercore.Blockchain.Ethereum
                     txHashes.Add(txHash);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
 
@@ -266,7 +266,7 @@ namespace Cybercore.Blockchain.Ethereum
                 }
             }
 
-            if(txHashes.Any())
+            if (txHashes.Any())
                 NotifyPayoutSuccess(poolConfig.Id, balances, txHashes.ToArray(), null);
         }
 
@@ -276,7 +276,7 @@ namespace Cybercore.Blockchain.Ethereum
         {
             var cacheMisses = blockHeights.Where(x => !blockCache.ContainsKey(x)).ToArray();
 
-            if(cacheMisses.Any())
+            if (cacheMisses.Any())
             {
                 var blockBatch = cacheMisses.Select(height => new DaemonCmd(EC.GetBlockByNumber,
                     new[]
@@ -293,8 +293,8 @@ namespace Cybercore.Blockchain.Ethereum
                     .Where(x => x != null)
                     .ToArray();
 
-                foreach(var block in transformed)
-                    blockCache[(long) block.Height.Value] = block;
+                foreach (var block in transformed)
+                    blockCache[(long)block.Height.Value] = block;
             }
 
             return blockHeights.Select(x => blockCache[x]).ToArray();
@@ -302,13 +302,13 @@ namespace Cybercore.Blockchain.Ethereum
 
         internal static decimal GetBaseBlockReward(GethChainType chainType, ulong height)
         {
-            switch(chainType)
+            switch (chainType)
             {
                 case GethChainType.Ethereum:
-                    if(height >= EthereumConstants.ConstantinopleHardForkHeight)
+                    if (height >= EthereumConstants.ConstantinopleHardForkHeight)
                         return EthereumConstants.ConstantinopleBlockReward;
 
-                    if(height >= EthereumConstants.ByzantiumHardForkHeight)
+                    if (height >= EthereumConstants.ByzantiumHardForkHeight)
                         return EthereumConstants.ByzantiumBlockReward;
 
                     return EthereumConstants.HomesteadBlockReward;
@@ -328,13 +328,13 @@ namespace Cybercore.Blockchain.Ethereum
 
             var results = await daemon.ExecuteBatchAnyAsync(logger, ct, batch);
 
-            if(results.Any(x => x.Error != null))
+            if (results.Any(x => x.Error != null))
                 throw new Exception($"Error fetching tx receipts: {string.Join(", ", results.Where(x => x.Error != null).Select(y => y.Error.Message))}");
 
             var gasUsed = results.Select(x => x.Response.ToObject<TransactionReceipt>())
                 .ToDictionary(x => x.TransactionHash, x => x.GasUsed);
 
-            var result = blockInfo.Transactions.Sum(x => (ulong) gasUsed[x.Hash] * ((decimal) x.GasPrice / EthereumConstants.Wei));
+            var result = blockInfo.Transactions.Sum(x => (ulong)gasUsed[x.Hash] * ((decimal)x.GasPrice / EthereumConstants.Wei));
 
             return result;
         }
@@ -358,12 +358,12 @@ namespace Cybercore.Blockchain.Ethereum
 
             var results = await daemon.ExecuteBatchAnyAsync(logger, ct, commands);
 
-            if(results.Any(x => x.Error != null))
+            if (results.Any(x => x.Error != null))
             {
                 var errors = results.Take(1).Where(x => x.Error != null)
                     .ToArray();
 
-                if(errors.Any())
+                if (errors.Any())
                     throw new Exception($"Chain detection failed: {string.Join(", ", errors.Select(y => y.Error.Message))}");
             }
 
@@ -377,7 +377,7 @@ namespace Cybercore.Blockchain.Ethereum
         {
             logger.Info(() => $"[{LogCategory}] Sending {FormatAmount(balance.Amount)} to {balance.Address}");
 
-            var amount = (BigInteger) Math.Floor(balance.Amount * EthereumConstants.Wei);
+            var amount = (BigInteger)Math.Floor(balance.Amount * EthereumConstants.Wei);
 
             var request = new SendTransactionRequest
             {
@@ -386,7 +386,7 @@ namespace Cybercore.Blockchain.Ethereum
                 Value = amount.ToString("x").TrimStart('0'),
             };
 
-            if(extraPoolConfig?.ChainTypeOverride == "Ethereum")
+            if (extraPoolConfig?.ChainTypeOverride == "Ethereum")
             {
                 var maxPriorityFeePerGas = await daemon.ExecuteCmdSingleAsync<string>(logger, EC.MaxPriorityFeePerGas, ct);
                 request.Gas = extraConfig.Gas;
@@ -396,10 +396,10 @@ namespace Cybercore.Blockchain.Ethereum
 
             var response = await daemon.ExecuteCmdSingleAsync<string>(logger, EC.SendTx, ct, new[] { request });
 
-            if(response.Error != null)
+            if (response.Error != null)
                 throw new Exception($"{EC.SendTx} returned error: {response.Error.Message} code {response.Error.Code}");
 
-            if(string.IsNullOrEmpty(response.Response) || EthereumConstants.ZeroHashPattern.IsMatch(response.Response))
+            if (string.IsNullOrEmpty(response.Response) || EthereumConstants.ZeroHashPattern.IsMatch(response.Response))
                 throw new Exception($"{EC.SendTx} did not return a valid transaction hash");
 
             var txHash = response.Response;

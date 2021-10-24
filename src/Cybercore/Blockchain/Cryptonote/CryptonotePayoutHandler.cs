@@ -65,10 +65,10 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-            if(response.Error == null)
+            if (response.Error == null)
             {
                 var txHash = response.Response.TxHash;
-                var txFee = (decimal) response.Response.Fee / coin.SmallestUnit;
+                var txFee = (decimal)response.Response.Fee / coin.SmallestUnit;
 
                 logger.Info(() => $"[{LogCategory}] Payment transaction id: {txHash}, TxFee {FormatAmount(txFee)}, TxKey {response.Response.TxKey}");
 
@@ -90,10 +90,10 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-            if(response.Error == null)
+            if (response.Error == null)
             {
                 var txHashes = response.Response.TxHashList;
-                var txFees = response.Response.FeeList.Select(x => (decimal) x / coin.SmallestUnit).ToArray();
+                var txFees = response.Response.FeeList.Select(x => (decimal)x / coin.SmallestUnit).ToArray();
 
                 logger.Info(() => $"[{LogCategory}] Split-Payment transaction ids: {string.Join(", ", txHashes)}, Corresponding TxFees were {string.Join(", ", txFees.Select(FormatAmount))}");
 
@@ -113,14 +113,14 @@ namespace Cybercore.Blockchain.Cryptonote
 
         private async Task UpdateNetworkTypeAsync(CancellationToken ct)
         {
-            if(!networkType.HasValue)
+            if (!networkType.HasValue)
             {
                 var infoResponse = await daemon.ExecuteCmdAnyAsync(logger, CNC.GetInfo, ct, true);
                 var info = infoResponse.Response.ToObject<GetInfoResponse>();
 
-                if(!string.IsNullOrEmpty(info.NetType))
+                if (!string.IsNullOrEmpty(info.NetType))
                 {
-                    switch(info.NetType.ToLower())
+                    switch (info.NetType.ToLower())
                     {
                         case "mainnet":
                             networkType = CryptonoteNetworkType.Main;
@@ -146,7 +146,7 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var response = await walletDaemon.ExecuteCmdSingleAsync<GetBalanceResponse>(logger, CryptonoteWalletCommands.GetBalance, ct);
 
-            if(response.Error != null)
+            if (response.Error != null)
             {
                 logger.Error(() => $"[{LogCategory}] Daemon command '{CryptonoteWalletCommands.GetBalance}' returned error: {response.Error.Message} code {response.Error.Code}");
                 return false;
@@ -155,7 +155,7 @@ namespace Cybercore.Blockchain.Cryptonote
             var unlockedBalance = Math.Floor(response.Response.UnlockedBalance / coin.SmallestUnit);
             var balance = Math.Floor(response.Response.Balance / coin.SmallestUnit);
 
-            if(unlockedBalance < requiredAmount)
+            if (unlockedBalance < requiredAmount)
             {
                 logger.Info(() => $"[{LogCategory}] {FormatAmount(requiredAmount)} unlocked balance required for payment, but only have {FormatAmount(unlockedBalance)} of {FormatAmount(balance)} available yet. Will try again.");
                 return false;
@@ -169,7 +169,7 @@ namespace Cybercore.Blockchain.Cryptonote
         {
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-            if(!await EnsureBalance(balances.Sum(x => x.Amount), coin, ct))
+            if (!await EnsureBalance(balances.Sum(x => x.Amount), coin, ct))
                 return false;
 
             var request = new TransferRequest
@@ -183,23 +183,23 @@ namespace Cybercore.Blockchain.Cryptonote
                         return new TransferDestination
                         {
                             Address = address,
-                            Amount = (ulong) Math.Floor(x.Amount * coin.SmallestUnit)
+                            Amount = (ulong)Math.Floor(x.Amount * coin.SmallestUnit)
                         };
                     }).ToArray(),
 
                 GetTxKey = true
             };
 
-            if(request.Destinations.Length == 0)
+            if (request.Destinations.Length == 0)
                 return true;
 
             logger.Info(() => $"[{LogCategory}] Paying {FormatAmount(balances.Sum(x => x.Amount))} to {balances.Length} addresses:\n{string.Join("\n", balances.OrderByDescending(x => x.Amount).Select(x => $"{FormatAmount(x.Amount)} to {x.Address}"))}");
 
             var transferResponse = await walletDaemon.ExecuteCmdSingleAsync<TransferResponse>(logger, CryptonoteWalletCommands.Transfer, ct, request);
 
-            if(transferResponse.Error?.Code == -4)
+            if (transferResponse.Error?.Code == -4)
             {
-                if(walletSupportsTransferSplit)
+                if (walletSupportsTransferSplit)
                 {
                     logger.Error(() => $"[{LogCategory}] Daemon command '{CryptonoteWalletCommands.Transfer}' returned error: {transferResponse.Error.Message} code {transferResponse.Error.Code}");
                     logger.Info(() => $"[{LogCategory}] Retrying transfer using {CryptonoteWalletCommands.TransferSplit}");
@@ -218,15 +218,15 @@ namespace Cybercore.Blockchain.Cryptonote
             paymentId = null;
             var index = input.IndexOf(PayoutConstants.PayoutInfoSeperator);
 
-            if(index != -1)
+            if (index != -1)
             {
                 address = input[..index];
 
-                if(index + 1 < input.Length)
+                if (index + 1 < input.Length)
                 {
                     paymentId = input[(index + 1)..];
 
-                    if(paymentId.Length != CryptonoteConstants.PaymentIdHexLength)
+                    if (paymentId.Length != CryptonoteConstants.PaymentIdHexLength)
                         paymentId = null;
                 }
             }
@@ -242,7 +242,7 @@ namespace Cybercore.Blockchain.Cryptonote
             ExtractAddressAndPaymentId(balance.Address, out var address, out var paymentId);
             var isIntegratedAddress = string.IsNullOrEmpty(paymentId);
 
-            if(!await EnsureBalance(balance.Amount, coin, ct))
+            if (!await EnsureBalance(balance.Amount, coin, ct))
                 return false;
 
             var request = new TransferRequest
@@ -259,19 +259,19 @@ namespace Cybercore.Blockchain.Cryptonote
                 GetTxKey = true
             };
 
-            if(!isIntegratedAddress)
+            if (!isIntegratedAddress)
                 request.PaymentId = paymentId;
 
-            if(!isIntegratedAddress)
+            if (!isIntegratedAddress)
                 logger.Info(() => $"[{LogCategory}] Paying {FormatAmount(balance.Amount)} to address {balance.Address} with paymentId {paymentId}");
             else
                 logger.Info(() => $"[{LogCategory}] Paying {FormatAmount(balance.Amount)} to integrated address {balance.Address}");
 
             var result = await walletDaemon.ExecuteCmdSingleAsync<TransferResponse>(logger, CryptonoteWalletCommands.Transfer, ct, request);
 
-            if(walletSupportsTransferSplit)
+            if (walletSupportsTransferSplit)
             {
-                if(result.Error?.Code == -4)
+                if (result.Error?.Code == -4)
                 {
                     logger.Info(() => $"[{LogCategory}] Retrying transfer using {CryptonoteWalletCommands.TransferSplit}");
 
@@ -300,7 +300,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 .Where(x => string.IsNullOrEmpty(x.Category))
                 .Select(x =>
                 {
-                    if(string.IsNullOrEmpty(x.HttpPath))
+                    if (string.IsNullOrEmpty(x.HttpPath))
                         x.HttpPath = CryptonoteConstants.DaemonRpcLocation;
 
                     return x;
@@ -314,7 +314,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 .Where(x => x.Category?.ToLower() == CryptonoteConstants.WalletDaemonCategory)
                 .Select(x =>
                 {
-                    if(string.IsNullOrEmpty(x.HttpPath))
+                    if (string.IsNullOrEmpty(x.HttpPath))
                         x.HttpPath = CryptonoteConstants.DaemonRpcLocation;
 
                     return x;
@@ -337,17 +337,17 @@ namespace Cybercore.Blockchain.Cryptonote
 
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
             var pageSize = 100;
-            var pageCount = (int) Math.Ceiling(blocks.Length / (double) pageSize);
+            var pageCount = (int)Math.Ceiling(blocks.Length / (double)pageSize);
             var result = new List<Block>();
 
-            for(var i = 0; i < pageCount; i++)
+            for (var i = 0; i < pageCount; i++)
             {
                 var page = blocks
                     .Skip(i * pageSize)
                     .Take(pageSize)
                     .ToArray();
 
-                for(var j = 0; j < page.Length; j++)
+                for (var j = 0; j < page.Length; j++)
                 {
                     var block = page[j];
 
@@ -358,13 +358,13 @@ namespace Cybercore.Blockchain.Cryptonote
                             Height = block.BlockHeight
                         });
 
-                    if(rpcResult.Error != null)
+                    if (rpcResult.Error != null)
                     {
                         logger.Debug(() => $"[{LogCategory}] Daemon reports error '{rpcResult.Error.Message}' (Code {rpcResult.Error.Code}) for block {block.BlockHeight}");
                         continue;
                     }
 
-                    if(rpcResult.Response?.BlockHeader == null)
+                    if (rpcResult.Response?.BlockHeader == null)
                     {
                         logger.Debug(() => $"[{LogCategory}] Daemon returned no header for block {block.BlockHeight}");
                         continue;
@@ -372,12 +372,12 @@ namespace Cybercore.Blockchain.Cryptonote
 
                     var blockHeader = rpcResult.Response.BlockHeader;
 
-                    block.ConfirmationProgress = Math.Min(1.0d, (double) blockHeader.Depth / CryptonoteConstants.PayoutMinBlockConfirmations);
+                    block.ConfirmationProgress = Math.Min(1.0d, (double)blockHeader.Depth / CryptonoteConstants.PayoutMinBlockConfirmations);
                     result.Add(block);
 
                     messageBus.NotifyBlockConfirmationProgress(poolConfig.Id, block, coin);
 
-                    if(blockHeader.IsOrphaned || blockHeader.Hash != block.TransactionConfirmationData)
+                    if (blockHeader.IsOrphaned || blockHeader.Hash != block.TransactionConfirmationData)
                     {
                         block.Status = BlockStatus.Orphaned;
                         block.Reward = 0;
@@ -386,11 +386,11 @@ namespace Cybercore.Blockchain.Cryptonote
                         continue;
                     }
 
-                    if(blockHeader.Depth >= CryptonoteConstants.PayoutMinBlockConfirmations)
+                    if (blockHeader.Depth >= CryptonoteConstants.PayoutMinBlockConfirmations)
                     {
                         block.Status = BlockStatus.Confirmed;
                         block.ConfirmationProgress = 1;
-                        block.Reward = ((decimal) blockHeader.Reward / coin.SmallestUnit) * coin.BlockrewardMultiplier;
+                        block.Reward = ((decimal)blockHeader.Reward / coin.SmallestUnit) * coin.BlockrewardMultiplier;
 
                         logger.Info(() => $"[{LogCategory}] Unlocked block {block.BlockHeight} worth {FormatAmount(block.Reward)}");
 
@@ -424,7 +424,7 @@ namespace Cybercore.Blockchain.Cryptonote
 
             var coin = poolConfig.Template.As<CryptonoteCoinTemplate>();
 
-	#if !DEBUG
+#if !DEBUG
             var infoResponse = await daemon.ExecuteCmdAnyAsync<GetInfoResponse>(logger, CNC.GetInfo, ct);
             if (infoResponse.Error != null || infoResponse.Response == null ||
                 infoResponse.Response.IncomingConnectionsCount + infoResponse.Response.OutgoingConnectionsCount < 3)
@@ -432,7 +432,7 @@ namespace Cybercore.Blockchain.Cryptonote
                 logger.Warn(() => $"[{LogCategory}] Payout aborted. Not enough peers (4 required)");
                 return;
             }
-	#endif
+#endif
             balances = balances
                 .Where(x =>
                 {
@@ -441,10 +441,10 @@ namespace Cybercore.Blockchain.Cryptonote
                     var addressPrefix = LibCryptonote.DecodeAddress(address);
                     var addressIntegratedPrefix = LibCryptonote.DecodeIntegratedAddress(address);
 
-                    switch(networkType)
+                    switch (networkType)
                     {
                         case CryptonoteNetworkType.Main:
-                            if(addressPrefix != coin.AddressPrefix &&
+                            if (addressPrefix != coin.AddressPrefix &&
                                 addressIntegratedPrefix != coin.AddressPrefixIntegrated)
                             {
                                 logger.Warn(() => $"[{LogCategory}] Excluding payment to invalid address {x.Address}");
@@ -454,7 +454,7 @@ namespace Cybercore.Blockchain.Cryptonote
                             break;
 
                         case CryptonoteNetworkType.Stage:
-                            if(addressPrefix != coin.AddressPrefixStagenet &&
+                            if (addressPrefix != coin.AddressPrefixStagenet &&
                                addressIntegratedPrefix != coin.AddressPrefixIntegratedStagenet)
                             {
                                 logger.Warn(() => $"[{LogCategory}] Excluding payment to invalid address {x.Address}");
@@ -464,7 +464,7 @@ namespace Cybercore.Blockchain.Cryptonote
                             break;
 
                         case CryptonoteNetworkType.Test:
-                            if(addressPrefix != coin.AddressPrefixTestnet &&
+                            if (addressPrefix != coin.AddressPrefixTestnet &&
                                 addressIntegratedPrefix != coin.AddressPrefixIntegratedTestnet)
                             {
                                 logger.Warn(() => $"[{LogCategory}] Excluding payment to invalid address {x.Address}");
@@ -487,15 +487,15 @@ namespace Cybercore.Blockchain.Cryptonote
                     var isIntegratedAddress = false;
                     var addressIntegratedPrefix = LibCryptonote.DecodeIntegratedAddress(address);
 
-                    switch(networkType)
+                    switch (networkType)
                     {
                         case CryptonoteNetworkType.Main:
-                            if(addressIntegratedPrefix == coin.AddressPrefixIntegrated)
+                            if (addressIntegratedPrefix == coin.AddressPrefixIntegrated)
                                 isIntegratedAddress = true;
                             break;
 
                         case CryptonoteNetworkType.Test:
-                            if(addressIntegratedPrefix == coin.AddressPrefixIntegratedTestnet)
+                            if (addressIntegratedPrefix == coin.AddressPrefixIntegratedTestnet)
                                 isIntegratedAddress = true;
                             break;
                     }
@@ -505,36 +505,36 @@ namespace Cybercore.Blockchain.Cryptonote
                 .OrderByDescending(x => x.Amount)
                 .ToArray();
 
-            if(simpleBalances.Length > 0)
-	#if false
+            if (simpleBalances.Length > 0)
+#if false
                 await PayoutBatch(simpleBalances);
-	#else
+#else
             {
                 var maxBatchSize = 15;
                 var pageSize = maxBatchSize;
-                var pageCount = (int) Math.Ceiling((double) simpleBalances.Length / pageSize);
+                var pageCount = (int)Math.Ceiling((double)simpleBalances.Length / pageSize);
 
-                for(var i = 0; i < pageCount; i++)
+                for (var i = 0; i < pageCount; i++)
                 {
                     var page = simpleBalances
                         .Skip(i * pageSize)
                         .Take(pageSize)
                         .ToArray();
 
-                    if(!await PayoutBatch(page, ct))
+                    if (!await PayoutBatch(page, ct))
                         break;
                 }
             }
-	#endif
+#endif
             var minimumPaymentToPaymentId = extraConfig?.MinimumPaymentToPaymentId ?? poolConfig.PaymentProcessing.MinimumPayment;
 
             var paymentIdBalances = balances.Except(simpleBalances)
                 .Where(x => x.Amount >= minimumPaymentToPaymentId)
                 .ToArray();
 
-            foreach(var balance in paymentIdBalances)
+            foreach (var balance in paymentIdBalances)
             {
-                if(!await PayoutToPaymentId(balance, ct))
+                if (!await PayoutToPaymentId(balance, ct))
                     break;
             }
 

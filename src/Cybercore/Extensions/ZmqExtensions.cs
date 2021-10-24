@@ -21,7 +21,7 @@ namespace Cybercore.Extensions
 
         private static readonly Lazy<KeyData> ownKey = new(() =>
         {
-            if(!ZContext.Has("curve"))
+            if (!ZContext.Has("curve"))
                 throw new NotSupportedException("ZMQ library does not support curve");
 
             Z85.CurveKeypair(out var pubKey, out var secretKey);
@@ -34,7 +34,7 @@ namespace Cybercore.Extensions
 
         private static byte[] DeriveKey(string password, int length = 32)
         {
-            using(var kbd = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), noSalt, PasswordIterations))
+            using (var kbd = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), noSalt, PasswordIterations))
             {
                 var block = kbd.GetBytes(length);
                 return block;
@@ -63,7 +63,7 @@ namespace Cybercore.Extensions
 
                 return Disposable.Create(() =>
                 {
-                    using(new CompositeDisposable(monitor, cts))
+                    using (new CompositeDisposable(monitor, cts))
                     {
                         monitor.AllEvents -= OnEvent;
                         monitor.Stop();
@@ -81,16 +81,16 @@ namespace Cybercore.Extensions
         {
             keyPlain = keyPlain?.Trim();
 
-            if(string.IsNullOrEmpty(keyPlain))
+            if (string.IsNullOrEmpty(keyPlain))
                 return;
 
-            if(!ZContext.Has("curve"))
+            if (!ZContext.Has("curve"))
                 logger.ThrowLogPoolStartupException("Unable to initialize ZMQ Curve Transport-Layer-Security. Your ZMQ library was compiled without Curve support!");
 
             byte[] keyBytes = null;
             byte[] serverPubKey = null;
 
-            if(!knownKeys.TryGetValue(keyPlain, out var serverKeys))
+            if (!knownKeys.TryGetValue(keyPlain, out var serverKeys))
             {
                 keyBytes = DeriveKey(keyPlain, 32);
 
@@ -113,15 +113,15 @@ namespace Cybercore.Extensions
         {
             keyPlain = keyPlain?.Trim();
 
-            if(string.IsNullOrEmpty(keyPlain))
+            if (string.IsNullOrEmpty(keyPlain))
                 return;
 
-            if(!ZContext.Has("curve"))
+            if (!ZContext.Has("curve"))
                 logger.ThrowLogPoolStartupException("Unable to initialize ZMQ Curve Transport-Layer-Security. Your ZMQ library was compiled without Curve support!");
 
             byte[] serverPubKey = null;
 
-            if(!knownKeys.TryGetValue(keyPlain, out var serverKeys))
+            if (!knownKeys.TryGetValue(keyPlain, out var serverKeys))
             {
                 var keyBytes = DeriveKey(keyPlain, 32);
 

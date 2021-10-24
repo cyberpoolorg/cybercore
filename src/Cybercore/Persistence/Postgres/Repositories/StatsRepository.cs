@@ -48,7 +48,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             var mapped = mapper.Map<Entities.MinerWorkerPerformanceStats>(stats);
 
-            if(string.IsNullOrEmpty(mapped.Worker))
+            if (string.IsNullOrEmpty(mapped.Worker))
                 mapped.Worker = string.Empty;
 
             const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, created) " +
@@ -64,7 +64,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
             const string query = "SELECT * FROM poolstats WHERE poolid = @poolId ORDER BY created DESC FETCH NEXT 1 ROWS ONLY";
 
             var entity = await con.QuerySingleOrDefaultAsync<Entities.PoolStats>(query, new { poolId });
-            if(entity == null)
+            if (entity == null)
                 return null;
 
             return mapper.Map<PoolStats>(entity);
@@ -85,7 +85,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             string trunc = null;
 
-            switch(interval)
+            switch (interval)
             {
                 case SampleInterval.Hour:
                     trunc = "hour";
@@ -121,7 +121,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             var result = await con.QuerySingleOrDefaultAsync<MinerStats>(query, new { poolId, miner }, tx);
 
-            if(result != null)
+            if (result != null)
             {
                 query = "SELECT * FROM payments WHERE poolid = @poolId AND address = @miner" +
                     " ORDER BY created DESC LIMIT 1";
@@ -133,10 +133,10 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
                 var lastUpdate = await con.QuerySingleOrDefaultAsync<DateTime?>(query, new { poolId, miner }, tx);
 
-                if(lastUpdate.HasValue && (clock.Now - DateTime.SpecifyKind(lastUpdate.Value, DateTimeKind.Utc) > MinerStatsMaxAge))
+                if (lastUpdate.HasValue && (clock.Now - DateTime.SpecifyKind(lastUpdate.Value, DateTimeKind.Utc) > MinerStatsMaxAge))
                     lastUpdate = null;
 
-                if(lastUpdate.HasValue)
+                if (lastUpdate.HasValue)
                 {
                     query = "SELECT * FROM minerstats WHERE poolid = @poolId AND miner = @miner AND created = @created";
 
@@ -144,11 +144,11 @@ namespace Cybercore.Persistence.Postgres.Repositories
                         .Select(mapper.Map<MinerWorkerPerformanceStats>)
                         .ToArray();
 
-                    if(stats.Any())
+                    if (stats.Any())
                     {
-                        foreach(var stat in stats)
+                        foreach (var stat in stats)
                         {
-                            if(stat.Worker == null)
+                            if (stat.Worker == null)
                             {
                                 stat.Worker = string.Empty;
                                 break;
@@ -212,7 +212,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
             var entities = (await con.QueryAsync<Entities.MinerWorkerPerformanceStats>(query, new { poolId, miner, start, end }))
                 .ToArray();
 
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 entity.Worker ??= string.Empty;
                 entity.Created = entity.Created.AddMinutes(3 * entity.Partition);
@@ -248,7 +248,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
             var entities = (await con.QueryAsync<Entities.MinerWorkerPerformanceStats>(query, new { poolId, miner, start, end }))
                 .ToArray();
 
-            foreach(var entity in entities)
+            foreach (var entity in entities)
                 entity.Worker ??= string.Empty;
 
             var entitiesByDate = entities
@@ -281,7 +281,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
             var entities = (await con.QueryAsync<Entities.MinerWorkerPerformanceStats>(query, new { poolId, miner, start, end }))
                 .ToArray();
 
-            foreach(var entity in entities)
+            foreach (var entity in entities)
                 entity.Worker ??= string.Empty;
 
             var entitiesByDate = entities
@@ -331,7 +331,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
         public async Task<MinerWorkerPerformanceStats[]> PagePoolMinersByHashrateAsync(IDbConnection con, string poolId, DateTime from, int page, int pageSize)
         {
-            logger.LogInvoke(new object[] { (object) poolId, from, page, pageSize });
+            logger.LogInvoke(new object[] { (object)poolId, from, page, pageSize });
 
             const string query = "WITH tmp AS " +
                 "( " +

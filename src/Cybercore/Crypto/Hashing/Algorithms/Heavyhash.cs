@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibMultihash.heavyhash(input, output, (uint) data.Length);
+                    LibMultihash.heavyhash(input, output, (uint)data.Length);
                 }
             }
         }

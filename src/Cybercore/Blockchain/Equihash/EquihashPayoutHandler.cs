@@ -64,22 +64,22 @@ namespace Cybercore.Blockchain.Equihash
             chainConfig = poolConfig.Template.As<EquihashCoinTemplate>().GetNetwork(network.ChainName);
 
             var response = await daemon.ExecuteCmdSingleAsync<JObject>(logger, EquihashCommands.ZShieldCoinbase, ct);
-            supportsNativeShielding = response.Error.Code != (int) BitcoinRPCErrorCode.RPC_METHOD_NOT_FOUND;
+            supportsNativeShielding = response.Error.Code != (int)BitcoinRPCErrorCode.RPC_METHOD_NOT_FOUND;
         }
 
         public override async Task PayoutAsync(IMiningPool pool, Balance[] balances, CancellationToken ct)
         {
             Contract.RequiresNonNull(balances, nameof(balances));
 
-            if(supportsNativeShielding)
+            if (supportsNativeShielding)
                 await ShieldCoinbaseAsync(ct);
             else
                 await ShieldCoinbaseEmulatedAsync(ct);
 
             var pageSize = 50;
-            var pageCount = (int) Math.Ceiling(balances.Length / (double) pageSize);
+            var pageCount = (int)Math.Ceiling(balances.Length / (double)pageSize);
 
-            for(var i = 0; i < pageCount; i++)
+            for (var i = 0; i < pageCount; i++)
             {
                 var didUnlockWallet = false;
 
@@ -93,7 +93,7 @@ namespace Cybercore.Blockchain.Equihash
                     .Select(x => new ZSendManyRecipient { Address = x.Address, Amount = Math.Round(x.Amount, 8) })
                     .ToList();
 
-                if(amounts.Count == 0)
+                if (amounts.Count == 0)
                     return;
 
                 var pageAmount = amounts.Sum(x => x.Amount);
@@ -104,7 +104,7 @@ namespace Cybercore.Blockchain.Equihash
                     ZMinConfirmations,
                 });
 
-                if(balanceResult.Error != null || (decimal) (double) balanceResult.Response - TransferFee < pageAmount)
+                if (balanceResult.Error != null || (decimal)(double)balanceResult.Response - TransferFee < pageAmount)
                 {
                     logger.Info(() => $"[{LogCategory}] Insufficient shielded balance for payment of {FormatAmount(pageAmount)}");
                     return;
@@ -123,11 +123,11 @@ namespace Cybercore.Blockchain.Equihash
             tryTransfer:
                 var result = await daemon.ExecuteCmdSingleAsync<string>(logger, EquihashCommands.ZSendMany, ct, args);
 
-                if(result.Error == null)
+                if (result.Error == null)
                 {
                     var operationId = result.Response;
 
-                    if(string.IsNullOrEmpty(operationId))
+                    if (string.IsNullOrEmpty(operationId))
                         logger.Error(() => $"[{LogCategory}] {EquihashCommands.ZSendMany} did not return a operation id!");
                     else
                     {
@@ -135,23 +135,23 @@ namespace Cybercore.Blockchain.Equihash
 
                         var continueWaiting = true;
 
-                        while(continueWaiting)
+                        while (continueWaiting)
                         {
                             var operationResultResponse = await daemon.ExecuteCmdSingleAsync<ZCashAsyncOperationStatus[]>(logger,
                                 EquihashCommands.ZGetOperationResult, ct, new object[] { new object[] { operationId } });
 
-                            if(operationResultResponse.Error == null &&
+                            if (operationResultResponse.Error == null &&
                                 operationResultResponse.Response?.Any(x => x.OperationId == operationId) == true)
                             {
                                 var operationResult = operationResultResponse.Response.First(x => x.OperationId == operationId);
 
-                                if(!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
+                                if (!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
                                 {
                                     logger.Error(() => $"Unrecognized operation status: {operationResult.Status}");
                                     break;
                                 }
 
-                                switch(status)
+                                switch (status)
                                 {
                                     case ZOperationStatus.Success:
                                         var txId = operationResult.Result?.Value<string>("txid") ?? string.Empty;
@@ -181,9 +181,9 @@ namespace Cybercore.Blockchain.Equihash
 
                 else
                 {
-                    if(result.Error.Code == (int) BitcoinRPCErrorCode.RPC_WALLET_UNLOCK_NEEDED && !didUnlockWallet)
+                    if (result.Error.Code == (int)BitcoinRPCErrorCode.RPC_WALLET_UNLOCK_NEEDED && !didUnlockWallet)
                     {
-                        if(!string.IsNullOrEmpty(extraPoolPaymentProcessingConfig?.WalletPassword))
+                        if (!string.IsNullOrEmpty(extraPoolPaymentProcessingConfig?.WalletPassword))
                         {
                             logger.Info(() => $"[{LogCategory}] Unlocking wallet");
 
@@ -193,7 +193,7 @@ namespace Cybercore.Blockchain.Equihash
                                 (object) 5
                             });
 
-                            if(unlockResult.Error == null)
+                            if (unlockResult.Error == null)
                             {
                                 didUnlockWallet = true;
                                 goto tryTransfer;
@@ -242,9 +242,9 @@ namespace Cybercore.Blockchain.Equihash
 
             var result = await daemon.ExecuteCmdSingleAsync<ZCashShieldingResponse>(logger, EquihashCommands.ZShieldCoinbase, ct, args);
 
-            if(result.Error != null)
+            if (result.Error != null)
             {
-                if(result.Error.Code == -6)
+                if (result.Error.Code == -6)
                     logger.Info(() => $"[{LogCategory}] No funds to shield");
                 else
                     logger.Error(() => $"[{LogCategory}] {EquihashCommands.ZShieldCoinbase} returned error: {result.Error.Message} code {result.Error.Code}");
@@ -258,23 +258,23 @@ namespace Cybercore.Blockchain.Equihash
 
             var continueWaiting = true;
 
-            while(continueWaiting)
+            while (continueWaiting)
             {
                 var operationResultResponse = await daemon.ExecuteCmdSingleAsync<ZCashAsyncOperationStatus[]>(logger,
                     EquihashCommands.ZGetOperationResult, ct, new object[] { new object[] { operationId } });
 
-                if(operationResultResponse.Error == null &&
+                if (operationResultResponse.Error == null &&
                     operationResultResponse.Response?.Any(x => x.OperationId == operationId) == true)
                 {
                     var operationResult = operationResultResponse.Response.First(x => x.OperationId == operationId);
 
-                    if(!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
+                    if (!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
                     {
                         logger.Error(() => $"Unrecognized operation status: {operationResult.Status}");
                         break;
                     }
 
-                    switch(status)
+                    switch (status)
                     {
                         case ZOperationStatus.Success:
                             logger.Info(() => $"[{LogCategory}] {EquihashCommands.ZShieldCoinbase} successful");
@@ -302,7 +302,7 @@ namespace Cybercore.Blockchain.Equihash
 
             var unspentResult = await daemon.ExecuteCmdSingleAsync<Utxo[]>(logger, BitcoinCommands.ListUnspent, ct);
 
-            if(unspentResult.Error != null)
+            if (unspentResult.Error != null)
             {
                 logger.Error(() => $"[{LogCategory}] {BitcoinCommands.ListUnspent} returned error: {unspentResult.Error.Message} code {unspentResult.Error.Code}");
                 return;
@@ -312,7 +312,7 @@ namespace Cybercore.Blockchain.Equihash
                 .Where(x => x.Spendable && x.Address == poolConfig.Address)
                 .Sum(x => x.Amount);
 
-            if(balance - TransferFee <= TransferFee)
+            if (balance - TransferFee <= TransferFee)
             {
                 logger.Info(() => $"[{LogCategory}] Balance {FormatAmount(balance)} too small for emulated shielding");
                 return;
@@ -339,7 +339,7 @@ namespace Cybercore.Blockchain.Equihash
 
             var sendResult = await daemon.ExecuteCmdSingleAsync<string>(logger, EquihashCommands.ZSendMany, ct, args);
 
-            if(sendResult.Error != null)
+            if (sendResult.Error != null)
             {
                 logger.Error(() => $"[{LogCategory}] {EquihashCommands.ZSendMany} returned error: {unspentResult.Error.Message} code {unspentResult.Error.Code}");
                 return;
@@ -351,23 +351,23 @@ namespace Cybercore.Blockchain.Equihash
 
             var continueWaiting = true;
 
-            while(continueWaiting)
+            while (continueWaiting)
             {
                 var operationResultResponse = await daemon.ExecuteCmdSingleAsync<ZCashAsyncOperationStatus[]>(logger,
                     EquihashCommands.ZGetOperationResult, ct, new object[] { new object[] { operationId } });
 
-                if(operationResultResponse.Error == null &&
+                if (operationResultResponse.Error == null &&
                     operationResultResponse.Response?.Any(x => x.OperationId == operationId) == true)
                 {
                     var operationResult = operationResultResponse.Response.First(x => x.OperationId == operationId);
 
-                    if(!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
+                    if (!Enum.TryParse(operationResult.Status, true, out ZOperationStatus status))
                     {
                         logger.Error(() => $"Unrecognized operation status: {operationResult.Status}");
                         break;
                     }
 
-                    switch(status)
+                    switch (status)
                     {
                         case ZOperationStatus.Success:
                             var txId = operationResult.Result?.Value<string>("txid") ?? string.Empty;

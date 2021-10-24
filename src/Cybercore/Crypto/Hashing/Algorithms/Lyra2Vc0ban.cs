@@ -15,7 +15,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibLyrahash.lyra2vc0ban(input, output, (uint) data.Length);
+                    LibLyrahash.lyra2vc0ban(input, output, (uint)data.Length);
                 }
             }
         }

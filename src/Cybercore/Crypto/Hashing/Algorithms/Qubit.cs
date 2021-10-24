@@ -14,7 +14,7 @@ namespace Cybercore.Crypto.Hashing.Algorithms
             {
                 fixed (byte* output = result)
                 {
-                    LibMultihash.qubit(input, output, (uint) data.Length);
+                    LibMultihash.qubit(input, output, (uint)data.Length);
                 }
             }
         }

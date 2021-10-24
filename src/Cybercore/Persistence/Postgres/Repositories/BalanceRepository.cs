@@ -47,7 +47,7 @@ namespace Cybercore.Persistence.Postgres.Repositories
             var balance = (await con.QueryAsync<Entities.Balance>(query, new { poolId, address }, tx))
                 .FirstOrDefault();
 
-            if(balance == null)
+            if (balance == null)
             {
                 balance = new Entities.Balance
                 {

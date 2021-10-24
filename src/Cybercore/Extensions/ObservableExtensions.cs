@@ -50,7 +50,7 @@ namespace Cybercore.Extensions
                     action(x);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
                 }

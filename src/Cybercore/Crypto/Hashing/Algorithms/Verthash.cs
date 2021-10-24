@@ -39,10 +39,10 @@ namespace Cybercore.Crypto.Hashing.Algorithms
         {
             var vertHashDataFile = "verthash.dat";
 
-            if(poolConfig.Extra.TryGetValue("vertHashDataFile", out var result))
-                vertHashDataFile = ((string) result).Trim();
+            if (poolConfig.Extra.TryGetValue("vertHashDataFile", out var result))
+                vertHashDataFile = ((string)result).Trim();
 
-            logger.Info(()=> $"Loading verthash data file {vertHashDataFile}");
+            logger.Info(() => $"Loading verthash data file {vertHashDataFile}");
 
             return LibMultihash.verthash_init(vertHashDataFile, false) == 0;
         }

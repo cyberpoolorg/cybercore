@@ -35,7 +35,7 @@ namespace Cybercore.Mining
     public class StatsRecorder : BackgroundService
     {
         public StatsRecorder(
-	    IComponentContext ctx,
+        IComponentContext ctx,
             IMasterClock clock,
             IConnectionFactory cf,
             IMessageBus messageBus,
@@ -85,7 +85,7 @@ namespace Cybercore.Mining
         private readonly TimeSpan gcInterval;
         private readonly TimeSpan hashrateCalculationWindow;
         private readonly TimeSpan cleanupDays;
-	private const double HashrateBoostFactor = 1.1d;
+        private const double HashrateBoostFactor = 1.1d;
         private const int RetryCount = 4;
         private IAsyncPolicy readFaultPolicy;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
@@ -99,7 +99,7 @@ namespace Cybercore.Mining
 
         private void OnPoolStatusNotification(PoolStatusNotification notification)
         {
-            if(notification.Status == PoolStatus.Online)
+            if (notification.Status == PoolStatus.Online)
                 AttachPool(notification.Pool);
         }
 
@@ -109,17 +109,17 @@ namespace Cybercore.Mining
             var timeFrom = now.Add(-hashrateCalculationWindow);
             var from = DateTime.MinValue;
             var to = clock.Now;
-            var poolShares = (double) 0;
-            var netDiff = (double) 0;
+            var poolShares = (double)0;
+            var netDiff = (double)0;
 
             var stats = new MinerWorkerPerformanceStats
             {
                 Created = now
             };
 
-            foreach(var poolId in pools.Keys)
+            foreach (var poolId in pools.Keys)
             {
-                if(ct.IsCancellationRequested)
+                if (ct.IsCancellationRequested)
                     return;
 
                 stats.PoolId = poolId;
@@ -133,37 +133,37 @@ namespace Cybercore.Mining
 
                 var byMiner = result.GroupBy(x => x.Miner).ToArray();
 
-		var lastBlock = await cf.Run(con => blockRepo.GetBlockBeforeAsync(con, poolId, new[]
-		{
-			BlockStatus.Confirmed,
-			BlockStatus.Orphaned,
-			BlockStatus.Pending,
-		}, to));
+                var lastBlock = await cf.Run(con => blockRepo.GetBlockBeforeAsync(con, poolId, new[]
+                {
+            BlockStatus.Confirmed,
+            BlockStatus.Orphaned,
+            BlockStatus.Pending,
+        }, to));
 
-		if(lastBlock != null)
-			from = lastBlock.Created;
+                if (lastBlock != null)
+                    from = lastBlock.Created;
 
-		var accumulatedShareDiffForBlock = await cf.Run(con => shareRepo.GetAccumulatedShareDifficultyBetweenCreatedAsync(con, poolId, from, to));
+                var accumulatedShareDiffForBlock = await cf.Run(con => shareRepo.GetAccumulatedShareDifficultyBetweenCreatedAsync(con, poolId, from, to));
 
-		if(accumulatedShareDiffForBlock.HasValue)
-			poolShares = accumulatedShareDiffForBlock.Value;
+                if (accumulatedShareDiffForBlock.HasValue)
+                    poolShares = accumulatedShareDiffForBlock.Value;
 
-		var diff = await cf.Run(con => statsRepo.GetLastPoolStatsAsync(con, poolId));
+                var diff = await cf.Run(con => statsRepo.GetLastPoolStatsAsync(con, poolId));
 
-                if(diff != null)
+                if (diff != null)
                     netDiff = diff.NetworkDifficulty;
 
                 if (result.Length > 0)
                 {
                     var workerCount = 0;
-                    foreach(var workers in byMiner)
+                    foreach (var workers in byMiner)
                     {
                         workerCount += workers.Count();
                     }
 
                     var timeFrameBeforeFirstShare = ((result.Min(x => x.FirstShare) - timeFrom).TotalSeconds);
-                    var timeFrameAfterLastShare   = ((now - result.Max(x => x.LastShare)).TotalSeconds);
-                    var timeFrameFirstLastShare   = (hashrateCalculationWindow.TotalSeconds - timeFrameBeforeFirstShare - timeFrameAfterLastShare);
+                    var timeFrameAfterLastShare = ((now - result.Max(x => x.LastShare)).TotalSeconds);
+                    var timeFrameFirstLastShare = (hashrateCalculationWindow.TotalSeconds - timeFrameBeforeFirstShare - timeFrameAfterLastShare);
                     var poolHashTimeFrame = hashrateCalculationWindow.TotalSeconds;
                     var poolHashesAccumulated = result.Sum(x => x.Sum);
                     var poolHashesCountAccumulated = result.Sum(x => x.Count);
@@ -171,37 +171,39 @@ namespace Cybercore.Mining
 
                     poolHashrate = Math.Round(poolHashrate, 8);
 
-		    if(poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
-		    {
-			poolHashrate *= 11.2;
-		    }
-                        
-		    if(poolId == "rng")
-		    {
-			poolHashrate *= 2850;
-		    }
+                    if (poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
+                    {
+                        poolHashrate *= 11.2;
+                    }
 
-		    if(poolId == "lccm" || poolId == "lccms")
-		    {
-			poolHashrate *= 1100000;
-		        logger.Info(() => $"[{poolId}] Pool Hashrate Adjusted {poolHashrate}");
-		    }
+                    if (poolId == "rng")
+                    {
+                        poolHashrate *= 2850;
+                    }
 
-		    if(poolId == "sugar")
-		    {
-			poolHashrate *= 58.5;
-		    }
+                    if (poolId == "lccm" || poolId == "lccms")
+                    {
+                        poolHashrate *= 1100000;
+                        logger.Info(() => $"[{poolId}] Pool Hashrate Adjusted {poolHashrate}");
+                    }
+
+                    if (poolId == "sugar")
+                    {
+                        poolHashrate *= 58.5;
+                    }
 
                     pool.PoolStats.ConnectedMiners = byMiner.Length;
                     pool.PoolStats.ConnectedWorkers = workerCount;
-                    pool.PoolStats.PoolHashrate = (ulong) poolHashrate;
-                    pool.PoolStats.SharesPerSecond = (double) (poolHashesCountAccumulated / poolHashTimeFrame);
-                    pool.PoolStats.RoundShares = (double) poolShares;
+                    pool.PoolStats.PoolHashrate = (ulong)poolHashrate;
+                    pool.PoolStats.SharesPerSecond = (double)(poolHashesCountAccumulated / poolHashTimeFrame);
+                    pool.PoolStats.RoundShares = (double)poolShares;
                     pool.PoolStats.RoundEffort = (poolShares / netDiff) * 100;
 
-		    messageBus.NotifyHashrateUpdated(pool.Config.Id, poolHashrate);
+                    messageBus.NotifyHashrateUpdated(pool.Config.Id, poolHashrate);
 
-                } else {
+                }
+                else
+                {
 
                     pool.PoolStats.ConnectedMiners = 0;
                     pool.PoolStats.ConnectedWorkers = 0;
@@ -245,8 +247,8 @@ namespace Cybercore.Mining
                 var currentNonZeroMinerWorkers = new HashSet<string>();
 
                 foreach (var minerHashes in byMiner)
-		{
-                    if(ct.IsCancellationRequested)
+                {
+                    if (ct.IsCancellationRequested)
                         return;
 
                     double minerTotalHashrate = 0;
@@ -255,7 +257,7 @@ namespace Cybercore.Mining
                     {
                         stats.Miner = minerHashes.Key;
 
-			currentNonZeroMinerWorkers.Add(BuildKey(stats.Miner));
+                        currentNonZeroMinerWorkers.Add(BuildKey(stats.Miner));
 
                         foreach (var item in minerHashes)
                         {
@@ -263,46 +265,46 @@ namespace Cybercore.Mining
                             stats.SharesPerSecond = 0;
 
                             var timeFrameBeforeFirstShare = ((minerHashes.Min(x => x.FirstShare) - timeFrom).TotalSeconds);
-                            var timeFrameAfterLastShare   = ((now - minerHashes.Max(x => x.LastShare)).TotalSeconds);
+                            var timeFrameAfterLastShare = ((now - minerHashes.Max(x => x.LastShare)).TotalSeconds);
 
                             var minerHashTimeFrame = hashrateCalculationWindow.TotalSeconds;
 
-                            if(timeFrameBeforeFirstShare >= (hashrateCalculationWindow.TotalSeconds * 0.1))
+                            if (timeFrameBeforeFirstShare >= (hashrateCalculationWindow.TotalSeconds * 0.1))
                                 minerHashTimeFrame = Math.Floor(hashrateCalculationWindow.TotalSeconds - timeFrameBeforeFirstShare);
 
-                            if(timeFrameAfterLastShare   >= (hashrateCalculationWindow.TotalSeconds * 0.1))
+                            if (timeFrameAfterLastShare >= (hashrateCalculationWindow.TotalSeconds * 0.1))
                                 minerHashTimeFrame = Math.Floor(hashrateCalculationWindow.TotalSeconds + timeFrameAfterLastShare);
 
-                            if( (timeFrameBeforeFirstShare >= (hashrateCalculationWindow.TotalSeconds * 0.1)) && (timeFrameAfterLastShare >= (hashrateCalculationWindow.TotalSeconds * 0.1)))
+                            if ((timeFrameBeforeFirstShare >= (hashrateCalculationWindow.TotalSeconds * 0.1)) && (timeFrameAfterLastShare >= (hashrateCalculationWindow.TotalSeconds * 0.1)))
                                 minerHashTimeFrame = (hashrateCalculationWindow.TotalSeconds - timeFrameBeforeFirstShare + timeFrameAfterLastShare);
 
-                            if(minerHashTimeFrame < 1)
+                            if (minerHashTimeFrame < 1)
                                 minerHashTimeFrame = 1;
 
                             var minerHashrate = pool.HashrateFromShares(item.Sum, minerHashTimeFrame) * HashrateBoostFactor;
 
                             minerHashrate = Math.Round(minerHashrate, 8);
 
-			    if(poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
-			    {
-				minerHashrate *= 11.2;
-			    }
-                                
-			    if(poolId == "rng" || poolId == "lccm" || poolId == "lccms")
-			    {
-				minerHashrate *= 2850;
-			    }
+                            if (poolId == "idx" || poolId == "vgc" || poolId == "shrx" || poolId == "ecc" || poolId == "gold" || poolId == "eli" || poolId == "acm" || poolId == "alps" || poolId == "grs")
+                            {
+                                minerHashrate *= 11.2;
+                            }
 
-			    if(poolId == "lccm" || poolId == "lccms")
-			    {
-				minerHashrate *= 400;
-				logger.Info(() => $"[{poolId}] Miner Hashrate Adjusted {minerHashrate}");
-			    }
+                            if (poolId == "rng" || poolId == "lccm" || poolId == "lccms")
+                            {
+                                minerHashrate *= 2850;
+                            }
 
-			    if(poolId == "sugar")
-			    {
-				minerHashrate *= 58.5;
-			    }
+                            if (poolId == "lccm" || poolId == "lccms")
+                            {
+                                minerHashrate *= 400;
+                                logger.Info(() => $"[{poolId}] Miner Hashrate Adjusted {minerHashrate}");
+                            }
+
+                            if (poolId == "sugar")
+                            {
+                                minerHashrate *= 58.5;
+                            }
 
                             minerTotalHashrate += minerHashrate;
 
@@ -313,12 +315,12 @@ namespace Cybercore.Mining
 
                             await statsRepo.InsertMinerWorkerPerformanceStatsAsync(con, tx, stats);
 
-			    messageBus.NotifyHashrateUpdated(pool.Config.Id, minerHashrate, stats.Miner, stats.Worker);
+                            messageBus.NotifyHashrateUpdated(pool.Config.Id, minerHashrate, stats.Miner, stats.Worker);
 
                             logger.Info(() => $"[{poolId}] Worker {stats.Miner}{(!string.IsNullOrEmpty(stats.Worker) ? $".{stats.Worker}" : string.Empty)}: {FormatUtil.FormatHashrate(minerHashrate)}, {stats.SharesPerSecond} shares/sec");
 
-			    currentNonZeroMinerWorkers.Add(BuildKey(stats.Miner, stats.Worker));
-			}
+                            currentNonZeroMinerWorkers.Add(BuildKey(stats.Miner, stats.Worker));
+                        }
                     });
 
                     messageBus.NotifyHashrateUpdated(pool.Config.Id, minerTotalHashrate, stats.Miner, null);
@@ -328,14 +330,14 @@ namespace Cybercore.Mining
 
                 var orphanedHashrateForMinerWorker = previousNonZeroMinerWorkers.Except(currentNonZeroMinerWorkers).ToArray();
 
-                if(orphanedHashrateForMinerWorker.Any())
+                if (orphanedHashrateForMinerWorker.Any())
                 {
                     async Task Action(IDbConnection con, IDbTransaction tx)
                     {
                         stats.Hashrate = 0;
                         stats.SharesPerSecond = 0;
 
-                        foreach(var item in orphanedHashrateForMinerWorker)
+                        foreach (var item in orphanedHashrateForMinerWorker)
                         {
                             var parts = item.Split(keySeparator);
                             var miner = parts[0];
@@ -348,7 +350,7 @@ namespace Cybercore.Mining
 
                             messageBus.NotifyHashrateUpdated(pool.Config.Id, 0, stats.Miner, stats.Worker);
 
-                            if(string.IsNullOrEmpty(stats.Worker))
+                            if (string.IsNullOrEmpty(stats.Worker))
                                 logger.Info(() => $"[{poolId}] Reset performance stats for miner {stats.Miner}");
                             else
                                 logger.Info(() => $"[{poolId}] Reset performance stats for miner {stats.Miner}.{stats.Worker}");
@@ -369,11 +371,11 @@ namespace Cybercore.Mining
                 var cutOff = clock.Now.Add(-cleanupDays);
 
                 var rowCount = await statsRepo.DeletePoolStatsBeforeAsync(con, cutOff);
-                if(rowCount > 0)
+                if (rowCount > 0)
                     logger.Info(() => $"Deleted {rowCount} old poolstats records");
 
                 rowCount = await statsRepo.DeleteMinerStatsBeforeAsync(con, cutOff);
-                if(rowCount > 0)
+                if (rowCount > 0)
                     logger.Info(() => $"Deleted {rowCount} old minerstats records");
             });
 
@@ -382,14 +384,14 @@ namespace Cybercore.Mining
 
         private async Task UpdateAsync(CancellationToken ct)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
                     await UpdatePoolHashratesAsync(ct);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
                 }
@@ -400,14 +402,14 @@ namespace Cybercore.Mining
 
         private async Task GcAsync(CancellationToken ct)
         {
-            while(!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
                     await StatsGcAsync(ct);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.Error(ex);
                 }

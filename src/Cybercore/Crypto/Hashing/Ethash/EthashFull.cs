@@ -27,7 +27,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
 
         public void Dispose()
         {
-            foreach(var value in caches.Values)
+            foreach (var value in caches.Values)
                 value.Dispose();
         }
 
@@ -36,14 +36,14 @@ namespace Cybercore.Crypto.Hashing.Ethash
             var epoch = block / EthereumConstants.EpochLength;
             Dag result;
 
-            lock(cacheLock)
+            lock (cacheLock)
             {
-                if(numCaches == 0)
+                if (numCaches == 0)
                     numCaches = 3;
 
-                if(!caches.TryGetValue(epoch, out result))
+                if (!caches.TryGetValue(epoch, out result))
                 {
-                    while(caches.Count >= numCaches)
+                    while (caches.Count >= numCaches)
                     {
                         var toEvict = caches.Values.OrderBy(x => x.LastUsed).First();
                         var key = caches.First(pair => pair.Value == toEvict).Key;
@@ -54,7 +54,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                         caches.Remove(key);
                     }
 
-                    if(future != null && future.Epoch == epoch)
+                    if (future != null && future.Epoch == epoch)
                     {
                         logger.Debug(() => $"Using pre-generated DAG for epoch {epoch}");
 
@@ -71,7 +71,7 @@ namespace Cybercore.Crypto.Hashing.Ethash
                     caches[epoch] = result;
                 }
 
-                else if(future == null || future.Epoch <= epoch)
+                else if (future == null || future.Epoch <= epoch)
                 {
                     logger.Info(() => $"Pre-generating DAG for epoch {epoch + 1}");
                     future = new Dag(epoch + 1);
