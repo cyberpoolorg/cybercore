@@ -310,8 +310,8 @@ namespace Cybercore.Mining
 
                             stats.Hashrate = minerHashrate;
                             stats.Worker = item.Worker;
-
                             stats.SharesPerSecond = Math.Round(item.Count / minerHashTimeFrame, 4);
+			    stats.Source = clusterConfig.ClusterName;
 
                             await statsRepo.InsertMinerWorkerPerformanceStatsAsync(con, tx, stats);
 

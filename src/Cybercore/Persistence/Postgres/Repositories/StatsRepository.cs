@@ -34,10 +34,10 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
             var mapped = mapper.Map<Entities.PoolStats>(stats);
 
-            const string query = "INSERT INTO poolstats(poolid, connectedminers, connectedworkers, poolhashrate, networkhashrate, " +
-                "networkdifficulty, lastnetworkblocktime, lastpoolblocktime, blockheight, connectedpeers, sharespersecond, roundshares, roundeffort, created) " +
-                "VALUES(@poolid, @connectedminers, @connectedworkers, @poolhashrate, @networkhashrate, @networkdifficulty, " +
-                "@lastnetworkblocktime, @lastpoolblocktime, @blockheight, @connectedpeers, @sharespersecond, @roundshares, @roundeffort, @created)";
+            const string query = "INSERT INTO poolstats(poolid, connectedminers, connectedworkers, poolhashrate, networkhashrate, networkdifficulty, " +
+                "lastnetworkblocktime, lastpoolblocktime, blockheight, connectedpeers, sharespersecond, roundshares, roundeffort, created) " +
+                "VALUES(@poolid, @connectedminers, @connectedworkers, @poolhashrate, @networkhashrate, @networkdifficulty, @lastnetworkblocktime, " +
+                "@lastpoolblocktime, @blockheight, @connectedpeers, @sharespersecond, @roundshares, @roundeffort, @created)";
 
             await con.ExecuteAsync(query, mapped, tx);
         }
@@ -51,8 +51,8 @@ namespace Cybercore.Persistence.Postgres.Repositories
             if (string.IsNullOrEmpty(mapped.Worker))
                 mapped.Worker = string.Empty;
 
-            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, created) " +
-                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @created)";
+            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, source, created) " +
+                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @source, @created)";
 
             await con.ExecuteAsync(query, mapped, tx);
         }
@@ -339,12 +339,13 @@ namespace Cybercore.Persistence.Postgres.Repositories
                 "		ms.miner,  " +
                 "		ms.hashrate,  " +
                 "		ms.sharespersecond,  " +
+                "		ms.source,  " +
                 "		ROW_NUMBER() OVER(PARTITION BY ms.miner ORDER BY ms.hashrate DESC) AS rk  " +
-                "	FROM (SELECT miner, SUM(hashrate) AS hashrate, SUM(sharespersecond) AS sharespersecond " +
+                "	FROM (SELECT miner, SUM(hashrate) AS hashrate, SUM(sharespersecond) AS sharespersecond, source " +
                 "       FROM minerstats " +
-                "       WHERE poolid = @poolid AND created >= @from GROUP BY miner, created) ms " +
+                "       WHERE poolid = @poolid AND created >= @from GROUP BY miner, source, created) ms " +
                 ") " +
-                "SELECT t.miner, t.hashrate, t.sharespersecond " +
+                "SELECT t.miner, t.hashrate, t.sharespersecond, t.source " +
                 "FROM tmp t " +
                 "WHERE t.rk = 1 " +
                 "ORDER by t.hashrate DESC " +

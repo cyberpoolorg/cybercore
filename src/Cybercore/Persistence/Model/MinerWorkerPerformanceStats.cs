@@ -9,6 +9,7 @@ namespace Cybercore.Persistence.Model
         public string Worker { get; set; }
         public double Hashrate { get; set; }
         public double SharesPerSecond { get; set; }
+        public string Source { get; set; }
         public DateTime Created { get; set; }
     }
 }

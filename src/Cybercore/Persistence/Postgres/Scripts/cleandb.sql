@@ -115,6 +115,7 @@ CREATE TABLE minerstats
 	worker TEXT NOT NULL,
 	hashrate DOUBLE PRECISION NOT NULL DEFAULT 0,
 	sharespersecond DOUBLE PRECISION NOT NULL DEFAULT 0,
+	source TEXT NULL,
 	created TIMESTAMP NOT NULL
 );
 
@@ -122,4 +123,4 @@ CREATE INDEX IDX_MINERSTATS_POOL_CREATED on minerstats(poolid, created);
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED on minerstats(poolid, miner, created);
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED_HOUR on minerstats(poolid, miner, date_trunc('hour',created));
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED_DAY on minerstats(poolid, miner, date_trunc('day',created));
-CREATE INDEX IDX_MINERSTATS_POOL_MINER_WORKER_CREATED_HASHRATE on minerstats(poolid,miner,worker,created desc,hashrate);
+CREATE INDEX IDX_MINERSTATS_CREATED_POOL_MINER_WORKER_HASHRATE_SOURCE on minerstats(created desc,poolid,miner,worker,hashrate,source);

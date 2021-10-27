@@ -159,7 +159,7 @@ namespace Cybercore.Mining
         {
             writer.WriteLine("# The existence of this file means shares could not be committed to the database.");
             writer.WriteLine("# You should stop the pool cluster and run the following command:");
-            writer.WriteLine("# cybercore -c <path-to-config> -rs <path-to-this-file>\n");
+            writer.WriteLine("# dotnet Cybercore.dll -c <path-to-config> -rs <path-to-this-file>\n");
         }
 
         public async Task RecoverSharesAsync(ClusterConfig clusterConfig, string recoveryFilename)
