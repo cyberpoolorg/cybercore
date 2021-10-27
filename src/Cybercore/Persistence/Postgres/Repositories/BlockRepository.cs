@@ -134,22 +134,28 @@ namespace Cybercore.Persistence.Postgres.Repositories
 
         public Task<double?> GetAverageEffortCountAsync16(IDbConnection con, string poolId)
         {
-            logger.LogInvoke(new[] { poolId });
-            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 16";
+            logger.LogInvoke(new object[] { poolId });
+
+            const string query = "WITH eff16 AS (SELECT blockheight , effort FROM blocks WHERE poolid = @poolId ORDER BY blockheight DESC LIMIT 16) SELECT avg(effort) FROM eff16";
+
             return con.ExecuteScalarAsync<double?>(query, new { poolId });
         }
 
         public Task<double?> GetAverageEffortCountAsync64(IDbConnection con, string poolId)
         {
-            logger.LogInvoke(new[] { poolId });
-            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 64";
+            logger.LogInvoke(new object[] { poolId });
+
+            const string query = "WITH eff64 AS (SELECT blockheight , effort FROM blocks WHERE poolid = @poolId ORDER BY blockheight DESC LIMIT 64) SELECT avg(effort) FROM eff64";
+
             return con.ExecuteScalarAsync<double?>(query, new { poolId });
         }
 
         public Task<double?> GetAverageEffortCountAsync256(IDbConnection con, string poolId)
         {
-            logger.LogInvoke(new[] { poolId });
-            const string query = "SELECT AVG(effort) as avg FROM blocks WHERE poolid = @poolId LIMIT 256";
+            logger.LogInvoke(new object[] { poolId });
+
+            const string query = "WITH eff256 AS (SELECT blockheight , effort FROM blocks WHERE poolid = @poolId ORDER BY blockheight DESC LIMIT 256) SELECT avg(effort) FROM eff256";
+
             return con.ExecuteScalarAsync<double?>(query, new { poolId });
         }
     }
