@@ -196,10 +196,28 @@ namespace Cybercore.Persistence.Postgres.Repositories
             logger.LogInvoke(new object[] { poolId });
 
             const string query = "SELECT DISTINCT s.ipaddress FROM (SELECT * FROM shares " +
-                                 "WHERE poolid = @poolId and miner = @miner ORDER BY CREATED DESC LIMIT 100) s";
+                                 "WHERE poolid = @poolId and miner = @miner ORDER BY created DESC LIMIT 100) s";
 
             return (await con.QueryAsync<string>(query, new { poolId, miner }, tx))
                 .ToArray();
+        }
+
+        public Task<string> GetRecentyUsedIpAddress(IDbConnection con, string poolId, string miner)
+        {
+            logger.LogInvoke(new object[] { poolId });
+
+            const string query = "SELECT ipaddress FROM shares WHERE poolid = @poolId and miner = @miner ORDER BY created DESC LIMIT 1";
+
+            return con.QuerySingleAsync<string>(query, new { poolId, miner });
+        }
+
+        public Task<string> GetRecentyUsedSource(IDbConnection con, string poolId, string miner)
+        {
+            logger.LogInvoke(new object[] { poolId });
+
+            const string query = "SELECT source FROM shares WHERE poolid = @poolId and miner = @miner ORDER BY created DESC LIMIT 1";
+
+            return con.QuerySingleAsync<string>(query, new { poolId, miner });
         }
     }
 }

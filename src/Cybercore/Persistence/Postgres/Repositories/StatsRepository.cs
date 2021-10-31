@@ -51,8 +51,8 @@ namespace Cybercore.Persistence.Postgres.Repositories
             if (string.IsNullOrEmpty(mapped.Worker))
                 mapped.Worker = string.Empty;
 
-            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, source, created) " +
-                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @source, @created)";
+            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, ipaddress, source, created) " +
+                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @ipaddress, @source, @created)";
 
             await con.ExecuteAsync(query, mapped, tx);
         }
@@ -348,6 +348,34 @@ namespace Cybercore.Persistence.Postgres.Repositories
                 "SELECT t.miner, t.hashrate, t.sharespersecond, t.source " +
                 "FROM tmp t " +
                 "WHERE t.rk = 1 " +
+                "ORDER by t.hashrate DESC " +
+                "OFFSET @offset FETCH NEXT (@pageSize) ROWS ONLY";
+
+            return (await con.QueryAsync<Entities.MinerWorkerPerformanceStats>(query, new { poolId, from, offset = page * pageSize, pageSize }))
+                .Select(mapper.Map<MinerWorkerPerformanceStats>)
+                .ToArray();
+        }
+
+        public async Task<MinerWorkerPerformanceStats[]> AdminPagePoolMinersByHashrateAsync(IDbConnection con, string poolId, DateTime from, int page, int pageSize)
+        {
+            logger.LogInvoke(new object[] { (object)poolId, from, page, pageSize });
+
+            const string query = "WITH adm AS " +
+                "( " +
+                "	SELECT  " +
+                "		ams.miner,  " +
+                "		ams.hashrate,  " +
+                "		ams.sharespersecond,  " +
+                "		ams.ipaddress,  " +
+                "		ams.source,  " +
+                "		ROW_NUMBER() OVER(PARTITION BY ams.miner ORDER BY ams.hashrate DESC) AS ark  " +
+                "	FROM (SELECT miner, SUM(hashrate) AS hashrate, SUM(sharespersecond) AS sharespersecond, ipaddress, source " +
+                "       FROM minerstats " +
+                "       WHERE poolid = @poolid AND created >= @from GROUP BY miner, ipaddress, source, created) ams " +
+                ") " +
+                "SELECT t.miner, t.hashrate, t.sharespersecond, t.ipaddress, t.source " +
+                "FROM adm t " +
+                "WHERE t.ark = 1 " +
                 "ORDER by t.hashrate DESC " +
                 "OFFSET @offset FETCH NEXT (@pageSize) ROWS ONLY";
 

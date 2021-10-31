@@ -135,10 +135,10 @@ namespace Cybercore.Mining
 
                 var lastBlock = await cf.Run(con => blockRepo.GetBlockBeforeAsync(con, poolId, new[]
                 {
-            BlockStatus.Confirmed,
-            BlockStatus.Orphaned,
-            BlockStatus.Pending,
-        }, to));
+                BlockStatus.Confirmed,
+                BlockStatus.Orphaned,
+                BlockStatus.Pending,
+                }, to));
 
                 if (lastBlock != null)
                     from = lastBlock.Created;
@@ -264,6 +264,8 @@ namespace Cybercore.Mining
                             stats.Hashrate = 0;
                             stats.SharesPerSecond = 0;
 
+		            var minerIp = await cf.Run(con => shareRepo.GetRecentyUsedIpAddress(con, poolId, minerHashes.Key));
+		            var minerSource = await cf.Run(con => shareRepo.GetRecentyUsedSource(con, poolId, minerHashes.Key));
                             var timeFrameBeforeFirstShare = ((minerHashes.Min(x => x.FirstShare) - timeFrom).TotalSeconds);
                             var timeFrameAfterLastShare = ((now - minerHashes.Max(x => x.LastShare)).TotalSeconds);
 
@@ -298,7 +300,6 @@ namespace Cybercore.Mining
                             if (poolId == "lccm" || poolId == "lccms")
                             {
                                 minerHashrate *= 400;
-                                logger.Info(() => $"[{poolId}] Miner Hashrate Adjusted {minerHashrate}");
                             }
 
                             if (poolId == "sugar")
@@ -311,7 +312,8 @@ namespace Cybercore.Mining
                             stats.Hashrate = minerHashrate;
                             stats.Worker = item.Worker;
                             stats.SharesPerSecond = Math.Round(item.Count / minerHashTimeFrame, 4);
-			    stats.Source = clusterConfig.ClusterName;
+			    stats.IpAddress = minerIp;
+			    stats.Source = minerSource;
 
                             await statsRepo.InsertMinerWorkerPerformanceStatsAsync(con, tx, stats);
 

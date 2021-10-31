@@ -8,6 +8,8 @@ namespace Cybercore.Api.Responses
         public string Miner { get; set; }
         public double Hashrate { get; set; }
         public double SharesPerSecond { get; set; }
+        public string IpAddress { get; set; }
+        public string Source { get; set; }
     }
 
     public class WorkerPerformanceStats

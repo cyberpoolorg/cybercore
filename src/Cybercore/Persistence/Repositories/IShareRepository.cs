@@ -23,5 +23,7 @@ namespace Cybercore.Persistence.Repositories
         Task<MinerWorkerHashes[]> GetAccumulatedShareDifficultyTotalAsync(IDbConnection con, string poolId);
         Task<MinerWorkerHashes[]> GetHashAccumulationBetweenCreatedAsync(IDbConnection con, string poolId, DateTime start, DateTime end);
         Task<string[]> GetRecentyUsedIpAddresses(IDbConnection con, IDbTransaction tx, string poolId, string miner);
+        Task<string> GetRecentyUsedIpAddress(IDbConnection con, string poolId, string miner);
+        Task<string> GetRecentyUsedSource(IDbConnection con, string poolId, string miner);
     }
 }
