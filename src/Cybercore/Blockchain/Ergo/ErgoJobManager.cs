@@ -139,8 +139,8 @@ namespace Cybercore.Blockchain.Ergo
 
                         BlockchainStats.LastNetworkBlockTime = clock.Now;
                         BlockchainStats.BlockHeight = job.Height;
-                        BlockchainStats.NetworkDifficulty = job.Difficulty * 4295000000;
-                        BlockchainStats.NetworkHashrate = ((BlockchainStats.NetworkDifficulty / blockTime) * 0.8125);
+                        BlockchainStats.NetworkDifficulty = job.Difficulty * 4294901760;
+                        BlockchainStats.NetworkHashrate = BlockchainStats.NetworkDifficulty / blockTime;
                     }
 
                     else
