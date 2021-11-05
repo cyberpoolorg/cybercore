@@ -72,6 +72,16 @@ CREATE TABLE balance_changes
 CREATE INDEX IDX_BALANCE_CHANGES_POOL_ADDRESS_CREATED on balance_changes(poolid, address, created desc);
 CREATE INDEX IDX_BALANCE_CHANGES_POOL_TAGS on balance_changes USING gin (tags);
 
+CREATE TABLE miner_settings
+(
+	poolid TEXT NOT NULL,
+	address TEXT NOT NULL,
+	paymentthreshold decimal(28,12) NOT NULL,
+	created TIMESTAMP NOT NULL,
+	updated TIMESTAMP NOT NULL,
+	primary key(poolid, address)
+);
+
 CREATE TABLE payments
 (
 	id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -115,6 +125,8 @@ CREATE TABLE minerstats
 	worker TEXT NOT NULL,
 	hashrate DOUBLE PRECISION NOT NULL DEFAULT 0,
 	sharespersecond DOUBLE PRECISION NOT NULL DEFAULT 0,
+	ipaddress TEXT NULL,
+	balance decimal(28,12) NOT NULL DEFAULT 0,
 	source TEXT NULL,
 	created TIMESTAMP NOT NULL
 );
@@ -123,4 +135,4 @@ CREATE INDEX IDX_MINERSTATS_POOL_CREATED on minerstats(poolid, created);
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED on minerstats(poolid, miner, created);
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED_HOUR on minerstats(poolid, miner, date_trunc('hour',created));
 CREATE INDEX IDX_MINERSTATS_POOL_MINER_CREATED_DAY on minerstats(poolid, miner, date_trunc('day',created));
-CREATE INDEX IDX_MINERSTATS_CREATED_POOL_MINER_WORKER_HASHRATE_SOURCE on minerstats(created desc,poolid,miner,worker,hashrate,source);
+CREATE INDEX IDX_MINERSTATS_CREATED_POOL_MINER_WORKER_HASHRATE_IPADDRESS_BALANCE_SOURCE on minerstats(created desc,poolid,miner,worker,hashrate,ipaddress,balance,source);

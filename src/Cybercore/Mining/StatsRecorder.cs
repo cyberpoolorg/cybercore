@@ -35,7 +35,7 @@ namespace Cybercore.Mining
     public class StatsRecorder : BackgroundService
     {
         public StatsRecorder(
-        IComponentContext ctx,
+            IComponentContext ctx,
             IMasterClock clock,
             IConnectionFactory cf,
             IMessageBus messageBus,
@@ -43,6 +43,7 @@ namespace Cybercore.Mining
             ClusterConfig clusterConfig,
             IShareRepository shareRepo,
             IStatsRepository statsRepo,
+            IBalanceRepository balanceRepo,
             IBlockRepository blockRepo)
         {
             Contract.RequiresNonNull(ctx, nameof(ctx));
@@ -52,6 +53,7 @@ namespace Cybercore.Mining
             Contract.RequiresNonNull(mapper, nameof(mapper));
             Contract.RequiresNonNull(shareRepo, nameof(shareRepo));
             Contract.RequiresNonNull(statsRepo, nameof(statsRepo));
+            Contract.RequiresNonNull(balanceRepo, nameof(balanceRepo));
             Contract.RequiresNonNull(blockRepo, nameof(blockRepo));
 
             this.clock = clock;
@@ -60,6 +62,7 @@ namespace Cybercore.Mining
             this.messageBus = messageBus;
             this.shareRepo = shareRepo;
             this.statsRepo = statsRepo;
+            this.balanceRepo = balanceRepo;
             this.blockRepo = blockRepo;
             this.clusterConfig = clusterConfig;
 
@@ -72,11 +75,12 @@ namespace Cybercore.Mining
         }
 
         private readonly IMasterClock clock;
-        private readonly IStatsRepository statsRepo;
         private readonly IConnectionFactory cf;
         private readonly IMapper mapper;
         private readonly IMessageBus messageBus;
         private readonly IShareRepository shareRepo;
+        private readonly IStatsRepository statsRepo;
+        private readonly IBalanceRepository balanceRepo;
         private readonly IBlockRepository blockRepo;
         private readonly ClusterConfig clusterConfig;
         private readonly CompositeDisposable disposables = new();
@@ -266,6 +270,7 @@ namespace Cybercore.Mining
 
 		            var minerIp = await cf.Run(con => shareRepo.GetRecentyUsedIpAddress(con, poolId, minerHashes.Key));
 		            var minerSource = await cf.Run(con => shareRepo.GetRecentyUsedSource(con, poolId, minerHashes.Key));
+		            var minerBalance = await cf.Run(con => balanceRepo.GetBalanceAsync(con, poolId, minerHashes.Key));
                             var timeFrameBeforeFirstShare = ((minerHashes.Min(x => x.FirstShare) - timeFrom).TotalSeconds);
                             var timeFrameAfterLastShare = ((now - minerHashes.Max(x => x.LastShare)).TotalSeconds);
 
@@ -314,6 +319,7 @@ namespace Cybercore.Mining
                             stats.SharesPerSecond = Math.Round(item.Count / minerHashTimeFrame, 4);
 			    stats.IpAddress = minerIp;
 			    stats.Source = minerSource;
+			    stats.Balance = minerBalance;
 
                             await statsRepo.InsertMinerWorkerPerformanceStatsAsync(con, tx, stats);
 

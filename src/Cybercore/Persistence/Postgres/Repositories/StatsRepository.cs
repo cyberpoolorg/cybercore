@@ -51,8 +51,8 @@ namespace Cybercore.Persistence.Postgres.Repositories
             if (string.IsNullOrEmpty(mapped.Worker))
                 mapped.Worker = string.Empty;
 
-            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, ipaddress, source, created) " +
-                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @ipaddress, @source, @created)";
+            const string query = "INSERT INTO minerstats(poolid, miner, worker, hashrate, sharespersecond, ipaddress, balance, source, created) " +
+                "VALUES(@poolid, @miner, @worker, @hashrate, @sharespersecond, @ipaddress, @balance, @source, @created)";
 
             await con.ExecuteAsync(query, mapped, tx);
         }
@@ -367,13 +367,14 @@ namespace Cybercore.Persistence.Postgres.Repositories
                 "		ams.hashrate,  " +
                 "		ams.sharespersecond,  " +
                 "		ams.ipaddress,  " +
+                "		ams.balance,  " +
                 "		ams.source,  " +
                 "		ROW_NUMBER() OVER(PARTITION BY ams.miner ORDER BY ams.hashrate DESC) AS ark  " +
-                "	FROM (SELECT miner, SUM(hashrate) AS hashrate, SUM(sharespersecond) AS sharespersecond, ipaddress, source " +
+                "	FROM (SELECT miner, SUM(hashrate) AS hashrate, SUM(sharespersecond) AS sharespersecond, ipaddress, balance, source " +
                 "       FROM minerstats " +
-                "       WHERE poolid = @poolid AND created >= @from GROUP BY miner, ipaddress, source, created) ams " +
+                "       WHERE poolid = @poolid AND created >= @from GROUP BY miner, ipaddress, balance, source, created) ams " +
                 ") " +
-                "SELECT t.miner, t.hashrate, t.sharespersecond, t.ipaddress, t.source " +
+                "SELECT t.miner, t.hashrate, t.sharespersecond, t.ipaddress, t.balance, t.source " +
                 "FROM adm t " +
                 "WHERE t.ark = 1 " +
                 "ORDER by t.hashrate DESC " +

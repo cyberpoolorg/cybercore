@@ -11,6 +11,7 @@ namespace Cybercore.Persistence.Postgres.Entities
         public double Hashrate { get; set; }
         public double SharesPerSecond { get; set; }
         public string IpAddress { get; set; }
+        public decimal Balance { get; set; }
         public string Source { get; set; }
         public DateTime Created { get; set; }
         public int Partition { get; set; }
