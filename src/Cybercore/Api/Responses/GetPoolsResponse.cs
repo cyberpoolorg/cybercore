@@ -17,6 +17,16 @@ namespace Cybercore.Api.Responses
         public string Algorithm { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Website { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Market { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Twitter { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Discord { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Telegram { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CanonicalName { get; set; }
     }
 
