@@ -1,5 +1,4 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac;
 using Autofac.Features.Metadata;
 using AutoMapper;
 using System;
@@ -14,16 +13,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Cybercore.Api;
-using Cybercore.Api.Controllers;
 using Cybercore.Api.Middlewares;
 using Cybercore.Api.Responses;
-using Cybercore.Blockchain.Ergo;
 using Cybercore.Configuration;
 using Cybercore.Crypto.Hashing.Algorithms;
 using Cybercore.Crypto.Hashing.Equihash;
 using Cybercore.Crypto.Hashing.Ethash;
-using Cybercore.Extensions;
 using Cybercore.Messaging;
 using Cybercore.Mining;
 using Cybercore.Native;
@@ -37,220 +32,53 @@ using AspNetCoreRateLimit;
 using FluentValidation;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NBitcoin.Zcash;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Conditions;
 using NLog.Config;
-using NLog.Extensions.Hosting;
-using NLog.Extensions.Logging;
 using NLog.Layouts;
 using NLog.Targets;
-using Prometheus;
-using WebSocketManager;
 using ILogger = NLog.ILogger;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-
-// ReSharper disable AssignNullToNotNullAttribute
-// ReSharper disable PossibleNullReferenceException
 
 namespace Cybercore
 {
-    public class Program : BackgroundService
+    public sealed class CybercoreBackgroudService : BackgroundService
     {
-        public static async Task Main(string[] args)
+        private readonly IComponentContext container;
+        private static ILogger logger;
+        private static ClusterConfig clusterConfig;
+        private static readonly ConcurrentDictionary<string, IMiningPool> pools = new();
+        private static readonly AdminGcStats gcStats = new();
+        private static readonly Regex regexJsonTypeConversionError = new("\"([^\"]+)\"[^\']+\'([^\']+)\'.+\\s(\\d+),.+\\s(\\d+)", RegexOptions.Compiled);
+
+        public static CommandOption DumpConfiguration
         {
-            try
-            {
-                AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
+            get { return dumpConfigOption; }
+        }
+        private static CommandOption dumpConfigOption;
 
-                if (!ParseCommandLine(args, out var configFile))
-                    return;
+        public static CommandOption ShareRecoveryOption
+        {
+            get { return shareRecoveryOption; }
+        }
+        private static CommandOption shareRecoveryOption;
 
-                isShareRecoveryMode = shareRecoveryOption.HasValue();
+        public static bool IsShareRecoveryMode
+        {
+            get { return isShareRecoveryMode; }
+        }
+        private static bool isShareRecoveryMode;
 
-                Logo();
-                clusterConfig = ReadConfig(configFile);
-
-                if (dumpConfigOption.HasValue())
-                {
-                    DumpParsedConfig(clusterConfig);
-                    return;
-                }
-
-                ValidateConfig();
-                ConfigureLogging();
-                LogRuntimeInfo();
-                ValidateRuntimeEnvironment();
-
-                var hostBuilder = new HostBuilder();
-
-                hostBuilder
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                    .ConfigureContainer((Action<ContainerBuilder>)ConfigureAutofac)
-                    .UseNLog()
-                    .ConfigureLogging(logging =>
-                    {
-                        logging.ClearProviders();
-                        logging.AddNLog();
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                    })
-                    .ConfigureServices((ctx, services) =>
-                    {
-                        services.AddHttpClient();
-                        services.AddMemoryCache();
-
-                        ConfigureBackgroundServices(services);
-
-                        services.AddHostedService<Program>();
-                    });
-
-                if (clusterConfig.Api == null || clusterConfig.Api.Enabled)
-                {
-                    var address = clusterConfig.Api?.ListenAddress != null
-                        ? (clusterConfig.Api.ListenAddress != "*"
-                            ? IPAddress.Parse(clusterConfig.Api.ListenAddress)
-                            : IPAddress.Any)
-                        : IPAddress.Parse("127.0.0.1");
-
-                    var port = clusterConfig.Api?.Port ?? 4000;
-                    var enableApiRateLimiting = clusterConfig.Api?.RateLimiting?.Disabled != true;
-
-                    var apiTlsEnable =
-                        clusterConfig.Api?.Tls?.Enabled == true ||
-                        !string.IsNullOrEmpty(clusterConfig.Api?.Tls?.TlsPfxFile);
-
-                    if (apiTlsEnable)
-                    {
-                        if (!File.Exists(clusterConfig.Api.Tls.TlsPfxFile))
-                            logger.ThrowLogPoolStartupException(
-                                $"Certificate file {clusterConfig.Api.Tls.TlsPfxFile} does not exist!");
-                    }
-
-                    hostBuilder.ConfigureWebHost(builder =>
-                    {
-                        builder.ConfigureServices(services =>
-                            {
-                                if (enableApiRateLimiting)
-                                {
-                                    services.Configure<IpRateLimitOptions>(ConfigureIpRateLimitOptions);
-                                    services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-                                    services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-                                    services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-                                    services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
-                                }
-
-                                services.AddSingleton<PoolApiController, PoolApiController>();
-                                services.AddSingleton<AdminApiController, AdminApiController>();
-                                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-                                services.AddMvc(options => { options.EnableEndpointRouting = false; })
-                                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                                    .AddControllersAsServices()
-                                    .AddJsonOptions(options => { options.JsonSerializerOptions.WriteIndented = true; });
-
-                                services.AddResponseCompression();
-                                services.AddCors();
-                                services.AddWebSocketManager();
-                            })
-                            .UseKestrel(options =>
-                            {
-                                options.Listen(address, port, listenOptions =>
-                                {
-                                    if (apiTlsEnable)
-                                        listenOptions.UseHttps(clusterConfig.Api.Tls.TlsPfxFile,
-                                            clusterConfig.Api.Tls.TlsPfxPassword);
-                                });
-                            })
-                            .Configure(app =>
-                            {
-                                if (enableApiRateLimiting)
-                                    app.UseIpRateLimiting();
-
-                                app.UseMiddleware<ApiExceptionHandlingMiddleware>();
-
-                                UseIpWhiteList(app, true, new[] { "/api/admin" }, clusterConfig.Api?.AdminIpWhitelist);
-                                UseIpWhiteList(app, true, new[] { "/metrics" }, clusterConfig.Api?.MetricsIpWhitelist);
-
-                                app.UseResponseCompression();
-                                app.UseCors(corsPolicyBuilder =>
-                                    corsPolicyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-                                app.UseWebSockets();
-                                app.MapWebSocketManager("/notifications",
-                                    app.ApplicationServices.GetService<WebSocketNotificationsRelay>());
-                                app.UseMetricServer();
-                                app.UseMvc();
-
-                            });
-
-                        logger.Info(() => $"Prometheus Metrics {address}:{port}/metrics");
-                        logger.Info(() => $"WebSocket notifications streaming {address}:{port}/notifications");
-                    });
-                }
-
-                host = hostBuilder
-                    .UseConsoleLifetime()
-                    .Build();
-
-                await host.RunAsync();
-            }
-
-            catch (PoolStartupAbortException ex)
-            {
-                if (!string.IsNullOrEmpty(ex.Message))
-                    await Console.Error.WriteLineAsync(ex.Message);
-
-                await Console.Error.WriteLineAsync("\nCluster cannot start. Good Bye!");
-            }
-
-            catch (JsonException ex)
-            {
-                if (!string.IsNullOrEmpty(ex.Message))
-                    await Console.Error.WriteLineAsync(ex.Message);
-
-                await Console.Error.WriteLineAsync("\nCluster cannot start. Good Bye!");
-            }
-
-            catch (IOException ex)
-            {
-                if (!string.IsNullOrEmpty(ex.Message))
-                    await Console.Error.WriteLineAsync(ex.Message);
-
-                await Console.Error.WriteLineAsync("\nCluster cannot start. Good Bye!");
-            }
-
-            catch (AggregateException ex)
-            {
-                if (ex.InnerExceptions.First() is not PoolStartupAbortException)
-                    Console.Error.WriteLine(ex);
-
-                await Console.Error.WriteLineAsync("Cluster cannot start. Good Bye!");
-            }
-
-            catch (OperationCanceledException ex)
-            {
-                if (!string.IsNullOrEmpty(ex.Message))
-                    await Console.Error.WriteLineAsync(ex.Message);
-
-                await Console.Error.WriteLineAsync("\nCluster cannot start. Good Bye!");
-            }
-
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex);
-
-                await Console.Error.WriteLineAsync("Cluster cannot start. Good Bye!");
-            }
+        public CybercoreBackgroudService(IComponentContext container)
+        {
+            this.container = container;
         }
 
-        private static void ConfigureBackgroundServices(IServiceCollection services)
+        public static void ConfigureBackgroundServices(IServiceCollection services)
         {
             services.AddHostedService<NotificationService>();
             services.AddHostedService<BtStreamReceiver>();
@@ -280,25 +108,7 @@ namespace Cybercore
             }
         }
 
-        private static IHost host;
-        private readonly IComponentContext container;
-        private static ILogger logger;
-        private static CommandOption dumpConfigOption;
-        private static CommandOption shareRecoveryOption;
-        private static bool isShareRecoveryMode;
-        private static ClusterConfig clusterConfig;
-        private static readonly ConcurrentDictionary<string, IMiningPool> pools = new();
-
-        private static readonly AdminGcStats gcStats = new();
-        private static readonly Regex regexJsonTypeConversionError =
-            new("\"([^\"]+)\"[^\']+\'([^\']+)\'.+\\s(\\d+),.+\\s(\\d+)", RegexOptions.Compiled);
-
-        public Program(IComponentContext container)
-        {
-            this.container = container;
-        }
-
-        private static void ConfigureAutofac(ContainerBuilder builder)
+        public static void ConfigureAutofac(ContainerBuilder builder)
         {
             builder.RegisterAssemblyModules(typeof(AutofacModule).GetTypeInfo().Assembly);
             builder.RegisterInstance(clusterConfig);
@@ -332,7 +142,7 @@ namespace Cybercore
                 .Select(config => RunPool(config, coinTemplates, ct)));
         }
 
-        private Task RunPool(PoolConfig poolConfig, Dictionary<string, CoinTemplate> coinTemplates, CancellationToken ct)
+        public Task RunPool(PoolConfig poolConfig, Dictionary<string, CoinTemplate> coinTemplates, CancellationToken ct)
         {
             return Task.Run(async () =>
             {
@@ -352,18 +162,18 @@ namespace Cybercore
             }, ct);
         }
 
-        private Task RecoverSharesAsync(string recoveryFilename)
+        public Task RecoverSharesAsync(string recoveryFilename)
         {
             var shareRecorder = container.Resolve<ShareRecorder>();
             return shareRecorder.RecoverSharesAsync(clusterConfig, recoveryFilename);
         }
 
-        private static void LogRuntimeInfo()
+        public static void LogRuntimeInfo()
         {
             logger.Info(() => $"{RuntimeInformation.FrameworkDescription.Trim()} on {RuntimeInformation.OSDescription.Trim()} [{RuntimeInformation.ProcessArchitecture}]");
         }
 
-        private static void ValidateConfig()
+        public static void ValidateConfig()
         {
             foreach (var config in clusterConfig.Pools)
             {
@@ -394,7 +204,7 @@ namespace Cybercore
             }
         }
 
-        private static void DumpParsedConfig(ClusterConfig config)
+        public static void DumpParsedConfig(ClusterConfig config)
         {
             Console.WriteLine("\nCurrent configuration as parsed from config file:");
 
@@ -405,7 +215,7 @@ namespace Cybercore
             }));
         }
 
-        private static bool ParseCommandLine(string[] args, out string configFile)
+        public static bool ParseCommandLine(string[] args, out string configFile)
         {
             configFile = null;
 
@@ -424,6 +234,7 @@ namespace Cybercore
                 CommandOptionType.NoValue);
             shareRecoveryOption = app.Option("-rs", "Import lost shares using existing recovery file",
                 CommandOptionType.SingleValue);
+            isShareRecoveryMode = shareRecoveryOption.HasValue();
             app.HelpOption("-? | -h | --help");
 
             app.Execute(args);
@@ -442,10 +253,12 @@ namespace Cybercore
 
             configFile = configFileOption.Value();
 
+
+
             return true;
         }
 
-        private static ClusterConfig ReadConfig(string file)
+        public static ClusterConfig ReadConfig(string file)
         {
             try
             {
@@ -484,7 +297,7 @@ namespace Cybercore
             }
         }
 
-        private static void HumanizeJsonParseException(JsonSerializationException ex)
+        public static void HumanizeJsonParseException(JsonSerializationException ex)
         {
             var m = regexJsonTypeConversionError.Match(ex.Message);
 
@@ -505,7 +318,7 @@ namespace Cybercore
             }
         }
 
-        private static void ValidateRuntimeEnvironment()
+        public static void ValidateRuntimeEnvironment()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Environment.UserName == "root")
                 logger.Warn(() => "Running as root is discouraged!");
@@ -514,7 +327,7 @@ namespace Cybercore
                 throw new PoolStartupAbortException("Cybercore requires 64-Bit Windows");
         }
 
-        private static void Logo()
+        public static void Logo()
         {
             Console.WriteLine(@"
 	    ______________.___.________________________________________  ________ _____________________  ____   ____________  
@@ -533,7 +346,7 @@ namespace Cybercore
             Console.WriteLine();
         }
 
-        private static void ConfigureLogging()
+        public static void ConfigureLogging()
         {
             var config = clusterConfig.Logging;
             var loggingConfig = new LoggingConfiguration();
@@ -650,7 +463,7 @@ namespace Cybercore
             logger = LogManager.GetLogger("Core");
         }
 
-        private static Layout GetLogPath(ClusterLoggingConfig config, string name)
+        public static Layout GetLogPath(ClusterLoggingConfig config, string name)
         {
             if (string.IsNullOrEmpty(config.LogBaseDirectory))
                 return name;
@@ -658,7 +471,7 @@ namespace Cybercore
             return Path.Combine(config.LogBaseDirectory, name);
         }
 
-        private void ConfigureMisc()
+        public void ConfigureMisc()
         {
             ZcashNetworks.Instance.EnsureRegistered();
             var messageBus = container.Resolve<IMessageBus>();
@@ -672,7 +485,7 @@ namespace Cybercore
             LibRandomX.messageBus = messageBus;
         }
 
-        private static void ConfigurePersistence(ContainerBuilder builder)
+        public static void ConfigurePersistence(ContainerBuilder builder)
         {
             if (clusterConfig.Persistence == null &&
                 clusterConfig.PaymentProcessing?.Enabled == true &&
@@ -685,7 +498,7 @@ namespace Cybercore
                 ConfigureDummyPersistence(builder);
         }
 
-        private static void ConfigurePostgres(DatabaseConfig pgConfig, ContainerBuilder builder)
+        public static void ConfigurePostgres(DatabaseConfig pgConfig, ContainerBuilder builder)
         {
             if (string.IsNullOrEmpty(pgConfig.Host))
                 logger.ThrowLogPoolStartupException("Postgres configuration: invalid or missing 'host'");
@@ -711,7 +524,7 @@ namespace Cybercore
                 .SingleInstance();
         }
 
-        private static void ConfigureDummyPersistence(ContainerBuilder builder)
+        public static void ConfigureDummyPersistence(ContainerBuilder builder)
         {
             builder.RegisterInstance(new DummyConnectionFactory(string.Empty))
                 .AsImplementedInterfaces();
@@ -723,7 +536,7 @@ namespace Cybercore
                 .SingleInstance();
         }
 
-        private Dictionary<string, CoinTemplate> LoadCoinTemplates()
+        public Dictionary<string, CoinTemplate> LoadCoinTemplates()
         {
             var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var defaultTemplates = Path.Combine(basePath, "coins.json");
@@ -740,7 +553,7 @@ namespace Cybercore
             return CoinTemplateLoader.Load(container, clusterConfig.CoinTemplates);
         }
 
-        private static void UseIpWhiteList(IApplicationBuilder app, bool defaultToLoopback, string[] locations, string[] whitelist)
+        public static void UseIpWhiteList(IApplicationBuilder app, bool defaultToLoopback, string[] locations, string[] whitelist)
         {
             var ipList = whitelist?.Select(IPAddress.Parse).ToList();
             if (defaultToLoopback && (ipList == null || ipList.Count == 0))
@@ -761,7 +574,7 @@ namespace Cybercore
             }
         }
 
-        private static void ConfigureIpRateLimitOptions(IpRateLimitOptions options)
+        public static void ConfigureIpRateLimitOptions(IpRateLimitOptions options)
         {
             options.EnableEndpointRateLimiting = false;
 
@@ -804,7 +617,7 @@ namespace Cybercore
             logger.Info(() => $"API access limited to {(string.Join(", ", rules.Select(x => $"{x.Limit} requests per {x.Period}")))}, except from {string.Join(", ", options.IpWhitelist)}");
         }
 
-        private static void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        public static void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (logger != null)
             {
