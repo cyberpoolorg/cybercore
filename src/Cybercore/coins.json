@@ -527,7 +527,7 @@
   },
 
   "butkoin-sha256": {
-      "name": "ButKoin Sha256",
+      "name": "ButKoin",
       "canonicalName": "ButKoin",
       "symbol": "BUTK",
       "family": "bitcoin",
@@ -555,7 +555,7 @@
   },
   
   "butkoin-scrypt": {
-      "name": "ButKoin Scrypt",
+      "name": "ButKoin",
       "canonicalName": "ButKoin",
       "symbol": "BUTK",
       "family": "bitcoin",
@@ -583,7 +583,8 @@
                   "args": [ 1024, 1 ]
               }
           ]
-      },
+      },      
+      "blockTemplateRpcExtraParams": [ "scrypt" ],
       "shareMultiplier": 65536,
       "hasFounderFee": true,
       "hasMasterNodes": true,
@@ -593,7 +594,7 @@
   },
 
   "butkoin-yespower": {
-      "name": "ButKoin YesPower",
+      "name": "ButKoin",
       "canonicalName": "ButKoin",
       "symbol": "BUTK",
       "family": "bitcoin",
@@ -603,16 +604,17 @@
       "telegram": "",
       "discord": "https://discord.com/invite/j7T82mKkrw",
       "coinbaseHasher": {
-          "hash": "sha256d"
+        "hash": "sha256d"
       },
       "headerHasher": {
-          "hash": "yespowersugar"
+          "hash": "yespower"
       },
       "blockHasher": {
           "hash": "reverse",
-          "args": [ { "hash": "sha256d" } ]
+          "args": [ { "hash": "yespower" } ]
       },
-      "shareMultiplier": 4194304,
+      "blockTemplateRpcExtraParams": [ "yespower" ],
+      "shareMultiplier": 65536,
       "hasFounderFee": true,
       "hasMasterNodes": true,
       "explorerBlockLink": "https://blocks.butcoin.tech/block/$hash$",
@@ -620,7 +622,36 @@
       "explorerAccountLink": "https://blocks.butcoin.tech/address/{0}"
   },
   
-  "cannabiscoin": {
+  "butkoin-ghost": {
+    "name": "ButKoin",
+    "canonicalName": "ButKoin",
+    "symbol": "BUTK",
+    "family": "bitcoin",
+    "website": "https://butcoin.tech/",
+    "market": "",
+    "twitter": "https://twitter.com/ButKoin",
+    "telegram": "",
+    "discord": "https://discord.com/invite/j7T82mKkrw",
+    "coinbaseHasher": {
+        "hash": "sha256d"
+    },
+    "headerHasher": {
+        "hash": "ghostrider"
+    },
+    "blockHasher": {
+        "hash": "reverse",
+        "args": [ { "hash": "sha256d" } ]
+    },
+    "blockTemplateRpcExtraParams": [ "ghostrider" ],
+    "shareMultiplier": 65536,
+    "hasFounderFee": true,
+    "hasMasterNodes": true,
+    "explorerBlockLink": "https://blocks.butcoin.tech/block/$hash$",
+    "explorerTxLink": "https://blocks.butcoin.tech/tx/{0}",
+    "explorerAccountLink": "https://blocks.butcoin.tech/address/{0}"
+},
+
+"cannabiscoin": {
       "name": "Cannabiscoin",
       "canonicalName": "Cannabiscoin",
       "symbol": "CANN",
