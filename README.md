@@ -66,10 +66,10 @@ $ sudo dpkg -i packages-microsoft-prod.deb
 $ sudo apt-get update
 $ sudo apt-get install -y apt-transport-https build-essential software-properties-common curl unzip rar htop git
 $ sudo apt-get install -y libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq3-dev libzmq5 screen cmake
-$ sudo apt-get install -y postgresql postgresql-contrib dotnet-sdk-5.0
-$ git clone https://github.com/cyberpoolorg/cybercore
-$ cd cybercore/src/Cybercore
-$ dotnet publish -c Release --framework net5.0  -o ../../build
+$ sudo apt-get install -y postgresql postgresql-contrib dotnet-sdk-6.0
+$ git clone https://github.com/lurchinms/cybercore_NET6.git
+$ cd cybercore_dotnet6/src/Cybercore
+$ dotnet publish -c Release --framework net6.0 -o ../../build
 ```
 
 #### After successful build
