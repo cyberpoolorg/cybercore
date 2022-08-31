@@ -584,7 +584,7 @@ namespace Cybercore.Blockchain.Bitcoin
             this.poolAddressDestination = poolAddressDestination;
             BlockTemplate = blockTemplate;
             JobId = jobId;
-            var coinbaseString = !string.IsNullOrEmpty(clusterConfig.PaymentProcessing?.CoinbaseString) ? clusterConfig.PaymentProcessing?.CoinbaseString.Trim() : "Cybercore";
+            var coinbaseString = !string.IsNullOrEmpty(clusterConfig.PaymentProcessing?.CoinbaseString) ? clusterConfig.PaymentProcessing?.CoinbaseString.Trim() : "KriptoKyng Pool";
             scriptSigFinalBytes = new Script(Op.GetPushOp(Encoding.UTF8.GetBytes(coinbaseString))).ToBytes();
             Difficulty = new Target(System.Numerics.BigInteger.Parse(BlockTemplate.Target, NumberStyles.HexNumber)).Difficulty;
             extraNoncePlaceHolderLength = BitcoinConstants.ExtranoncePlaceHolderLength;

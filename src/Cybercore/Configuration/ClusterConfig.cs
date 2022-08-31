@@ -42,6 +42,37 @@ namespace Cybercore.Configuration
         [JsonProperty(Order = -9)]
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// Website
+        /// </summary>
+        [JsonProperty(Order = -9)]
+        public string Website { get; set; }
+
+                /// <summary>
+        /// Market
+        /// </summary>
+        [JsonProperty(Order = -9)]
+        public string Market { get; set; }
+
+
+        /// <summary>
+        /// Twitter Link
+        /// </summary>
+        [JsonProperty(Order = -9)]
+        public string Twitter { get; set; }
+
+        /// <summary>
+        /// Discord Link
+        /// </summary>
+        [JsonProperty(Order = -9)]
+        public string Discord { get; set; }
+
+        /// <summary>
+        /// Telegram Group Link
+        /// </summary>
+        [JsonProperty(Order = -9)]
+        public string Telegram { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter), true)]
         [JsonProperty(Order = -8)]
         public CoinFamily Family { get; set; }

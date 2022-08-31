@@ -66,10 +66,10 @@ $ sudo dpkg -i packages-microsoft-prod.deb
 $ sudo apt-get update
 $ sudo apt-get install -y apt-transport-https build-essential software-properties-common curl unzip rar htop git
 $ sudo apt-get install -y libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq3-dev libzmq5 screen cmake
-$ sudo apt-get install -y postgresql postgresql-contrib dotnet-sdk-5.0
-$ git clone https://github.com/cyberpoolorg/cybercore
-$ cd cybercore/src/Cybercore
-$ dotnet publish -c Release --framework net5.0  -o ../../build
+$ sudo apt-get install -y postgresql postgresql-contrib dotnet-sdk-6.0
+$ git clone https://github.com/lurchinms/cybercore_NET6.git
+$ cd cybercore_NET6/src/Cybercore
+$ dotnet publish -c Release --framework net6.0 -o ../../build
 ```
 
 #### After successful build
@@ -101,7 +101,7 @@ grant all privileges on database cybercore to cybercore;
 Import the database schema:
 
 ```console
-$ wget https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+$ wget https://raw.githubusercontent.com/lurchinms/cybercore_NET6/master/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
 $ psql -d cybercore -U cybercore -f createdb.sql
 ```
 
@@ -112,7 +112,7 @@ If you are planning to run a Multipool-Cluster, the simple setup might not perfo
 **WARNING**: The following step will delete all recorded shares. Do **NOT** do this on a production pool unless you backup your `shares` table using `pg_backup` first!
 
 ```console
-$ wget https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/src/Cybercore/Persistence/Postgres/Scripts/createdb_postgresql_11_appendix.sql
+$ wget https://raw.githubusercontent.com/lurchinms/cybercore_NET6/master/src/Cybercore/Persistence/Postgres/Scripts/createdb_postgresql_11_appendix.sql
 $ psql -d cybercore -U cybercore -f createdb_postgresql_11_appendix.sql
 ```
 
