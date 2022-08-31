@@ -101,7 +101,7 @@ grant all privileges on database cybercore to cybercore;
 Import the database schema:
 
 ```console
-$ wget https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
+$ wget https://raw.githubusercontent.com/lurchinms/cybercore_NET6/master/src/Cybercore/Persistence/Postgres/Scripts/createdb.sql
 $ psql -d cybercore -U cybercore -f createdb.sql
 ```
 
@@ -112,7 +112,7 @@ If you are planning to run a Multipool-Cluster, the simple setup might not perfo
 **WARNING**: The following step will delete all recorded shares. Do **NOT** do this on a production pool unless you backup your `shares` table using `pg_backup` first!
 
 ```console
-$ wget https://raw.githubusercontent.com/cyberpoolorg/cybercore/master/src/Cybercore/Persistence/Postgres/Scripts/createdb_postgresql_11_appendix.sql
+$ wget https://raw.githubusercontent.com/lurchinms/cybercore_NET6/master/src/Cybercore/Persistence/Postgres/Scripts/createdb_postgresql_11_appendix.sql
 $ psql -d cybercore -U cybercore -f createdb_postgresql_11_appendix.sql
 ```
 
